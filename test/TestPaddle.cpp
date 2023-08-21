@@ -3,18 +3,17 @@
 //
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
+#include <glm/glm.hpp>
 
 using testing::Eq;
 
 struct Paddle
 {
-    int x{};
-    int y{};
+    glm::vec2 position{};
 };
 
 TEST(ThePaddle, StartsAtTopLeftPossition)
 {
     Paddle paddle;
-    ASSERT_THAT(paddle.x,Eq(0));
-    ASSERT_THAT(paddle.y,Eq(0));
+    ASSERT_THAT(paddle.position,Eq(glm::vec2{}));
 }
