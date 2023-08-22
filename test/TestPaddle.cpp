@@ -12,7 +12,7 @@ struct Paddle
     glm::vec2 position{};
 };
 
-TEST(ThePaddle, StartsAtTopLeftPossition)
+TEST(ThePaddle, StartsAtTopLeftPosition)
 {
     Paddle paddle;
     ASSERT_THAT(paddle.position,Eq(glm::vec2{}));
