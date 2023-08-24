@@ -7,34 +7,39 @@
 #include <gtest/gtest.h>
 
 using testing::Eq;
+using testing::Ne;
 
-struct ThePaddle : testing::Test
+static const glm::vec2 paddleInitialPosition{};
+
+struct AnExistingPaddle : testing::Test
 {
-    glm::vec2 initialPosition{};
+    Paddle paddle{paddleInitialPosition};
+    glm::vec2 dummyPosition{10,-20};
+    glm::vec2 dummyVelocity{10,-20};
 };
 
-TEST_F(ThePaddle, StartsAtTheInitialPosition)
+TEST(APaddle, StartsAtTheGivenInitialPosition)
 {
-    Paddle paddle{initialPosition};
-    ASSERT_THAT(paddle.position(), Eq(initialPosition));
+    Paddle paddle{paddleInitialPosition};
+    ASSERT_THAT(paddle.position(), Eq(paddleInitialPosition));
 }
 
-TEST_F(ThePaddle, StartsAtRest)
+TEST(APaddle, StartsAtRest)
 {
-    Paddle paddle{initialPosition};
+    Paddle paddle{paddleInitialPosition};
     ASSERT_THAT(paddle.velocity(), Eq(glm::vec2{}));
 }
 
-TEST_F(ThePaddle, CanSetItsVelocity)
+TEST_F(AnExistingPaddle, CanChangeItsPosition)
 {
-    Paddle paddle{initialPosition};
-    paddle.setVelocity(glm::vec2{10, 10});
-    ASSERT_THAT(paddle.velocity(), Eq(glm::vec2{10, 10}));
+    ASSERT_THAT(paddle.position(),Ne(dummyPosition));
+    paddle.setPosition(dummyPosition);
+    ASSERT_THAT(paddle.position(), Eq(dummyPosition));
 }
 
-TEST_F(ThePaddle, CanSetItsPosition)
+TEST_F(AnExistingPaddle, CanChangeItsVelocity)
 {
-    Paddle paddle{initialPosition};
-    paddle.setPosition(glm::vec2{10, 10});
-    ASSERT_THAT(paddle.position(), Eq(glm::vec2{10, 10}));
+    ASSERT_THAT(paddle.velocity(),Ne(dummyVelocity));
+    paddle.setVelocity(dummyVelocity);
+    ASSERT_THAT(paddle.velocity(), Eq(dummyVelocity));
 }
