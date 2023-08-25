@@ -1,16 +1,11 @@
-//
-// Created by francisco on 8/24/23.
-//
-
-#ifndef PONG_PADDLE_H
-#define PONG_PADDLE_H
-
+#pragma once
 #include <glm/vec2.hpp>
 
-class Paddle
+
+class Movable
 {
   public:
-    explicit Paddle(glm::vec2 position) : m_position{position},m_velocity{}
+    explicit Movable(glm::vec2 position) : m_position{position},m_velocity{}
     {
     }
 
@@ -38,5 +33,3 @@ class Paddle
     glm::vec2 m_position;
     glm::vec2 m_velocity;
 };
-
-#endif // PONG_PADDLE_H

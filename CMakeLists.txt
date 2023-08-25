@@ -7,6 +7,4 @@ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/modules/")
 
 add_subdirectory(test)
 
-add_executable(Pong main.cpp
-        src/Paddle.cpp
-        include/Paddle.h)
+add_executable(Pong main.cpp)
