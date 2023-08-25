@@ -4,16 +4,20 @@
 class Movable
 {
   public:
-    explicit Movable(glm::ivec2 position) : m_position{position},m_velocity{}
+    explicit Movable(glm::ivec2 position) : m_position{position}, m_velocity{}
     {
     }
 
-    [[nodiscard]]glm::ivec2 position() const
+    virtual ~Movable()
+    {
+    }
+
+    [[nodiscard]] glm::ivec2 position() const
     {
         return m_position;
     }
 
-    [[nodiscard]] glm::ivec2 velocity()const
+    [[nodiscard]] glm::ivec2 velocity() const
     {
         return m_velocity;
     }

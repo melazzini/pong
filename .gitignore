@@ -2,5 +2,6 @@ cmake-build-debug/
 build/
 .cache/
 .idea/
+.vscode/
 .clang-format
 .testlists_notes.autosave.xopp
