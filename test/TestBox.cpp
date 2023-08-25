@@ -25,3 +25,10 @@ TEST(ABox, IsAlsoRectangularGeometry)
         std::make_unique<Box>(glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight})};
     rectGeometry.reset(nullptr);
 }
+
+TEST(ABox, IsAlsoDrawable)
+{
+    std::unique_ptr<Drawable> rectGeometry{
+        std::make_unique<Box>(glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight})};
+    rectGeometry.reset(nullptr);
+}
