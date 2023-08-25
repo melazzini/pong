@@ -31,3 +31,17 @@ TEST_F(AnExistingRectangularGeometry, CanBeFullyResized)
     ASSERT_THAT(rectGeometry.width(), Eq(newDummyWidth));
     ASSERT_THAT(rectGeometry.height(), Eq(newDummyHeight));
 }
+
+TEST_F(AnExistingRectangularGeometry, CanChangeItsWidthOnly)
+{
+    ASSERT_THAT(rectGeometry.width(), Ne(newDummyWidth));
+    rectGeometry.setWidth(newDummyWidth);
+    ASSERT_THAT(rectGeometry.width(), Eq(newDummyWidth));
+}
+
+TEST_F(AnExistingRectangularGeometry, CanChangeItsHeihtOnly)
+{
+    ASSERT_THAT(rectGeometry.height(), Ne(newDummyHeight));
+    rectGeometry.setHeight(newDummyHeight);
+    ASSERT_THAT(rectGeometry.height(), Eq(newDummyHeight));
+}

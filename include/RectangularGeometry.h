@@ -6,12 +6,12 @@ class RectangularGeometry
     {
     }
 
-    int width() const
+    [[nodiscard]] int width() const
     {
         return m_w;
     }
 
-    int height() const
+    [[nodiscard]] int height() const
     {
         return m_h;
     }
@@ -19,6 +19,16 @@ class RectangularGeometry
     void resize(int w, int h)
     {
         m_w = w;
+        m_h = h;
+    }
+
+    void setWidth(int w)
+    {
+        m_w = w;
+    }
+
+    void setHeight(int h)
+    {
         m_h = h;
     }
 
