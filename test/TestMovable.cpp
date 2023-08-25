@@ -9,13 +9,13 @@
 using testing::Eq;
 using testing::Ne;
 
-static const glm::vec2 movableInitialPosition{};
+static const glm::ivec2 movableInitialPosition{};
 
 struct AnExistingMovable : testing::Test
 {
     Movable movable{movableInitialPosition};
-    glm::vec2 dummyPosition{10, -20};
-    glm::vec2 dummyVelocity{10, -20};
+    glm::ivec2 dummyPosition{10, -20};
+    glm::ivec2 dummyVelocity{10, -20};
 };
 
 TEST(AMovable, StartsAtTheGivenInitialPosition)
@@ -27,7 +27,7 @@ TEST(AMovable, StartsAtTheGivenInitialPosition)
 TEST(AMovable, StartsAtRest)
 {
     Movable movable{movableInitialPosition};
-    ASSERT_THAT(movable.velocity(), Eq(glm::vec2{}));
+    ASSERT_THAT(movable.velocity(), Eq(glm::ivec2{}));
 }
 
 TEST_F(AnExistingMovable, CanChangeItsPosition)
