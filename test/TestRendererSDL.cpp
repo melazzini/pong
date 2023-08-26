@@ -1,26 +1,13 @@
 #include "Drawable.h"
+#include "RendererSDL.h"
 
+#include "gmock/gmock.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
 
 using testing::Eq;
 using testing::Ne;
-
-struct RendererSDL : IRenderer
-{
-    static RendererSDL *getInstance()
-    {
-        static RendererSDL renderer;
-        return &renderer;
-    }
-    virtual void render(Drawable *) override
-    {
-    }
-
-  private:
-    RendererSDL() = default;
-};
 
 struct TheRendererSDL : testing::Test
 {
@@ -32,6 +19,8 @@ struct TheRendererSDL : testing::Test
         void draw() override
         {
         }
+
+        MOCK_METHOD(void, paint, (IRenderer *), (override));
     };
 
     struct DummyDrawablePrimitive : IDrawablePrimitive
@@ -43,7 +32,7 @@ struct TheRendererSDL : testing::Test
 
     DummyDrawablePrimitive drawablePrimitive;
 
-    std::unique_ptr<Drawable> drawable{};
+    std::unique_ptr<DummyDrawable> drawable{};
 
     void SetUp() override
     {
@@ -51,8 +40,11 @@ struct TheRendererSDL : testing::Test
     }
 };
 
-TEST_F(TheRendererSDL, CanRenderADrawable)
+TEST_F(TheRendererSDL, PassesItselfToTheDrawableForPainting)
 {
     RendererSDL *renderer{RendererSDL::getInstance()};
+
+    EXPECT_CALL(*(drawable.get()), paint(renderer));
+
     renderer->render(drawable.get());
 }

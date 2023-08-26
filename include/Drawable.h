@@ -18,7 +18,7 @@ class Drawable
     Drawable(IDrawablePrimitive *primitive) : m_primitive{primitive}
     {
     }
-    void paint(IRenderer *renderer)
+    virtual void paint(IRenderer *renderer)
     {
         m_primitive->paintWithIRenderer(renderer);
     }
