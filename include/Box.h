@@ -6,7 +6,12 @@
 class Box : public Movable, public RectangularGeometry, public Drawable
 {
   public:
-    Box(glm::ivec2 position, RectangularGeometry size) : Movable{position}, RectangularGeometry{size}, Drawable{}
+    Box(glm::ivec2 position, RectangularGeometry size, DrawablePrimitive *drawablePrimitive)
+        : Movable{position}, RectangularGeometry{size}, Drawable{drawablePrimitive}
+    {
+    }
+
+    void draw() override
     {
     }
 };

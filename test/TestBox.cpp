@@ -1,4 +1,6 @@
 #include "Box.h"
+#include "Drawable.h"
+#include "Movable.h"
 
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
@@ -9,26 +11,43 @@ using testing::Ne;
 static const int dummyWidth{10};
 static const int dummyHeight{10};
 
-TEST(ABox, IsInstantiatedWithPositionAndSize)
+struct MockDrawablePrimitive : DrawablePrimitive
 {
-    Box b{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}};
+    MOCK_METHOD(void, paintWithRenderer, (Renderer *), (override));
+};
+
+MockDrawablePrimitive drawablePrimitive;
+
+struct ABox : testing::Test
+{
+    MockDrawablePrimitive drawablePrimitive2;
+    Box box{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive2};
+    Renderer renderer;
+};
+
+TEST(ABoxInstance, IsInstantiatedWithPositionAndSizeAndDrawablePrimitive)
+{
+    Box b{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive};
 }
 
-TEST(ABox, IsAlsoMovable)
+TEST_F(ABox, IsAlsoMovable)
 {
-    std::unique_ptr<Movable> movable{std::make_unique<Box>(glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight})};
+    Movable *m{&box};
 }
 
-TEST(ABox, IsAlsoRectangularGeometry)
+TEST_F(ABox, IsAlsoRectangularGeometry)
 {
-    std::unique_ptr<RectangularGeometry> rectGeometry{
-        std::make_unique<Box>(glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight})};
-    rectGeometry.reset(nullptr);
+    RectangularGeometry *rectangularGeometry{&box};
 }
 
-TEST(ABox, IsAlsoDrawable)
+TEST_F(ABox, IsAlsoDrawable)
 {
-    std::unique_ptr<Drawable> rectGeometry{
-        std::make_unique<Box>(glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight})};
-    rectGeometry.reset(nullptr);
+    Drawable *drawable{&box};
+    drawable->draw();
+}
+
+TEST_F(ABox, UsesItsDrawablePrimitiveAndRendererForPainting)
+{
+    EXPECT_CALL(drawablePrimitive2, paintWithRenderer(&renderer));
+    box.paint(&renderer);
 }
