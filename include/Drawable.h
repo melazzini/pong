@@ -4,7 +4,7 @@ struct Drawable;
 
 struct IRenderer
 {
-    // this code has not yet being tested and it's just for ilustration
+    // this code has not yet been tested and it's just for ilustration
     // virtual void render(Drawable *) = 0;
 };
 
@@ -34,7 +34,7 @@ class Drawable
     IDrawablePrimitive *m_primitive;
 };
 
-// The next code is just for ilustration and has not being tested.
+// The next code is just for ilustration and has not been tested.
 // THIS IS THE CONCRETE IMPLEMENTATION
 // WHICH CAN BE A SINGLETON
 struct Renderer : IRenderer
