@@ -4,6 +4,9 @@
 
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
+#include <gtest/gtest.h>
+#include <iterator>
+#include <memory>
 
 using testing::Eq;
 using testing::Ne;
@@ -11,24 +14,29 @@ using testing::Ne;
 static const int dummyWidth{10};
 static const int dummyHeight{10};
 
-struct MockDrawablePrimitive : DrawablePrimitive
+struct MockDrawablePrimitive : IDrawablePrimitive
 {
-    MOCK_METHOD(void, paintWithRenderer, (Renderer *), (override));
+    MOCK_METHOD(void, paintWithIRenderer, (IRenderer *), (override));
 };
 
-MockDrawablePrimitive drawablePrimitive;
-
-struct ABox : testing::Test
+struct ABoxInstance : testing::Test
 {
-    MockDrawablePrimitive drawablePrimitive2;
-    Box box{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive2};
-    Renderer renderer;
+    MockDrawablePrimitive drawablePrimitive;
 };
 
-TEST(ABoxInstance, IsInstantiatedWithPositionAndSizeAndDrawablePrimitive)
+TEST_F(ABoxInstance, IsInstantiatedWithPositionAndSizeAndIDrawablePrimitive)
 {
     Box b{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive};
 }
+
+struct ABox : ABoxInstance
+{
+    struct DummyRenderer : IRenderer
+    {
+    };
+    Box box{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive};
+    std::unique_ptr<ABox::DummyRenderer> dummyRenderer{std::make_unique<ABox::DummyRenderer>()};
+};
 
 TEST_F(ABox, IsAlsoMovable)
 {
@@ -45,9 +53,8 @@ TEST_F(ABox, IsAlsoDrawable)
     Drawable *drawable{&box};
     drawable->draw();
 }
-
-TEST_F(ABox, UsesItsDrawablePrimitiveAndRendererForPainting)
+TEST_F(ABox, UsesItsIDrawablePrimitiveAndIRendererForPainting)
 {
-    EXPECT_CALL(drawablePrimitive2, paintWithRenderer(&renderer));
-    box.paint(&renderer);
+    EXPECT_CALL(drawablePrimitive, paintWithIRenderer(dummyRenderer.get()));
+    box.paint(dummyRenderer.get());
 }
