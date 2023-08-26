@@ -33,6 +33,9 @@ struct ABox : ABoxInstance
 {
     struct DummyRenderer : IRenderer
     {
+        void render(Drawable *) override
+        {
+        }
     };
     Box box{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive};
     std::unique_ptr<ABox::DummyRenderer> dummyRenderer{std::make_unique<ABox::DummyRenderer>()};
