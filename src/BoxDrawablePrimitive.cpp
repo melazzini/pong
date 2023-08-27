@@ -1,13 +1,11 @@
-#include "../include/RendererSDL.h"
+#include "../include/BoxDrawablePrimitive.h"
+#include "../include/RendererPrimitive.h"
 
-void BoxDrawablePrimitive::paintWithIRenderer(IRenderer *renderer)
+void BoxDrawablePrimitive::paintWithRendererPrimitive(IRendererPrimitive *primitive)
 {
-    auto rendererSDL{dynamic_cast<RendererSDL *>(renderer)};
-    if (rendererSDL == nullptr)
-    {
-        throw std::runtime_error{"Bad SDL_Renderer"};
-    }
+    auto rendererPimpl{static_cast<RendererPrimitive *>(primitive)};
+
     SDL_Rect rect{position.x, position.y, size.x, size.y};
-    SDL_SetRenderDrawColor(rendererSDL->m_renderer.get(), color.r, color.g, color.b, color.a);
-    SDL_RenderFillRect(rendererSDL->m_renderer.get(), &rect);
+    SDL_SetRenderDrawColor(rendererPimpl->m_renderer.get(), color.r, color.g, color.b, color.a);
+    SDL_RenderFillRect(rendererPimpl->m_renderer.get(), &rect);
 }

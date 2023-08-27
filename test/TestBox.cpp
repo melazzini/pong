@@ -2,7 +2,6 @@
 #include "Drawable.h"
 #include "Movable.h"
 
-#include "gmock/gmock.h"
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -18,7 +17,7 @@ static const int dummyHeight{10};
 
 struct MockDrawablePrimitive : IDrawablePrimitive
 {
-    MOCK_METHOD(void, paintWithIRenderer, (IRenderer *), (override));
+    MOCK_METHOD(void, paintWithRendererPrimitive, (IRendererPrimitive *), (override));
 };
 
 struct ABoxInstance : testing::Test
@@ -33,10 +32,17 @@ TEST_F(ABoxInstance, IsInstantiatedWithPositionAndSizeAndIDrawablePrimitive)
 
 struct ABox : ABoxInstance
 {
+    struct DummyRendererePrimitive : IRendererPrimitive
+    {
+    };
     struct DummyRenderer : IRenderer
     {
         void render(Drawable *) override
         {
+        }
+        IRendererPrimitive *primitive() override
+        {
+            return nullptr;
         }
     };
     MockDrawablePrimitive &drawablePrimitiveSpy{*drawablePrimitive.get()};
@@ -59,9 +65,11 @@ TEST_F(ABox, IsAlsoDrawable)
     Drawable *drawable{&box};
     drawable->draw();
 }
-TEST_F(ABox, UsesItsIDrawablePrimitiveAndIRendererForPainting)
+
+TEST_F(ABox, UsesItsDrawablePrimitiveAndRendererPrimitiveForPainting)
 {
-    EXPECT_CALL(drawablePrimitiveSpy, paintWithIRenderer(dummyRenderer.get()));
+    EXPECT_CALL(drawablePrimitiveSpy, paintWithRendererPrimitive(dummyRenderer->primitive()));
     box.paint(dummyRenderer.get());
+    Mock::VerifyAndClearExpectations(&drawablePrimitiveSpy);
     Mock::AllowLeak(&drawablePrimitiveSpy);
 }

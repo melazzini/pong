@@ -1,5 +1,6 @@
+#include "Interfaces.h"
+#include "RendererPrimitive.h"
 #include "RendererSDL.h"
-
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -7,7 +8,7 @@
 using testing::Eq;
 using testing::Ne;
 
-RenderEngineSDL engine;
+BackendContext engine;
 TEST(ARenderer, IsObtainedWithARenderEngine)
 {
     RendererSDL *renderer{RendererSDL::getInstance(&engine)};
@@ -29,7 +30,7 @@ struct TheRendererSDL : testing::Test
 
     struct DummyDrawablePrimitive : IDrawablePrimitive
     {
-        void paintWithIRenderer(IRenderer *) override
+        void paintWithRendererPrimitive(IRendererPrimitive *) override
         {
         }
     };

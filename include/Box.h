@@ -1,8 +1,8 @@
 #pragma once
+#include "BoxDrawablePrimitive.h"
 #include "Drawable.h"
 #include "Movable.h"
 #include "RectangularGeometry.h"
-#include "RendererSDL.h"
 #include <iostream>
 #include <memory>
 
