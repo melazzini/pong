@@ -1,7 +1,7 @@
 #include "../include/Renderer.h"
 #include <memory>
 
-Renderer::Renderer(IBackendContext *engine) : m_pimpl{engine->rendererPrimitive()}
+Renderer::Renderer(IBackendContext *engine) : m_primitive{engine->rendererPrimitive()}
 {
 }
 
@@ -19,5 +19,5 @@ void Renderer::render(Drawable *drawable)
 
 IRendererPrimitive *Renderer::primitive()
 {
-    return m_pimpl.get();
+    return m_primitive.get();
 }

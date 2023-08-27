@@ -20,6 +20,6 @@ struct Renderer : IRenderer
 
   private:
     Renderer(IBackendContext *);
-    std::unique_ptr<IRendererPrimitive> m_pimpl;
+    std::unique_ptr<IRendererPrimitive> m_primitive;
 };
 
