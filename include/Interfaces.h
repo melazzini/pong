@@ -1,10 +1,14 @@
 #pragma once
-
+#include <memory>
 struct Drawable;
 struct IRendererPrimitive
 {
 };
 
+struct IBackendContext
+{
+    virtual std::unique_ptr<IRendererPrimitive> rendererPrimitive() = 0;
+};
 /**
  * @brief This interface represents a renderer of drawables on the screen.
  */

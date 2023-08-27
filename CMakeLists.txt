@@ -9,7 +9,7 @@ find_package(SDL2 REQUIRED)
 
 add_subdirectory(test)
 
-add_executable(app main.cpp src/BoxDrawablePrimitive.cpp src/Renderer.cpp)
+add_executable(app main.cpp src/BoxDrawablePrimitiveSDL.cpp src/Renderer.cpp)
 
 target_include_directories(app PRIVATE ${SDL2_INCLUDE_DIRS})
 

@@ -8,18 +8,18 @@
 #include <memory>
 #include <stdexcept>
 
-struct BackendContext;
-struct RendererPrimitive;
+struct IBackendContext;
+struct IRendererPrimitive;
 
 struct Renderer : IRenderer
 {
-    static Renderer *getInstance(BackendContext *engine);
+    static Renderer *getInstance(IBackendContext *engine);
     virtual void render(Drawable *drawable) override;
 
     IRendererPrimitive *primitive() override;
 
   private:
-    Renderer(BackendContext *);
-    std::unique_ptr<RendererPrimitive> m_pimpl;
+    Renderer(IBackendContext *);
+    std::unique_ptr<IRendererPrimitive> m_pimpl;
 };
 

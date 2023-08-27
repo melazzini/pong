@@ -1,13 +1,11 @@
 #include "../include/Renderer.h"
-#include "../include/RendererPrimitive.h"
 #include <memory>
 
-Renderer::Renderer(BackendContext *engine) : m_pimpl{std::make_unique<RendererPrimitive>(engine->wnd)}
+Renderer::Renderer(IBackendContext *engine) : m_pimpl{engine->rendererPrimitive()}
 {
-    engine->renderer = m_pimpl->m_renderer.get();
 }
 
-Renderer *Renderer::getInstance(BackendContext *engine)
+Renderer *Renderer::getInstance(IBackendContext *engine)
 {
     static Renderer renderer(engine);
     return &renderer;

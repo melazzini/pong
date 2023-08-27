@@ -1,6 +1,6 @@
+#include "include/BackendContextSDL.h"
 #include "include/Box.h"
 #include "include/Renderer.h"
-#include "include/RendererPrimitive.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
 #include <SDL_keycode.h>
@@ -25,8 +25,8 @@ int main()
         abort();
     }
 
-    BackendContext engine;
-    engine.wnd = wnd;
+    BackendContextSDL::wnd = wnd;
+    BackendContextSDL engine;
 
     auto rendererSDL{Renderer::getInstance(&engine)};
 

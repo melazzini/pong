@@ -1,6 +1,7 @@
 #include "Interfaces.h"
 #include "Renderer.h"
-#include "RendererPrimitive.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -8,10 +9,24 @@
 using testing::Eq;
 using testing::Ne;
 
-BackendContext engine;
-TEST(ARenderer, IsObtainedWithARenderEngine)
+struct DummyRendererPrimitive : IRendererPrimitive
 {
-    Renderer *renderer{Renderer::getInstance(&engine)};
+};
+
+struct DummyBackendContext : IBackendContext
+{
+    std::unique_ptr<IRendererPrimitive> rendererPrimitive() override
+    {
+        return std::make_unique<DummyRendererPrimitive>();
+    }
+};
+
+DummyBackendContext engine;
+TEST(ARenderer, IsASingleton)
+{
+    Renderer *renderer1{Renderer::getInstance(&engine)};
+    Renderer *renderer2{Renderer::getInstance(&engine)};
+    ASSERT_THAT(renderer1, Eq(renderer2));
 }
 
 struct TheRenderer : testing::Test
@@ -44,7 +59,7 @@ struct TheRenderer : testing::Test
     }
 };
 
-TEST_F(TheRenderer, DISABLED_PassesItselfToTheDrawableForPainting)
+TEST_F(TheRenderer, PassesItselfToTheDrawableForPainting)
 {
     EXPECT_CALL(*(drawable.get()), paint(renderer));
     renderer->render(drawable.get());
