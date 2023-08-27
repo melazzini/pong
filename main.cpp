@@ -1,6 +1,7 @@
 #include "include/BackendContextSDL.h"
 #include "include/Box.h"
 #include "include/Renderer.h"
+#include "include/Window.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
 #include <SDL_keycode.h>
@@ -27,6 +28,7 @@ int main()
 
     BackendContextSDL::wnd = wnd;
     BackendContextSDL engine;
+    auto window = Window::getInstance(&engine);
 
     auto rendererSDL{Renderer::getInstance(&engine)};
 
@@ -87,6 +89,10 @@ int main()
 
         rendererSDL->render(&paddle);
         rendererSDL->render(&ball);
+
+        window->clear(glm::u8vec4{0, 0, 0, 255});
+
+        window->present(rendererSDL);
 
         SDL_RenderPresent(renderer);
     }

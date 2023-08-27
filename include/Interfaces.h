@@ -1,4 +1,5 @@
 #pragma once
+#include <glm/glm.hpp>
 #include <memory>
 struct Drawable;
 struct IRendererPrimitive
@@ -24,6 +25,13 @@ struct IRenderer
     virtual void render(Drawable *drawable) = 0;
 
     virtual IRendererPrimitive *primitive() = 0;
+};
+
+struct IWindow
+{
+    virtual void clear(glm::u8vec4 color) = 0;
+
+    virtual void present(IRenderer *) = 0;
 };
 
 /**

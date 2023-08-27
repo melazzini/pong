@@ -21,7 +21,7 @@ struct DummyBackendContext : IBackendContext
     }
 };
 
-DummyBackendContext engine;
+static DummyBackendContext engine;
 TEST(ARenderer, IsASingleton)
 {
     Renderer *renderer1{Renderer::getInstance(&engine)};
