@@ -1,12 +1,6 @@
 #pragma once
 
-#include "Drawable.h"
 #include "Interfaces.h"
-#include <SDL2/SDL.h>
-#include <algorithm>
-#include <glm/glm.hpp>
-#include <memory>
-#include <stdexcept>
 
 struct IBackendContext;
 struct IRendererPrimitive;

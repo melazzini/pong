@@ -3,8 +3,6 @@
 #include "Drawable.h"
 #include "Movable.h"
 #include "RectangularGeometry.h"
-#include <iostream>
-#include <memory>
 
 class Box : public Movable, public RectangularGeometry, public Drawable
 {

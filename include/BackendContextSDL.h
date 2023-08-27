@@ -1,7 +1,6 @@
 #pragma once
 #include "Interfaces.h"
 #include <SDL2/SDL.h>
-#include <memory>
 
 struct BackendContextSDL : IBackendContext
 {

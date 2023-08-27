@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Interfaces.h"
-#include <memory>
 
 class Drawable
 {

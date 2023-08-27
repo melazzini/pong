@@ -1,7 +1,6 @@
 #pragma once
 #include "Interfaces.h"
 
-#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
 struct BoxDrawablePrimitive : IDrawablePrimitive
