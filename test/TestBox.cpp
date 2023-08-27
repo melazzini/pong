@@ -2,6 +2,7 @@
 #include "Drawable.h"
 #include "Movable.h"
 
+#include "gmock/gmock.h"
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -9,6 +10,7 @@
 #include <memory>
 
 using testing::Eq;
+using testing::Mock;
 using testing::Ne;
 
 static const int dummyWidth{10};
@@ -21,12 +23,12 @@ struct MockDrawablePrimitive : IDrawablePrimitive
 
 struct ABoxInstance : testing::Test
 {
-    MockDrawablePrimitive drawablePrimitive;
+    std::unique_ptr<MockDrawablePrimitive> drawablePrimitive{std::make_unique<MockDrawablePrimitive>()};
 };
 
 TEST_F(ABoxInstance, IsInstantiatedWithPositionAndSizeAndIDrawablePrimitive)
 {
-    Box b{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive};
+    Box b{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, std::move(drawablePrimitive)};
 }
 
 struct ABox : ABoxInstance
@@ -37,7 +39,8 @@ struct ABox : ABoxInstance
         {
         }
     };
-    Box box{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, &drawablePrimitive};
+    MockDrawablePrimitive &drawablePrimitiveSpy{*drawablePrimitive.get()};
+    Box box{glm::ivec2{}, RectangularGeometry{dummyWidth, dummyHeight}, std::move(drawablePrimitive)};
     std::unique_ptr<ABox::DummyRenderer> dummyRenderer{std::make_unique<ABox::DummyRenderer>()};
 };
 
@@ -58,6 +61,7 @@ TEST_F(ABox, IsAlsoDrawable)
 }
 TEST_F(ABox, UsesItsIDrawablePrimitiveAndIRendererForPainting)
 {
-    EXPECT_CALL(drawablePrimitive, paintWithIRenderer(dummyRenderer.get()));
+    EXPECT_CALL(drawablePrimitiveSpy, paintWithIRenderer(dummyRenderer.get()));
     box.paint(dummyRenderer.get());
+    Mock::AllowLeak(&drawablePrimitiveSpy);
 }

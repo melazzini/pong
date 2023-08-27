@@ -1,6 +1,10 @@
+#include "include/Box.h"
 #include "include/RendererSDL.h"
 
 #include <SDL2/SDL.h>
+#include <SDL_events.h>
+#include <SDL_keycode.h>
+#include <glm/fwd.hpp>
 #include <iostream>
 using namespace std;
 
@@ -21,18 +25,25 @@ int main()
         abort();
     }
 
-    auto renderer = SDL_CreateRenderer(wnd, -1, SDL_RENDERER_SOFTWARE);
+    RenderEngineSDL engine{wnd};
+
+    auto rendererSDL{RendererSDL::getInstance(&engine)};
+
+    auto renderer{rendererSDL->m_renderer.get()};
+
+    Paddle paddle{};
+    paddle.resize(20, 100);
+
+    Ball ball{};
+    ball.resize(40, 40);
+
+    ball.setPosition(glm::ivec2{300, 300});
 
     if (renderer == nullptr)
     {
         cerr << SDL_GetError() << endl;
         abort();
     }
-
-    SDL_Rect rect;
-    rect.h = 40;
-    rect.w = 40;
-    rect.x = rect.y = 30;
 
     auto isRunning = true;
     while (isRunning)
@@ -48,18 +59,38 @@ int main()
             {
                 isRunning = false;
             }
+
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_RIGHT)
+            {
+                glm::ivec2 pos{paddle.position().x + 10, paddle.position().y};
+                paddle.setPosition(pos);
+            }
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_LEFT)
+            {
+                glm::ivec2 pos{paddle.position().x - 10, paddle.position().y};
+                paddle.setPosition(pos);
+            }
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_UP)
+            {
+                glm::ivec2 pos{paddle.position().x, paddle.position().y - 10};
+                paddle.setPosition(pos);
+            }
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_DOWN)
+            {
+                glm::ivec2 pos{paddle.position().x, paddle.position().y + 10};
+                paddle.setPosition(pos);
+            }
         }
 
         SDL_SetRenderDrawColor(renderer, 101, 101, 130, 255);
         SDL_RenderClear(renderer);
 
-        SDL_SetRenderDrawColor(renderer, 200, 201, 10, 255);
-        SDL_RenderFillRect(renderer, &rect);
+        rendererSDL->render(&paddle);
+        rendererSDL->render(&ball);
 
         SDL_RenderPresent(renderer);
     }
 
-    SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(wnd);
     SDL_Quit();
     cout << "Hello world!" << endl;

@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 struct Drawable;
 
 /**
@@ -38,7 +39,7 @@ struct IDrawablePrimitive
 class Drawable
 {
   public:
-    Drawable(IDrawablePrimitive *primitive) : m_primitive{primitive}
+    Drawable(std::unique_ptr<IDrawablePrimitive> primitive) : m_primitive{std::move(primitive)}
     {
     }
     virtual void paint(IRenderer *renderer)
@@ -53,6 +54,6 @@ class Drawable
     }
 
   protected:
-    IDrawablePrimitive *m_primitive;
+    std::unique_ptr<IDrawablePrimitive> m_primitive;
 };
 
