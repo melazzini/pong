@@ -1,25 +1,25 @@
+#include "../include/Renderer.h"
 #include "../include/RendererPrimitive.h"
-#include "../include/RendererSDL.h"
 #include <memory>
 
-RendererSDL::RendererSDL(BackendContext *engine) : m_pimpl{std::make_unique<RendererPrimitive>(engine->wnd)}
+Renderer::Renderer(BackendContext *engine) : m_pimpl{std::make_unique<RendererPrimitive>(engine->wnd)}
 {
     engine->renderer = m_pimpl->m_renderer.get();
 }
 
-RendererSDL *RendererSDL::getInstance(BackendContext *engine)
+Renderer *Renderer::getInstance(BackendContext *engine)
 {
-    static RendererSDL renderer(engine);
+    static Renderer renderer(engine);
     return &renderer;
 }
 
-void RendererSDL::render(Drawable *drawable)
+void Renderer::render(Drawable *drawable)
 {
     drawable->draw();
     drawable->paint(this);
 }
 
-IRendererPrimitive *RendererSDL::primitive()
+IRendererPrimitive *Renderer::primitive()
 {
     return m_pimpl.get();
 }

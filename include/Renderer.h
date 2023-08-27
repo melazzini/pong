@@ -11,15 +11,15 @@
 struct BackendContext;
 struct RendererPrimitive;
 
-struct RendererSDL : IRenderer
+struct Renderer : IRenderer
 {
-    static RendererSDL *getInstance(BackendContext *engine);
+    static Renderer *getInstance(BackendContext *engine);
     virtual void render(Drawable *drawable) override;
 
     IRendererPrimitive *primitive() override;
 
   private:
-    RendererSDL(BackendContext *);
+    Renderer(BackendContext *);
     std::unique_ptr<RendererPrimitive> m_pimpl;
 };
 

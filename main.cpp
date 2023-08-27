@@ -1,6 +1,6 @@
 #include "include/Box.h"
+#include "include/Renderer.h"
 #include "include/RendererPrimitive.h"
-#include "include/RendererSDL.h"
 #include <SDL2/SDL.h>
 #include <SDL_events.h>
 #include <SDL_keycode.h>
@@ -28,7 +28,7 @@ int main()
     BackendContext engine;
     engine.wnd = wnd;
 
-    auto rendererSDL{RendererSDL::getInstance(&engine)};
+    auto rendererSDL{Renderer::getInstance(&engine)};
 
     auto renderer{engine.renderer};
     Paddle paddle{};

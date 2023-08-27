@@ -1,6 +1,6 @@
 #include "Interfaces.h"
+#include "Renderer.h"
 #include "RendererPrimitive.h"
-#include "RendererSDL.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -11,10 +11,10 @@ using testing::Ne;
 BackendContext engine;
 TEST(ARenderer, IsObtainedWithARenderEngine)
 {
-    RendererSDL *renderer{RendererSDL::getInstance(&engine)};
+    Renderer *renderer{Renderer::getInstance(&engine)};
 }
 
-struct TheRendererSDL : testing::Test
+struct TheRenderer : testing::Test
 {
     struct DummyDrawable : Drawable
     {
@@ -36,7 +36,7 @@ struct TheRendererSDL : testing::Test
     };
 
     std::unique_ptr<DummyDrawable> drawable{};
-    RendererSDL *renderer{RendererSDL::getInstance(&engine)};
+    Renderer *renderer{Renderer::getInstance(&engine)};
 
     void SetUp() override
     {
@@ -44,7 +44,7 @@ struct TheRendererSDL : testing::Test
     }
 };
 
-TEST_F(TheRendererSDL, DISABLED_PassesItselfToTheDrawableForPainting)
+TEST_F(TheRenderer, DISABLED_PassesItselfToTheDrawableForPainting)
 {
     EXPECT_CALL(*(drawable.get()), paint(renderer));
     renderer->render(drawable.get());
