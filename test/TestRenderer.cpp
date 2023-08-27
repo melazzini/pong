@@ -9,19 +9,23 @@
 using testing::Eq;
 using testing::Ne;
 
-struct DummyRendererPrimitive : IRendererPrimitive
+struct Dummy2RendererPrimitive : IRendererPrimitive
 {
 };
 
-struct DummyBackendContext : IBackendContext
+struct Dummy2BackendContext : IBackendContext
 {
     std::unique_ptr<IRendererPrimitive> rendererPrimitive() override
     {
-        return std::make_unique<DummyRendererPrimitive>();
+        return std::make_unique<Dummy2RendererPrimitive>();
+    }
+    std::unique_ptr<IWindowPrimitive> windowPrimitive() override
+    {
+        return nullptr;
     }
 };
 
-static DummyBackendContext engine;
+static Dummy2BackendContext engine;
 TEST(ARenderer, IsASingleton)
 {
     Renderer *renderer1{Renderer::getInstance(&engine)};
@@ -31,9 +35,9 @@ TEST(ARenderer, IsASingleton)
 
 struct TheRenderer : testing::Test
 {
-    struct DummyDrawable : Drawable
+    struct Dummy2Drawable : Drawable
     {
-        DummyDrawable(std::unique_ptr<IDrawablePrimitive> primitive) : Drawable(std::move(primitive))
+        Dummy2Drawable(std::unique_ptr<IDrawablePrimitive> primitive) : Drawable(std::move(primitive))
         {
         }
         void draw() override
@@ -43,19 +47,19 @@ struct TheRenderer : testing::Test
         MOCK_METHOD(void, paint, (IRenderer *), (override));
     };
 
-    struct DummyDrawablePrimitive : IDrawablePrimitive
+    struct Dummy2DrawablePrimitive : IDrawablePrimitive
     {
         void paintWithRendererPrimitive(IRendererPrimitive *) override
         {
         }
     };
 
-    std::unique_ptr<DummyDrawable> drawable{};
+    std::unique_ptr<Dummy2Drawable> drawable{};
     Renderer *renderer{Renderer::getInstance(&engine)};
 
     void SetUp() override
     {
-        drawable = std::make_unique<DummyDrawable>(std::make_unique<DummyDrawablePrimitive>());
+        drawable = std::make_unique<Dummy2Drawable>(std::make_unique<Dummy2DrawablePrimitive>());
     }
 };
 

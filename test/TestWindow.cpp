@@ -10,29 +10,33 @@ struct DummyRendererPrimitive : IRendererPrimitive
 {
 };
 
+struct DummyWindowPrimitive : IWindowPrimitive
+{
+    void clearWindow(glm::u8vec4 color) override
+    {
+    }
+
+    void updateWindow() override
+    {
+    }
+};
+
 struct DummyBackendContext : IBackendContext
 {
     std::unique_ptr<IRendererPrimitive> rendererPrimitive() override
     {
         return std::make_unique<DummyRendererPrimitive>();
     }
-};
 
-static DummyBackendContext engine;
-
-struct DummyRenderer : IRenderer
-{
-    void render(Drawable *)
+    std::unique_ptr<IWindowPrimitive> windowPrimitive() override
     {
-    }
-    IRendererPrimitive *primitive()
-    {
-        return nullptr;
+        return std::make_unique<DummyWindowPrimitive>();
     }
 };
 
 TEST(AWindow, IsASingleton)
 {
+    DummyBackendContext engine;
     Window *wnd1 = Window::getInstance(&engine);
     Window *wnd2 = Window::getInstance(&engine);
     ASSERT_THAT(wnd1, Eq(wnd2));
@@ -40,6 +44,7 @@ TEST(AWindow, IsASingleton)
 
 struct TheWindow : testing::Test
 {
+    DummyBackendContext engine;
     Window *wnd{Window::getInstance(&engine)};
 };
 
@@ -50,6 +55,5 @@ TEST_F(TheWindow, CanClearItsContents)
 
 TEST_F(TheWindow, CanPresentARenderer)
 {
-    DummyRenderer renderer;
-    wnd->present(&renderer);
+    wnd->present();
 }

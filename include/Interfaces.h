@@ -1,14 +1,22 @@
 #pragma once
+#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 struct Drawable;
 struct IRendererPrimitive
 {
 };
+struct IWindowPrimitive
+{
+    virtual void clearWindow(glm::u8vec4 color) = 0;
+    virtual void updateWindow() = 0;
+    virtual ~IWindowPrimitive() = default;
+};
 
 struct IBackendContext
 {
     virtual std::unique_ptr<IRendererPrimitive> rendererPrimitive() = 0;
+    virtual std::unique_ptr<IWindowPrimitive> windowPrimitive() = 0;
 };
 /**
  * @brief This interface represents a renderer of drawables on the screen.
@@ -31,7 +39,7 @@ struct IWindow
 {
     virtual void clear(glm::u8vec4 color) = 0;
 
-    virtual void present(IRenderer *) = 0;
+    virtual void present() = 0;
 };
 
 /**

@@ -4,16 +4,13 @@
 class Window : IWindow
 {
   public:
-    void clear(glm::u8vec4 color) override
-    {
-    }
+    void clear(glm::u8vec4 color) override;
 
-    void present(IRenderer *) override
-    {
-    }
+    void present() override;
 
     static Window *getInstance(IBackendContext *engine);
 
   private:
-    Window() = default;
+    explicit Window(IBackendContext *);
+    std::unique_ptr<IWindowPrimitive> m_primitive;
 };

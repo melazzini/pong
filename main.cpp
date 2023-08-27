@@ -11,28 +11,11 @@ using namespace std;
 
 int main()
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
-    {
-        cerr << SDL_GetError() << endl;
-        abort();
-    }
+    auto engine{BackendContextSDL::getInstance()};
+    auto window = Window::getInstance(engine);
 
-    auto wnd =
-        SDL_CreateWindow("Test", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 600, 400, SDL_WINDOW_ALWAYS_ON_TOP);
+    auto rendererSDL{Renderer::getInstance(engine)};
 
-    if (wnd == nullptr)
-    {
-        cerr << SDL_GetError() << endl;
-        abort();
-    }
-
-    BackendContextSDL::wnd = wnd;
-    BackendContextSDL engine;
-    auto window = Window::getInstance(&engine);
-
-    auto rendererSDL{Renderer::getInstance(&engine)};
-
-    auto renderer{engine.renderer};
     Paddle paddle{};
     paddle.resize(20, 100);
 
@@ -40,12 +23,6 @@ int main()
     ball.resize(40, 40);
 
     ball.setPosition(glm::ivec2{300, 300});
-
-    if (renderer == nullptr)
-    {
-        cerr << SDL_GetError() << endl;
-        abort();
-    }
 
     auto isRunning = true;
     while (isRunning)
@@ -84,20 +61,14 @@ int main()
             }
         }
 
-        SDL_SetRenderDrawColor(renderer, 101, 101, 130, 255);
-        SDL_RenderClear(renderer);
+        window->clear(glm::u8vec4{100, 100, 100, 255});
 
         rendererSDL->render(&paddle);
         rendererSDL->render(&ball);
 
-        window->clear(glm::u8vec4{0, 0, 0, 255});
-
-        window->present(rendererSDL);
-
-        SDL_RenderPresent(renderer);
+        window->present();
     }
 
-    SDL_DestroyWindow(wnd);
     SDL_Quit();
     cout << "Hello world!" << endl;
 
