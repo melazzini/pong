@@ -39,6 +39,7 @@ struct TheWindow : testing::Test
     inline static Window *wnd;
     DummyBackendContext engine;
     inline static DummyWindowPrimitive *windowPrimitiveSpy{};
+    inline static const glm::u8vec4 dummyBackgroundColor{glm::u8vec4(0, 0, 0, 255)};
 
     void SetUp()
     {
@@ -53,7 +54,7 @@ struct TheWindow : testing::Test
 TEST_F(TheWindow, ClearsItsContentsUsingThePrimitive)
 {
     EXPECT_CALL(*windowPrimitiveSpy, clearWindow);
-    wnd->clear(glm::u8vec4(0, 0, 0, 255));
+    wnd->clear(dummyBackgroundColor);
     testing::Mock::VerifyAndClearExpectations(windowPrimitiveSpy);
 }
 
@@ -68,4 +69,5 @@ TEST_F(TheWindow, ShowsItselfUsingItsPrimitive)
 {
     EXPECT_CALL(*windowPrimitiveSpy, updateWindow);
     wnd->present();
+    testing::Mock::VerifyAndClearExpectations(windowPrimitiveSpy);
 }
