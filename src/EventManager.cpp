@@ -31,6 +31,11 @@ void EventManager::pollEvents()
 }
 void EventManager::enqueueEvent(std::unique_ptr<IEvent> event)
 {
+    if (event == nullptr)
+    {
+        throw std::runtime_error{"The received event was nullptr"};
+    }
+
     m_eventQueue.push_back(std::move(event));
 }
 void EventManager::dispatchEvents()

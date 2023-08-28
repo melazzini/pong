@@ -52,6 +52,10 @@ TEST_F(TheEventManager, CanEnqueueNewEvents)
     eventManager.enqueueEvent(std::move(dummyEvent));
     ASSERT_TRUE(eventManager.eventQueueHasEventType(dummyEventType));
 }
+TEST_F(TheEventManager, ThrowsIfYouTryToEnqueANullEvent)
+{
+    ASSERT_THROW(eventManager.enqueueEvent(nullptr), std::runtime_error);
+}
 
 TEST_F(TheEventManager, NotifiesAListenerAboutACorrespondingEvent)
 {
