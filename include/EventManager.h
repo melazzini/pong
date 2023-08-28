@@ -1,6 +1,7 @@
 #pragma once
 #include "Interfaces.h"
 #include <list>
+#include <memory>
 #include <vector>
 
 class EventManager : public IEventManger
@@ -23,5 +24,13 @@ class EventManager : public IEventManger
   private:
     std::vector<IListener *> m_listeners;
     std::list<std::unique_ptr<IEvent>> m_eventQueue;
+
+  private:
+    void validateListener(IListener *listener);
+    void validateEvent(const std::unique_ptr<IEvent> &listener);
+    void sendEventsToListeners();
+    void clearEventQueue();
+    void pushBackListener(IListener *listener);
+    void pushBackEvent(std::unique_ptr<IEvent> event);
 };
 
