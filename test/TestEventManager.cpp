@@ -1,41 +1,10 @@
-#include "gmock/gmock.h"
-#include <algorithm>
+#include "Event.h"
+#include "EventManager.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
-#include <iterator>
-#include <list>
-#include <memory>
-#include <vector>
 
 using testing::Eq;
 using testing::Ne;
-
-enum class EventType
-{
-};
-
-class Event
-{
-  public:
-    Event(EventType type) : m_type{type}
-    {
-    }
-
-    EventType eventType() const
-    {
-        return m_type;
-    }
-
-  private:
-    EventType m_type;
-};
-
-struct IListener
-{
-    virtual EventType eventType() const = 0;
-
-    virtual void onEvent(std::unique_ptr<Event> event) = 0;
-};
 
 struct DummyListener : IListener
 {
@@ -49,63 +18,10 @@ struct DummyListener : IListener
         return m_eventType;
     }
 
-    MOCK_METHOD(void, onEvent, (std::unique_ptr<Event>), (override));
+    MOCK_METHOD(void, onEvent, (std::unique_ptr<IEvent>), (override));
 
   private:
     EventType m_eventType;
-};
-struct EventManager
-{
-    void registerListener(IListener *listener)
-    {
-        m_listeners.push_back(listener);
-    }
-
-    bool listenerIsRegistered(IListener *listener) const
-    {
-        return std::find(std::begin(m_listeners), std::end(m_listeners), listener) != std::end(m_listeners);
-    }
-
-    bool eventQueueHasEventType(EventType eventType) const
-    {
-
-        return std::find_if(std::begin(m_eventQueue), std::end(m_eventQueue), [eventType](const auto &event) {
-                   return event->eventType() == eventType;
-               }) != std::end(m_eventQueue);
-    }
-
-    bool isEventQueueEmpty() const
-    {
-        return m_eventQueue.empty();
-    }
-
-    void pollEvents()
-    {
-    }
-
-    void enqueueEvent(std::unique_ptr<Event> event)
-    {
-        m_eventQueue.push_back(std::move(event));
-    }
-
-    void dispatchEvents()
-    {
-        for (auto &event : m_eventQueue)
-        {
-            for (auto listener : m_listeners)
-            {
-                if (listener->eventType() == event->eventType())
-                {
-                    listener->onEvent(std::move(event));
-                }
-            }
-        }
-        m_eventQueue.clear();
-    }
-
-  private:
-    std::vector<IListener *> m_listeners;
-    std::list<std::unique_ptr<Event>> m_eventQueue;
 };
 
 struct TheEventManager : testing::Test
@@ -119,9 +35,9 @@ struct TheEventManager : testing::Test
 
 TEST_F(TheEventManager, CanRegisterListeners)
 {
-    ASSERT_FALSE(eventManager.listenerIsRegistered(&dummyListener));
+    ASSERT_FALSE(eventManager.isListenerRegistered(&dummyListener));
     eventManager.registerListener(&dummyListener);
-    ASSERT_TRUE(eventManager.listenerIsRegistered(&dummyListener));
+    ASSERT_TRUE(eventManager.isListenerRegistered(&dummyListener));
 }
 
 TEST_F(TheEventManager, CanEnqueueNewEvents)
@@ -139,7 +55,7 @@ TEST_F(TheEventManager, NotifiesAListenerAboutACorrespondingEvent)
     eventManager.enqueueEvent(std::move(dummyEvent));
 
     EXPECT_CALL(aDummyListenerForEventType, onEvent)
-        .WillOnce([dummyEventTypeCopy = dummyEventType](const std::unique_ptr<Event> &event) {
+        .WillOnce([dummyEventTypeCopy = dummyEventType](const std::unique_ptr<IEvent> &event) {
             ASSERT_TRUE(event->eventType() == dummyEventTypeCopy);
         });
 
