@@ -2,13 +2,13 @@
 #include "EventManager.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
+#include <stdexcept>
 
 using testing::Eq;
 using testing::Ne;
 
 struct DummyListener : IListener
 {
-
     DummyListener(EventType eventType) : m_eventType{eventType}
     {
     }
@@ -38,6 +38,11 @@ TEST_F(TheEventManager, CanRegisterListeners)
     ASSERT_FALSE(eventManager.isListenerRegistered(&dummyListener));
     eventManager.registerListener(&dummyListener);
     ASSERT_TRUE(eventManager.isListenerRegistered(&dummyListener));
+}
+
+TEST_F(TheEventManager, ThrowsIfYouTryToRegisterANullListener)
+{
+    ASSERT_THROW(eventManager.registerListener(nullptr), std::runtime_error);
 }
 
 TEST_F(TheEventManager, CanEnqueueNewEvents)
@@ -78,3 +83,4 @@ TEST_F(TheEventManagerQueue, IsEmptyAfterDispachingTheEvents)
     eventManager.dispatchEvents();
     ASSERT_TRUE(eventManager.isEventQueueEmpty());
 }
+

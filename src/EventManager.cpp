@@ -1,8 +1,13 @@
 #include "../include/EventManager.h"
 #include <algorithm>
+#include <stdexcept>
 
 void EventManager::registerListener(IListener *listener)
 {
+    if (listener == nullptr)
+    {
+        throw std::runtime_error{"The received event listener was nullptr"};
+    }
     m_listeners.push_back(listener);
 }
 bool EventManager::isListenerRegistered(IListener *listener) const
