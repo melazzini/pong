@@ -1,4 +1,5 @@
 #include "../include/Window.h"
+#include <iostream>
 
 Window::Window(IBackendContext *engine) : m_primitive{engine->windowPrimitive()}
 {

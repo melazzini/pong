@@ -1,4 +1,5 @@
 #include "Window.h"
+#include "gmock/gmock.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -12,17 +13,14 @@ struct DummyRendererPrimitive : IRendererPrimitive
 
 struct DummyWindowPrimitive : IWindowPrimitive
 {
-    void clearWindow(glm::u8vec4 color) override
-    {
-    }
+    MOCK_METHOD(void, clearWindow, (glm::u8vec4), (override));
 
-    void updateWindow() override
-    {
-    }
+    MOCK_METHOD(void, updateWindow, (), (override));
 };
 
 struct DummyBackendContext : IBackendContext
 {
+    DummyWindowPrimitive *windowPrimitiveSpy{};
     std::unique_ptr<IRendererPrimitive> rendererPrimitive() override
     {
         return std::make_unique<DummyRendererPrimitive>();
@@ -30,30 +28,44 @@ struct DummyBackendContext : IBackendContext
 
     std::unique_ptr<IWindowPrimitive> windowPrimitive() override
     {
-        return std::make_unique<DummyWindowPrimitive>();
+        auto ptr = std::make_unique<DummyWindowPrimitive>();
+        windowPrimitiveSpy = ptr.get();
+        return ptr;
     }
 };
 
-TEST(AWindow, IsASingleton)
+struct TheWindow : testing::Test
 {
+    inline static Window *wnd;
     DummyBackendContext engine;
+    inline static DummyWindowPrimitive *windowPrimitiveSpy{};
+
+    void SetUp()
+    {
+        if (windowPrimitiveSpy == nullptr)
+        {
+            wnd = Window::getInstance(&engine);
+            windowPrimitiveSpy = engine.windowPrimitiveSpy;
+        }
+    }
+};
+
+TEST_F(TheWindow, ClearsItsContentsUsingThePrimitive)
+{
+    EXPECT_CALL(*windowPrimitiveSpy, clearWindow);
+    wnd->clear(glm::u8vec4(0, 0, 0, 255));
+    testing::Mock::VerifyAndClearExpectations(windowPrimitiveSpy);
+}
+
+TEST_F(TheWindow, IsASingleton)
+{
     Window *wnd1 = Window::getInstance(&engine);
     Window *wnd2 = Window::getInstance(&engine);
     ASSERT_THAT(wnd1, Eq(wnd2));
 }
 
-struct TheWindow : testing::Test
+TEST_F(TheWindow, ShowsItselfUsingItsPrimitive)
 {
-    DummyBackendContext engine;
-    Window *wnd{Window::getInstance(&engine)};
-};
-
-TEST_F(TheWindow, CanClearItsContents)
-{
-    wnd->clear(glm::u8vec4(0, 0, 0, 255));
-}
-
-TEST_F(TheWindow, CanPresentARenderer)
-{
+    EXPECT_CALL(*windowPrimitiveSpy, updateWindow);
     wnd->present();
 }
