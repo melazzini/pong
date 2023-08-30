@@ -1,9 +1,61 @@
 #pragma once
+#include "EventManager.h"
 #include "Interfaces.h"
 #include <SDL2/SDL.h>
+#include <SDL_events.h>
 #include <SDL_video.h>
+#include <iostream>
 #include <memory>
 #include <stdexcept>
+
+struct EventManagerPrimitiveSDL : IEventManagerPrimitive
+{
+    void pollEvents(IEventManager &eventManager) const override
+    {
+
+        SDL_Event evt;
+        while (SDL_PollEvent(&evt))
+        {
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_ESCAPE)
+            {
+                eventManager.enqueueEvent(std::make_unique<EventQuit>());
+            }
+            else if (evt.type == SDL_WINDOWEVENT && evt.window.event == SDL_WINDOWEVENT_CLOSE)
+            {
+                eventManager.enqueueEvent(std::make_unique<EventQuit>());
+            }
+
+            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_RIGHT)
+            //            {
+            //                glm::ivec2 pos{paddle.position().x + 10, paddle.position().y};
+            //                paddle.setPosition(pos);
+            //            }
+            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_LEFT)
+            //            {
+            //                glm::ivec2 pos{paddle.position().x - 10, paddle.position().y};
+            //                paddle.setPosition(pos);
+            //            }
+            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_UP)
+            //            {
+            //                glm::ivec2 pos{paddle.position().x, paddle.position().y - 10};
+            //                paddle.setPosition(pos);
+            //            }
+            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_DOWN)
+            //            {
+            //                glm::ivec2 pos{paddle.position().x, paddle.position().y + 10};
+            //                paddle.setPosition(pos);
+            //            }
+        }
+    }
+};
+
+struct EventManagerPrimitiveProviderSDL : backendContext::IEventManagerPrimitiveProvider
+{
+    std::unique_ptr<IEventManagerPrimitive> provide() const override
+    {
+        return std::make_unique<EventManagerPrimitiveSDL>();
+    }
+};
 
 struct BackendContextSDL : IBackendContext
 {

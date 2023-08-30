@@ -1,5 +1,4 @@
 #include "../include/EventManager.h"
-#include "Interfaces.h"
 #include <algorithm>
 #include <memory>
 #include <stdexcept>
@@ -11,6 +10,10 @@ EventManager::EventManager(backendContext::IEventManagerPrimitiveProvider *conte
 
 EventManager *EventManager::getInstance(backendContext::IEventManagerPrimitiveProvider *provider)
 {
+    if (provider == nullptr)
+    {
+        throw std::runtime_error{"EventManagerPrimitive's provider is null!"};
+    }
     static EventManager instance(provider);
     return &instance;
 }
@@ -46,6 +49,7 @@ bool EventManager::isEventQueueEmpty() const
 void EventManager::pollEvents()
 {
     m_primitive->pollEvents(*this);
+    dispatchEvents();
 }
 void EventManager::enqueueEvent(std::unique_ptr<IEvent> event)
 {

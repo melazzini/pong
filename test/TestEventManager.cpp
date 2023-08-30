@@ -75,6 +75,11 @@ TEST_F(TheEventManager, IsASingleTon)
     ASSERT_EQ(eventManager1, eventManager2);
 }
 
+TEST_F(TheEventManager, ThrowsIfYouPassItANullptrBackendContextToGetTheInstance)
+{
+    ASSERT_THROW(EventManager::getInstance(nullptr), std::runtime_error);
+}
+
 TEST_F(TheEventManager, CanRegisterListeners)
 {
     ASSERT_FALSE(eventManager->isListenerRegistered(&dummyListener));
@@ -140,6 +145,21 @@ TEST_F(TheEventManager, HasAnEmptyQueueAfterDispatchingEvents)
 TEST_F(TheEventManager, UsesItsPrimitiveToPollTheEvents)
 {
     EXPECT_CALL(*dummyEventPrimitiveSpy, pollEvents);
+    eventManager->pollEvents();
+    Mock::VerifyAndClearExpectations(dummyEventPrimitiveSpy);
+}
+
+TEST_F(TheEventManager, DispachesAllTheEventsWhenPolling)
+{
+    DummyListener aDummyListenerForEventType{dummyEventType};
+    eventManager->registerListener(&aDummyListenerForEventType);
+    EXPECT_CALL(*dummyEventPrimitiveSpy, pollEvents)
+        .WillOnce(
+            [dm = std::move(dummyEvent)](IEventManager &evtManger) mutable { evtManger.enqueueEvent(std::move(dm)); });
+    EXPECT_CALL(aDummyListenerForEventType, onEvent)
+        .WillOnce([dummyEventTypeCopy = dummyEventType](const IEvent &event) {
+            ASSERT_TRUE(event.eventType() == dummyEventTypeCopy);
+        });
     eventManager->pollEvents();
     Mock::VerifyAndClearExpectations(dummyEventPrimitiveSpy);
 }

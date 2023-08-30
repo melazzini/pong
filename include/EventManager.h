@@ -38,6 +38,8 @@ class EventManager : public IEventManager
   private:
     void validateListener(IListener *listener);
     void validateEvent(const std::unique_ptr<IEvent> &listener);
+    std::unique_ptr<IEventManagerPrimitive> buildPrimitive(
+        backendContext::IEventManagerPrimitiveProvider *contextProvider);
     void sendEventsToListeners();
     void pushBackListener(IListener *listener);
     void pushBackEvent(std::unique_ptr<IEvent> event);

@@ -5,11 +5,21 @@
 
 enum class EventType
 {
+    QUIT
 };
 struct IEvent
 {
     virtual EventType eventType() const = 0;
     ~IEvent() = default;
+};
+
+class EventQuit : public IEvent
+{
+  public:
+    EventType eventType() const override
+    {
+        return EventType::QUIT;
+    }
 };
 
 struct IListener
