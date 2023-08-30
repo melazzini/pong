@@ -5,8 +5,18 @@
 
 enum class EventType
 {
-    QUIT
+    QUIT,
+    ARROW_KEYS_PRESSED
 };
+
+enum class ArrowKey
+{
+    LEFT,
+    RIGHT,
+    UP,
+    DOWN
+};
+
 struct IEvent
 {
     virtual EventType eventType() const = 0;
@@ -20,6 +30,25 @@ class EventQuit : public IEvent
     {
         return EventType::QUIT;
     }
+};
+class ArrowKeyPressed : public IEvent
+{
+  public:
+    ArrowKeyPressed(ArrowKey key) : m_key(key)
+    {
+    }
+    EventType eventType() const override
+    {
+        return EventType::ARROW_KEYS_PRESSED;
+    }
+
+    ArrowKey key() const
+    {
+        return m_key;
+    }
+
+  private:
+    ArrowKey m_key;
 };
 
 struct IListener

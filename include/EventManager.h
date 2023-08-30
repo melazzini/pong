@@ -1,8 +1,30 @@
 #pragma once
 #include "Interfaces.h"
+#include <functional>
 #include <list>
 #include <memory>
 #include <vector>
+struct LambdaEvent : IListener
+{
+    LambdaEvent(EventType eventType, std::function<void(const IEvent &)> handler)
+        : m_eventType{eventType}, m_handler{std::move(handler)}
+    {
+    }
+
+    EventType eventType() const override
+    {
+        return m_eventType;
+    }
+
+    void onEvent(const IEvent &event) override
+    {
+        m_handler(event);
+    }
+
+  private:
+    EventType m_eventType;
+    std::function<void(const IEvent &)> m_handler;
+};
 
 class EventManager : public IEventManager
 {
@@ -10,6 +32,8 @@ class EventManager : public IEventManager
     static EventManager *getInstance(backendContext::IEventManagerPrimitiveProvider *provider);
 
     void registerListener(IListener *listener) override;
+
+    std::unique_ptr<IListener> registerListener(EventType type, std::function<void(const IEvent &)> callback);
 
     [[nodiscard]] bool isListenerRegistered(IListener *listener) const override;
 

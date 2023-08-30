@@ -163,3 +163,8 @@ TEST_F(TheEventManager, DispachesAllTheEventsWhenPolling)
     eventManager->pollEvents();
     Mock::VerifyAndClearExpectations(dummyEventPrimitiveSpy);
 }
+
+TEST_F(TheEventManager, CanReceiveALambdaAsAListener)
+{
+    eventManager->registerListener(dummyEventType, [](const IEvent &) {});
+}

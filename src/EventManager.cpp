@@ -1,5 +1,6 @@
 #include "../include/EventManager.h"
 #include <algorithm>
+#include <functional>
 #include <memory>
 #include <stdexcept>
 
@@ -30,6 +31,14 @@ void EventManager::registerListener(IListener *listener)
 {
     validateListener(listener);
     pushBackListener(listener);
+}
+
+std::unique_ptr<IListener> EventManager::registerListener(EventType eventType,
+                                                          std::function<void(const IEvent &)> callback)
+{
+    std::unique_ptr<LambdaEvent> instance = std::make_unique<LambdaEvent>(eventType, std::move(callback));
+    registerListener(instance.get());
+    return instance;
 }
 bool EventManager::isListenerRegistered(IListener *listener) const
 {

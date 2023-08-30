@@ -25,26 +25,22 @@ struct EventManagerPrimitiveSDL : IEventManagerPrimitive
                 eventManager.enqueueEvent(std::make_unique<EventQuit>());
             }
 
-            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_RIGHT)
-            //            {
-            //                glm::ivec2 pos{paddle.position().x + 10, paddle.position().y};
-            //                paddle.setPosition(pos);
-            //            }
-            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_LEFT)
-            //            {
-            //                glm::ivec2 pos{paddle.position().x - 10, paddle.position().y};
-            //                paddle.setPosition(pos);
-            //            }
-            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_UP)
-            //            {
-            //                glm::ivec2 pos{paddle.position().x, paddle.position().y - 10};
-            //                paddle.setPosition(pos);
-            //            }
-            //            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_DOWN)
-            //            {
-            //                glm::ivec2 pos{paddle.position().x, paddle.position().y + 10};
-            //                paddle.setPosition(pos);
-            //            }
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_RIGHT)
+            {
+                eventManager.enqueueEvent(std::make_unique<ArrowKeyPressed>(ArrowKey::RIGHT));
+            }
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_LEFT)
+            {
+                eventManager.enqueueEvent(std::make_unique<ArrowKeyPressed>(ArrowKey::LEFT));
+            }
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_UP)
+            {
+                eventManager.enqueueEvent(std::make_unique<ArrowKeyPressed>(ArrowKey::UP));
+            }
+            if (evt.type == SDL_KEYDOWN && evt.key.keysym.sym == SDLK_DOWN)
+            {
+                eventManager.enqueueEvent(std::make_unique<ArrowKeyPressed>(ArrowKey::DOWN));
+            }
         }
     }
 };
@@ -144,3 +140,6 @@ struct BackendContextSDL : IBackendContext
   private:
     BackendContextSDL();
 };
+/*
+ *
+ */

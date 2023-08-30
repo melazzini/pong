@@ -51,6 +51,34 @@ int main()
 
     eventManager->registerListener(quitEventListener.get());
 
+    auto lambdaEventHnd = eventManager->registerListener(
+        EventType::QUIT, [](const IEvent &event) { std::cout << "Oh YEAH!!!! :)))))" << std::endl; });
+
+    auto moveBallEventHandler{
+        eventManager->registerListener(EventType::ARROW_KEYS_PRESSED, [&ball](const IEvent &event) {
+            const ArrowKeyPressed &arrowEvent{dynamic_cast<const ArrowKeyPressed &>(event)};
+            if (arrowEvent.key() == ArrowKey::RIGHT)
+            {
+                glm::ivec2 pos{ball.position().x + 10, ball.position().y};
+                ball.setPosition(pos);
+            }
+            if (arrowEvent.key() == ArrowKey::LEFT)
+            {
+                glm::ivec2 pos{ball.position().x - 10, ball.position().y};
+                ball.setPosition(pos);
+            }
+            if (arrowEvent.key() == ArrowKey::UP)
+            {
+                glm::ivec2 pos{ball.position().x, ball.position().y - 10};
+                ball.setPosition(pos);
+            }
+            if (arrowEvent.key() == ArrowKey::DOWN)
+            {
+                glm::ivec2 pos{ball.position().x, ball.position().y + 10};
+                ball.setPosition(pos);
+            }
+        })};
+
     while (isRunning)
     {
         eventManager->pollEvents();
