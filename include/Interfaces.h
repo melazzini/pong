@@ -16,10 +16,10 @@ struct IListener
 {
     virtual EventType eventType() const = 0;
 
-    virtual void onEvent(std::unique_ptr<IEvent> event) = 0;
+    virtual void onEvent(const IEvent &event) = 0;
 };
 
-struct IEventManger
+struct IEventManager
 {
     virtual void registerListener(IListener *) = 0;
     [[nodiscard]] virtual bool isListenerRegistered(IListener *listener) const = 0;
@@ -30,6 +30,17 @@ struct IEventManger
     virtual void dispatchEvents() = 0;
 };
 
+struct IEventManagerPrimitive
+{
+    virtual void pollEvents(IEventManager &) const = 0;
+};
+namespace backendContext
+{
+struct IEventManagerPrimitiveProvider
+{
+    virtual std::unique_ptr<IEventManagerPrimitive> provide() const = 0;
+};
+} // namespace backendContext
 struct Drawable;
 struct IRendererPrimitive
 {

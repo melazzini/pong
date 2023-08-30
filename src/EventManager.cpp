@@ -4,6 +4,25 @@
 #include <memory>
 #include <stdexcept>
 
+EventManager::EventManager(backendContext::IEventManagerPrimitiveProvider *contextProvider)
+    : m_primitive{contextProvider->provide()}
+{
+}
+
+EventManager *EventManager::getInstance(backendContext::IEventManagerPrimitiveProvider *provider)
+{
+    static EventManager instance(provider);
+    return &instance;
+}
+
+void EventManager::removeAllEventListeners()
+{
+    m_listeners.clear();
+}
+bool EventManager::hasEventListeners() const
+{
+    return m_listeners.size() != 0;
+}
 void EventManager::registerListener(IListener *listener)
 {
     validateListener(listener);
@@ -26,6 +45,7 @@ bool EventManager::isEventQueueEmpty() const
 
 void EventManager::pollEvents()
 {
+    m_primitive->pollEvents(*this);
 }
 void EventManager::enqueueEvent(std::unique_ptr<IEvent> event)
 {
@@ -60,7 +80,7 @@ void EventManager::sendEventsToListeners()
         {
             if (listener->eventType() == event->eventType())
             {
-                listener->onEvent(std::move(event));
+                listener->onEvent(*event);
             }
         }
     }
