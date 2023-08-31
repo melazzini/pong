@@ -1,6 +1,6 @@
-#include "Event.h"
+#include "EventManagementInterface.h"
 #include "EventManager.h"
-#include "Interfaces.h"
+#include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -43,12 +43,28 @@ struct DummyEventManagerPrimitiveProvider : backendContext::IEventManagerPrimiti
     }
 };
 
+class DummyEvent : public IEvent
+{
+  public:
+    DummyEvent(EventType type) : m_type{type}
+    {
+    }
+
+    EventType eventType() const override
+    {
+        return m_type;
+    }
+
+  private:
+    EventType m_type;
+};
+
 struct TheEventManager : testing::Test
 {
     EventType dummyEventType{EventType(-1)};
     DummyListener dummyListener{dummyEventType};
-    std::unique_ptr<Event> dummyEvent{std::make_unique<Event>(dummyEventType)};
-    Event *dummyEventSpy{dummyEvent.get()};
+    std::unique_ptr<DummyEvent> dummyEvent{std::make_unique<DummyEvent>(dummyEventType)};
+    DummyEvent *dummyEventSpy{dummyEvent.get()};
     EventManager *eventManager;
     DummyEventManagerPrimitiveProvider contextProvider;
     inline static DummyEventManagerPrimitive *dummyEventPrimitiveSpy{};
@@ -166,5 +182,19 @@ TEST_F(TheEventManager, DispachesAllTheEventsWhenPolling)
 
 TEST_F(TheEventManager, CanReceiveALambdaAsAListener)
 {
-    eventManager->registerListener(dummyEventType, [](const IEvent &) {});
+    bool theCallbackWasExecuted{false};
+    auto listener_ = eventManager->registerListener(
+        dummyEventType, [&theCallbackWasExecuted](const IEvent &) { theCallbackWasExecuted = true; });
+    auto listener{std::unique_ptr<CallbackEventListener>(dynamic_cast<CallbackEventListener *>(listener_.release()))};
+    eventManager->enqueueEvent(std::move(dummyEvent));
+    eventManager->dispatchEvents();
+    ASSERT_THAT(listener, Ne(nullptr));
+    ASSERT_TRUE(theCallbackWasExecuted);
+}
+
+TEST(ACallbackEventListener, ThrowsIfTheCallbackIsNull)
+{
+    EventType dummyEventType{-1};
+    CallbackEventListener listener{dummyEventType, std::function<void(const IEvent &)>{}};
+    ASSERT_THROW(listener.onEvent(DummyEvent{dummyEventType}), std::runtime_error);
 }

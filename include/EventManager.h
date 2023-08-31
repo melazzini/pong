@@ -1,12 +1,14 @@
 #pragma once
 #include "BackendContextInterface.h"
+#include "EventManagementInterface.h"
 #include <functional>
 #include <list>
 #include <memory>
+#include <stdexcept>
 #include <vector>
-struct LambdaEvent : IListener
+struct CallbackEventListener : IListener
 {
-    LambdaEvent(EventType eventType, std::function<void(const IEvent &)> handler)
+    CallbackEventListener(EventType eventType, std::function<void(const IEvent &)> handler)
         : m_eventType{eventType}, m_handler{std::move(handler)}
     {
     }
@@ -18,12 +20,21 @@ struct LambdaEvent : IListener
 
     void onEvent(const IEvent &event) override
     {
-        m_handler(event);
+        validateHandler(m_handler);
+        std::invoke(m_handler, event);
     }
 
   private:
     EventType m_eventType;
     std::function<void(const IEvent &)> m_handler;
+
+    void validateHandler(const std::function<void(const IEvent &)> &handler)
+    {
+        if (!handler)
+        {
+            throw std::runtime_error{"This event listener has no handler!"};
+        }
+    }
 };
 
 class EventManager : public IEventManager
@@ -33,7 +44,8 @@ class EventManager : public IEventManager
 
     void registerListener(IListener *listener) override;
 
-    std::unique_ptr<IListener> registerListener(EventType type, std::function<void(const IEvent &)> callback);
+    std::unique_ptr<CallbackEventListener> registerListener(EventType type,
+                                                            std::function<void(const IEvent &)> callback);
 
     [[nodiscard]] bool isListenerRegistered(IListener *listener) const override;
 

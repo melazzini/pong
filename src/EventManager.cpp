@@ -38,10 +38,10 @@ void EventManager::registerListener(IListener *listener)
     pushBackListener(listener);
 }
 
-std::unique_ptr<IListener> EventManager::registerListener(EventType eventType,
-                                                          std::function<void(const IEvent &)> callback)
+std::unique_ptr<CallbackEventListener> EventManager::registerListener(EventType eventType,
+                                                                      std::function<void(const IEvent &)> callback)
 {
-    std::unique_ptr<LambdaEvent> instance = std::make_unique<LambdaEvent>(eventType, std::move(callback));
+    auto instance = std::make_unique<CallbackEventListener>(eventType, std::move(callback));
     registerListener(instance.get());
     return instance;
 }
