@@ -47,14 +47,19 @@ class EventManager : public IEventManager
 
     void dispatchEvents() override;
 
-    void clearEventQueue();
+    void clearEventQueue() noexcept;
 
-    void removeAllEventListeners();
+    void removeAllEventListeners() noexcept;
 
-    bool hasEventListeners() const;
+    bool hasEventListeners() const noexcept;
 
   private:
     EventManager(backendContext::IEventManagerPrimitiveProvider *contextProvider);
+    EventManager(const EventManager *) = delete;
+    EventManager(EventManager &&) = delete;
+    EventManager &operator=(const EventManager &) = delete;
+    EventManager &operator=(EventManager &&) = delete;
+
     std::unique_ptr<IEventManagerPrimitive> m_primitive;
     std::vector<IListener *> m_listeners;
     std::list<std::unique_ptr<IEvent>> m_eventQueue;
@@ -67,5 +72,6 @@ class EventManager : public IEventManager
     void sendEventsToListeners();
     void pushBackListener(IListener *listener);
     void pushBackEvent(std::unique_ptr<IEvent> event);
+    static void validateBackend(backendContext::IEventManagerPrimitiveProvider *contextProvider);
 };
 

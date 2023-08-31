@@ -11,19 +11,24 @@ EventManager::EventManager(backendContext::IEventManagerPrimitiveProvider *conte
 
 EventManager *EventManager::getInstance(backendContext::IEventManagerPrimitiveProvider *provider)
 {
-    if (provider == nullptr)
-    {
-        throw std::runtime_error{"EventManagerPrimitive's provider is null!"};
-    }
+    validateBackend(provider);
     static EventManager instance(provider);
     return &instance;
 }
 
-void EventManager::removeAllEventListeners()
+void EventManager::validateBackend(backendContext::IEventManagerPrimitiveProvider *contextProvider)
+{
+    if (!contextProvider)
+    {
+        throw std::runtime_error{"EventManagerPrimitive's provider is null!"};
+    }
+}
+
+void EventManager::removeAllEventListeners() noexcept
 {
     m_listeners.clear();
 }
-bool EventManager::hasEventListeners() const
+bool EventManager::hasEventListeners() const noexcept
 {
     return m_listeners.size() != 0;
 }
@@ -98,7 +103,7 @@ void EventManager::sendEventsToListeners()
         }
     }
 }
-void EventManager::clearEventQueue()
+void EventManager::clearEventQueue() noexcept
 {
     m_eventQueue.clear();
 }
