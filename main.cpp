@@ -82,13 +82,9 @@ int main()
     while (isRunning)
     {
         eventManager->pollEvents();
-        eventManager->dispatchEvents();
-
         window->clear(glm::u8vec4{100, 100, 100, 255});
-
         rendererSDL->render(&paddle);
         rendererSDL->render(&ball);
-
         window->present();
     }
 
