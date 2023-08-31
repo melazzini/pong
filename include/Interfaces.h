@@ -1,12 +1,11 @@
 #pragma once
-#include "EventManagementInterface.h"
-#include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 
 struct Drawable;
 struct IRendererPrimitive
 {
+    virtual ~IRendererPrimitive() = default;
 };
 struct IWindowPrimitive
 {
@@ -19,6 +18,7 @@ struct IBackendContext
 {
     virtual std::unique_ptr<IRendererPrimitive> rendererPrimitive() = 0;
     virtual std::unique_ptr<IWindowPrimitive> windowPrimitive() = 0;
+    virtual ~IBackendContext() = default;
 };
 /**
  * @brief This interface represents a renderer of drawables on the screen.
@@ -35,6 +35,7 @@ struct IRenderer
     virtual void render(Drawable *drawable) = 0;
 
     virtual IRendererPrimitive *primitive() = 0;
+    virtual ~IRenderer() = default;
 };
 
 struct IWindow
@@ -42,6 +43,7 @@ struct IWindow
     virtual void clear(glm::u8vec4 color) = 0;
 
     virtual void present() = 0;
+    virtual ~IWindow() = default;
 };
 
 /**
@@ -61,4 +63,5 @@ struct IDrawablePrimitive
      */
 
     virtual void paintWithRendererPrimitive(IRendererPrimitive *primitive) = 0;
+    virtual ~IDrawablePrimitive() = default;
 };

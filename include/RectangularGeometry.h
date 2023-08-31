@@ -10,9 +10,7 @@ class RectangularGeometry
 
     RectangularGeometry &operator=(const RectangularGeometry &) = default;
 
-    virtual ~RectangularGeometry()
-    {
-    }
+    virtual ~RectangularGeometry() = default;
 
     [[nodiscard]] int width() const
     {

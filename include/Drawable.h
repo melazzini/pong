@@ -15,9 +15,7 @@ class Drawable
 
     virtual void draw() = 0;
 
-    virtual ~Drawable()
-    {
-    }
+    virtual ~Drawable() = default;
 
   protected:
     std::unique_ptr<IDrawablePrimitive> m_primitive;

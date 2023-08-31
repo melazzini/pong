@@ -8,9 +8,7 @@ class Movable
     {
     }
 
-    virtual ~Movable()
-    {
-    }
+    virtual ~Movable() = default;
 
     [[nodiscard]] glm::ivec2 position() const
     {
