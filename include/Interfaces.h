@@ -1,85 +1,9 @@
 #pragma once
+#include "EventManagementInterface.h"
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 #include <memory>
 
-enum class EventType
-{
-    QUIT,
-    ARROW_KEYS_PRESSED
-};
-
-enum class ArrowKey
-{
-    LEFT,
-    RIGHT,
-    UP,
-    DOWN
-};
-
-struct IEvent
-{
-    virtual EventType eventType() const = 0;
-    ~IEvent() = default;
-};
-
-class EventQuit : public IEvent
-{
-  public:
-    EventType eventType() const override
-    {
-        return EventType::QUIT;
-    }
-};
-class ArrowKeyPressed : public IEvent
-{
-  public:
-    ArrowKeyPressed(ArrowKey key) : m_key(key)
-    {
-    }
-    EventType eventType() const override
-    {
-        return EventType::ARROW_KEYS_PRESSED;
-    }
-
-    ArrowKey key() const
-    {
-        return m_key;
-    }
-
-  private:
-    ArrowKey m_key;
-};
-
-struct IListener
-{
-    virtual EventType eventType() const = 0;
-
-    virtual void onEvent(const IEvent &event) = 0;
-};
-
-struct IEventManager
-{
-    virtual void registerListener(IListener *) = 0;
-    [[nodiscard]] virtual bool isListenerRegistered(IListener *listener) const = 0;
-    [[nodiscard]] virtual bool eventQueueHasEventType(EventType eventType) const = 0;
-    [[nodiscard]] virtual bool isEventQueueEmpty() const = 0;
-    virtual void pollEvents() = 0;
-    virtual void enqueueEvent(std::unique_ptr<IEvent> event) = 0;
-    virtual void dispatchEvents() = 0;
-};
-
-struct IEventManagerPrimitive
-{
-    virtual void pollEvents(IEventManager &) const = 0;
-};
-namespace backendContext
-{
-struct IEventManagerPrimitiveProvider
-{
-    virtual std::unique_ptr<IEventManagerPrimitive> provide() const = 0;
-};
-} // namespace backendContext
 struct Drawable;
 struct IRendererPrimitive
 {
