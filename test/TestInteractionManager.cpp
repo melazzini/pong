@@ -1,3 +1,4 @@
+#include "InteractionManager.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -6,34 +7,6 @@
 using testing::Eq;
 using testing::Mock;
 using testing::Ne;
-
-class IInteraction
-{
-};
-
-class IInteractionListener
-{
-};
-
-class InteractionManager
-{
-  public:
-    void addIInteraction(IInteraction *interaction, IInteractionListener *)
-    {
-        if (!interaction)
-        {
-            throw std::runtime_error{"Attempt to add a null interaction!"};
-        }
-        m_interactions.push_back(interaction);
-    }
-    bool hasIInteraction(IInteraction *interaction)
-    {
-        return std::find(std::begin(m_interactions), std::end(m_interactions), interaction) != std::end(m_interactions);
-    }
-
-  private:
-    std::vector<IInteraction *> m_interactions;
-};
 
 TEST(AnIInteractionManager, CanAddIInteractions)
 {
