@@ -8,19 +8,21 @@ using testing::Eq;
 using testing::Mock;
 using testing::Ne;
 
-TEST(AnIInteractionManager, CanAddIInteractions)
+struct AnInteractionManager : testing::Test
 {
-    InteractionManager interactionManager;
+    InteractionManager interactionManager{};
     IInteraction dummyIInteraction{};
-    IInteractionListener listener{};
+    IInteractionListener dummylistener{};
+};
+
+TEST_F(AnInteractionManager, CanAddIInteractions)
+{
     ASSERT_FALSE(interactionManager.hasIInteraction(&dummyIInteraction));
-    interactionManager.addIInteraction(&dummyIInteraction, &listener);
+    interactionManager.addIInteraction(&dummyIInteraction, &dummylistener);
     ASSERT_TRUE(interactionManager.hasIInteraction(&dummyIInteraction));
 }
 
-TEST(AnIInteractionManager, ThrowsIfYouPassItANullInteraction)
+TEST_F(AnInteractionManager, ThrowsIfYouPassItANullInteraction)
 {
-    InteractionManager interactionManager;
-    IInteractionListener listener{};
-    ASSERT_THROW(interactionManager.addIInteraction(nullptr, &listener), std::runtime_error);
+    ASSERT_THROW(interactionManager.addIInteraction(nullptr, &dummylistener), std::runtime_error);
 }
