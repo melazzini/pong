@@ -1,4 +1,5 @@
 #include "../include/InteractionManager.h"
+#include <memory>
 #include <optional>
 
 #include <algorithm>
@@ -25,9 +26,10 @@ void InteractionManager::handleInteractions() const
 {
     for (auto listenerInteractionPair : m_interactions)
     {
-        if (std::optional<InteractionInfo> info{listenerInteractionPair.second->checkInteraction()}; info.has_value())
+        if (std::optional<std::unique_ptr<IInteractionInfo>> info{listenerInteractionPair.second->checkInteraction()};
+            info.has_value())
         {
-            listenerInteractionPair.first->onInteraction(info.value());
+            listenerInteractionPair.first->onInteraction(std::move(info.value()));
         }
     }
 }

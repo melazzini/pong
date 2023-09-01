@@ -6,6 +6,7 @@
 #include <optional>
 #include <stdexcept>
 
+using testing::Action;
 using testing::Eq;
 using testing::Mock;
 using testing::Ne;
@@ -13,12 +14,12 @@ using testing::Return;
 
 struct DummyInteractionListener : IInteractionListener
 {
-    MOCK_METHOD(void, onInteraction, (const InteractionInfo &), (override));
+    MOCK_METHOD(void, onInteraction, (std::unique_ptr<IInteractionInfo>), (override));
 };
 
 struct DummyInteraction : IInteraction
 {
-    MOCK_METHOD(std::optional<InteractionInfo>, checkInteraction, (), (const override));
+    MOCK_METHOD(std::optional<std::unique_ptr<IInteractionInfo>>, checkInteraction, (), (const override));
 };
 
 struct AnInteractionManager : testing::Test
@@ -50,9 +51,12 @@ TEST_F(AnInteractionManager, UsesTheInteractionObjectItselfToCheckForInteraction
 TEST_F(AnInteractionManager,
        NotifiesTheCorrespondingListenerAboutAnInteractionWithAnInteractionInfoObtainedFromInteractionObject)
 {
-    InteractionInfo dummyInteractionInfo{};
+    auto dummyInteractionInfo{std::make_unique<IInteractionInfo>()};
+    auto dummyInteractionInfoSpy{dummyInteractionInfo.get()};
     interactionManager.addIInteraction(&dummyInteraction, &dummylistener);
-    EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(dummyInteractionInfo));
-    EXPECT_CALL(dummylistener, onInteraction(dummyInteractionInfo));
+    EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(std::move(dummyInteractionInfo)));
+    EXPECT_CALL(dummylistener, onInteraction).WillOnce([dummyInteractionInfoSpy](const auto &receivedValue) {
+        ASSERT_THAT(receivedValue.get(), Eq(dummyInteractionInfoSpy));
+    });
     interactionManager.handleInteractions();
 }

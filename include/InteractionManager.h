@@ -1,25 +1,21 @@
 #pragma once
+#include <memory>
 #include <optional>
 #include <tuple>
 #include <utility>
 #include <vector>
-class InteractionInfo
+class IInteractionInfo
 {
 };
 
-inline bool operator==(const InteractionInfo &a, const InteractionInfo &b)
-{
-    return true;
-}
-
 struct IInteraction
 {
-    [[nodiscard]] virtual std::optional<InteractionInfo> checkInteraction() const = 0;
+    [[nodiscard]] virtual std::optional<std::unique_ptr<IInteractionInfo>> checkInteraction() const = 0;
 };
 
 struct IInteractionListener
 {
-    virtual void onInteraction(const InteractionInfo &info) = 0;
+    virtual void onInteraction(std::unique_ptr<IInteractionInfo> info) = 0;
 };
 
 class InteractionManager
