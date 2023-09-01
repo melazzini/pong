@@ -7,6 +7,11 @@ class InteractionInfo
 {
 };
 
+inline bool operator==(const InteractionInfo &a, const InteractionInfo &b)
+{
+    return true;
+}
+
 struct IInteraction
 {
     [[nodiscard]] virtual std::optional<InteractionInfo> checkInteraction() const = 0;

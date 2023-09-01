@@ -47,10 +47,12 @@ TEST_F(AnInteractionManager, UsesTheInteractionObjectItselfToCheckForInteraction
     interactionManager.handleInteractions();
 }
 
-TEST_F(AnInteractionManager, NotifiesTheCorrespondingListenerAboutAnInteraction)
+TEST_F(AnInteractionManager,
+       NotifiesTheCorrespondingListenerAboutAnInteractionWithAnInteractionInfoObtainedFromInteractionObject)
 {
+    InteractionInfo dummyInteractionInfo{};
     interactionManager.addIInteraction(&dummyInteraction, &dummylistener);
-    EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(InteractionInfo{}));
-    EXPECT_CALL(dummylistener, onInteraction);
+    EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(dummyInteractionInfo));
+    EXPECT_CALL(dummylistener, onInteraction(dummyInteractionInfo));
     interactionManager.handleInteractions();
 }
