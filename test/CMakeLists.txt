@@ -6,7 +6,7 @@ find_package(GLM REQUIRED)
 
 find_package(SDL2 REQUIRED)
 
-add_executable(cpptest TestMovable.cpp TestRectangularGeometry.cpp TestBox.cpp ../src/Renderer.cpp ../src/Window.cpp ../src/EventManager.cpp TestRenderer.cpp TestWindow.cpp TestEventManager.cpp)
+add_executable(cpptest TestMovable.cpp TestRectangularGeometry.cpp TestBox.cpp TestInteractionManager.cpp ../src/Renderer.cpp ../src/Window.cpp ../src/EventManager.cpp TestRenderer.cpp TestWindow.cpp TestEventManager.cpp)
 
 target_include_directories(cpptest PRIVATE ${GLM_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/include ${SDL2_INCLUDE_DIRS})
 
