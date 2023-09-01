@@ -1,4 +1,5 @@
 #include "../include/InteractionManager.h"
+#include <optional>
 
 #include <algorithm>
 #include <stdexcept>
@@ -24,9 +25,9 @@ void InteractionManager::handleInteractions() const
 {
     for (auto listenerInteractionPair : m_interactions)
     {
-        if (listenerInteractionPair.second->checkInteraction())
+        if (std::optional<InteractionInfo> info{listenerInteractionPair.second->checkInteraction()}; info.has_value())
         {
-            listenerInteractionPair.first->onInteraction(InteractionInfo{});
+            listenerInteractionPair.first->onInteraction(info.value());
         }
     }
 }

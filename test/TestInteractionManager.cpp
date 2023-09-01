@@ -3,6 +3,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
+#include <optional>
 #include <stdexcept>
 
 using testing::Eq;
@@ -17,7 +18,7 @@ struct DummyInteractionListener : IInteractionListener
 
 struct DummyInteraction : IInteraction
 {
-    MOCK_METHOD(bool, checkInteraction, (), (const override));
+    MOCK_METHOD(std::optional<InteractionInfo>, checkInteraction, (), (const override));
 };
 
 struct AnInteractionManager : testing::Test
@@ -49,7 +50,7 @@ TEST_F(AnInteractionManager, UsesTheInteractionObjectItselfToCheckForInteraction
 TEST_F(AnInteractionManager, NotifiesTheCorrespondingListenerAboutAnInteraction)
 {
     interactionManager.addIInteraction(&dummyInteraction, &dummylistener);
-    EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(true));
+    EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(InteractionInfo{}));
     EXPECT_CALL(dummylistener, onInteraction);
     interactionManager.handleInteractions();
 }

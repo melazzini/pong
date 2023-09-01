@@ -1,15 +1,15 @@
 #pragma once
+#include <optional>
 #include <tuple>
 #include <utility>
 #include <vector>
+class InteractionInfo
+{
+};
 
 struct IInteraction
 {
-    [[nodiscard]] virtual bool checkInteraction() const = 0;
-};
-
-class InteractionInfo
-{
+    [[nodiscard]] virtual std::optional<InteractionInfo> checkInteraction() const = 0;
 };
 
 struct IInteractionListener
