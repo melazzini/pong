@@ -16,3 +16,11 @@ void InteractionManager::addIInteraction(IInteraction *interaction, IInteraction
     }
     m_interactions.push_back(interaction);
 }
+
+void InteractionManager::handleInteractions() const
+{
+    for (auto interaction : m_interactions)
+    {
+        interaction->checkInteraction();
+    }
+}
