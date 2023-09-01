@@ -1,4 +1,6 @@
 #pragma once
+#include <tuple>
+#include <utility>
 #include <vector>
 
 struct IInteraction
@@ -6,8 +8,13 @@ struct IInteraction
     [[nodiscard]] virtual bool checkInteraction() const = 0;
 };
 
-class IInteractionListener
+class InteractionInfo
 {
+};
+
+struct IInteractionListener
+{
+    virtual void onInteraction(const InteractionInfo &info) = 0;
 };
 
 class InteractionManager
@@ -18,5 +25,5 @@ class InteractionManager
     void handleInteractions() const;
 
   private:
-    std::vector<IInteraction *> m_interactions;
+    std::vector<std::pair<IInteractionListener *, IInteraction *>> m_interactions;
 };

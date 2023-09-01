@@ -8,6 +8,12 @@
 using testing::Eq;
 using testing::Mock;
 using testing::Ne;
+using testing::Return;
+
+struct DummyInteractionListener : IInteractionListener
+{
+    MOCK_METHOD(void, onInteraction, (const InteractionInfo &), (override));
+};
 
 struct DummyInteraction : IInteraction
 {
@@ -18,7 +24,7 @@ struct AnInteractionManager : testing::Test
 {
     InteractionManager interactionManager{};
     DummyInteraction dummyInteraction{};
-    IInteractionListener dummylistener{};
+    DummyInteractionListener dummylistener{};
 };
 
 TEST_F(AnInteractionManager, CanAddIInteractions)
@@ -40,3 +46,10 @@ TEST_F(AnInteractionManager, UsesTheInteractionObjectItselfToCheckForInteraction
     interactionManager.handleInteractions();
 }
 
+TEST_F(AnInteractionManager, NotifiesTheCorrespondingListenerAboutAnInteraction)
+{
+    interactionManager.addIInteraction(&dummyInteraction, &dummylistener);
+    EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(true));
+    EXPECT_CALL(dummylistener, onInteraction);
+    interactionManager.handleInteractions();
+}
