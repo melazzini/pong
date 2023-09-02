@@ -1,7 +1,7 @@
+#include "BoxDrawablePrimitiveSDL.h"
 #include "BackendContextSDL.h"
-#include "BoxDrawablePrimitive.h"
 
-void BoxDrawablePrimitive::paintWithRendererPrimitive(IRendererPrimitive *primitive)
+void BoxDrawablePrimitiveSDL::paintWithRendererPrimitive(IRendererPrimitive *primitive)
 {
     auto rendererPimpl{static_cast<BackendContextSDL::RendererPrimitive *>(primitive)};
 

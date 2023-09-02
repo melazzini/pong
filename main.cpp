@@ -1,9 +1,9 @@
 #include "BackendContextSDL.h"
-#include "Box.h"
 #include "EventManager.h"
 #include "Interfaces.h"
 #include "Renderer.h"
 #include "Window.h"
+#include "examples/SimpleDrawables.h"
 #include <iostream>
 #include <memory>
 using namespace std;
@@ -32,16 +32,10 @@ int main()
     auto window = Window::getInstance(engine);
     auto backendEventMangerPrimitiveProdiver{EventManagerPrimitiveProviderSDL()};
     auto eventManager{EventManager::getInstance(&backendEventMangerPrimitiveProdiver)};
-
     auto rendererSDL{Renderer::getInstance(engine)};
 
-    Paddle paddle{};
-    paddle.resize(20, 100);
-
-    Ball ball{};
-    ball.resize(40, 40);
-
-    ball.setPosition(glm::ivec2{300, 300});
+    Paddle paddle{glm::ivec2{0, 0}, RectangularGeometry{20, 100}};
+    Ball ball{glm::ivec2{100, 300}, 20};
 
     auto quitEventListener{std::make_unique<QuitEventListener>()};
 

@@ -1,5 +1,6 @@
 #pragma once
 #include "Interfaces.h"
+
 #include <glm/glm.hpp>
 
 struct BoxDrawablePrimitiveSDL : IDrawablePrimitive
