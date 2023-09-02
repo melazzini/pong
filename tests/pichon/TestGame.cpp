@@ -32,3 +32,9 @@ TEST(TheGame, InitiallyIsNotRunning)
     Game game{};
     ASSERT_FALSE(game.isRunning());
 }
+
+TEST(TheGame, ByDefaultStartsWithTheWindowSizeGivenInTheGameConfigurationsFileAs_WINDOW_SIZE)
+{
+    Game game{};
+    ASSERT_THAT(game.windowSize(), Eq(WINDOW_SIZE));
+}

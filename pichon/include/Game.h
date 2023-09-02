@@ -1,10 +1,12 @@
 #pragma once
 #include "RectangularGeometry.h"
 
+static const RectangularGeometry WINDOW_SIZE{600, 400};
+
 class Game
 {
   public:
-    Game(RectangularGeometry windowSize = RectangularGeometry{}) : m_running{false}, m_windowSize{windowSize}
+    Game(RectangularGeometry windowSize = WINDOW_SIZE) : m_running{false}, m_windowSize{windowSize}
     {
     }
     void setRunning(bool trueFalse)
