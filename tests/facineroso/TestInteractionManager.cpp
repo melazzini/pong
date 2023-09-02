@@ -1,15 +1,11 @@
 #include "InteractionManager.h"
-#include "gmock/gmock.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
 #include <optional>
 #include <stdexcept>
 
-using testing::Action;
 using testing::Eq;
-using testing::Mock;
-using testing::Ne;
 using testing::Return;
 
 struct DummyInteractionListener : IInteractionListener
