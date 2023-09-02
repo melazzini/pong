@@ -28,7 +28,6 @@ struct AnInteractionManager : testing::Test
     DummyInteraction dummyInteraction{};
     DummyInteractionListener dummylistener{};
     std::unique_ptr<IInteractionInfo> dummyInteractionInfo{std::make_unique<IInteractionInfo>()};
-    IInteractionInfo *dummyInteractionInfoSpy{dummyInteractionInfo.get()};
 };
 
 TEST_F(AnInteractionManager, CanAddIInteractions)
@@ -53,10 +52,12 @@ TEST_F(AnInteractionManager, UsesTheInteractionObjectItselfToCheckForInteraction
 TEST_F(AnInteractionManager,
        NotifiesTheCorrespondingListenerAboutAnInteractionWithAnInteractionInfoObtainedFromInteractionObject)
 {
+    IInteractionInfo *dummyInteractionInfoSpy{dummyInteractionInfo.get()};
     interactionManager.addIInteraction(&dummyInteraction, &dummylistener);
     EXPECT_CALL(dummyInteraction, checkInteraction).WillOnce(Return(std::move(dummyInteractionInfo)));
-    EXPECT_CALL(dummylistener, onInteraction).WillOnce([spy = dummyInteractionInfoSpy](const auto &receivedValue) {
-        ASSERT_THAT(receivedValue.get(), Eq(spy));
-    });
+    EXPECT_CALL(dummylistener, onInteraction)
+        .WillOnce([spy = dummyInteractionInfoSpy](const auto &receivedDummyInteractionInfo) {
+            ASSERT_THAT(receivedDummyInteractionInfo.get(), Eq(spy));
+        });
     interactionManager.handleInteractions();
 }
