@@ -1,13 +1,9 @@
-#include "include/BackendContextSDL.h"
-#include "include/Box.h"
-#include "include/EventManager.h"
-#include "include/Interfaces.h"
-#include "include/Renderer.h"
-#include "include/Window.h"
-#include <SDL2/SDL.h>
-#include <SDL_events.h>
-#include <SDL_keycode.h>
-#include <glm/fwd.hpp>
+#include "BackendContextSDL.h"
+#include "Box.h"
+#include "EventManager.h"
+#include "Interfaces.h"
+#include "Renderer.h"
+#include "Window.h"
 #include <iostream>
 #include <memory>
 using namespace std;

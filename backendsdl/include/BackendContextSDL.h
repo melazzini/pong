@@ -1,11 +1,8 @@
 #pragma once
 #include "BackendContextInterface.h"
-#include "EventManager.h"
 #include "Events.h"
 #include "Interfaces.h"
 #include <SDL2/SDL.h>
-#include <SDL_events.h>
-#include <SDL_video.h>
 #include <iostream>
 #include <memory>
 #include <stdexcept>

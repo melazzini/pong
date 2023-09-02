@@ -1,5 +1,4 @@
-#include "../include/BackendContextSDL.h"
-#include <iostream>
+#include "BackendContextSDL.h"
 
 BackendContextSDL *BackendContextSDL::getInstance()
 {

@@ -1,5 +1,5 @@
-#include "../include/BackendContextSDL.h"
-#include "../include/BoxDrawablePrimitive.h"
+#include "BackendContextSDL.h"
+#include "BoxDrawablePrimitive.h"
 
 void BoxDrawablePrimitive::paintWithRendererPrimitive(IRendererPrimitive *primitive)
 {
