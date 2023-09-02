@@ -2,6 +2,7 @@
 class RectangularGeometry
 {
   public:
+    explicit RectangularGeometry() = default;
     RectangularGeometry(int w, int h) : m_w{w}, m_h{h}
     {
     }
@@ -36,6 +37,11 @@ class RectangularGeometry
     void setHeight(int h)
     {
         m_h = h;
+    }
+
+    bool operator==(const RectangularGeometry &other) const
+    {
+        return ((other.m_h == this->m_h) && (other.m_w == this->m_w));
     }
 
   private:
