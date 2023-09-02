@@ -1,4 +1,5 @@
 #pragma once
+#include "RectangularGeometry.h"
 
 class Game
 {
@@ -11,6 +12,11 @@ class Game
     [[nodiscard]] bool isRunning() const
     {
         return m_running;
+    }
+
+    [[nodiscard]] RectangularGeometry windowSize() const
+    {
+        return RectangularGeometry{0, 0};
     }
 
   private:
