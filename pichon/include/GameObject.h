@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include <algorithm>
 #include <memory>
 #include <vector>
 
@@ -37,6 +38,16 @@ struct GameObject
 
         return false;
     }
+
+    void updateComponents(float deltatime)
+    {
+        for (auto &component : m_components)
+        {
+            component->update(deltatime);
+        }
+    }
+
+    virtual ~GameObject() = default;
 
   protected:
     std::vector<std::unique_ptr<Component>> m_components;
