@@ -42,10 +42,10 @@ class TransformComponent : public Component
     RectangularGeometry m_size;
 };
 
-class ConstraintTransformComponent : public TransformComponent
+class ConstrainedTransformComponent : public TransformComponent
 {
   public:
-    ConstraintTransformComponent(
+    ConstrainedTransformComponent(
         glm::ivec2 initialPosition, RectangularGeometry initialSize,
         std::function<glm::ivec2(std::pair<const glm::ivec2 &, const glm::ivec2 &>)> positionConstraint)
         : TransformComponent(initialPosition, initialSize), m_constraintNewPosition{std::move(positionConstraint)}

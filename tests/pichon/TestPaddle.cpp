@@ -1,3 +1,4 @@
+#include "DrawableComponent.h"
 #include "Game.h"
 #include "Paddle.h"
 #include "TransformComponent.h"
@@ -8,6 +9,18 @@
 
 using testing::Eq;
 using testing::Ne;
+
+TEST(ThePaddle, HasConstrainedTransformComponent)
+{
+    Paddle paddle{};
+    ASSERT_TRUE(paddle.hasComponent<ConstrainedTransformComponent>());
+}
+
+TEST(ThePaddle, HasDrawableComponent)
+{
+    Paddle paddle{};
+    ASSERT_TRUE(paddle.hasComponent<DrawableComponent>());
+}
 
 TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)
 {
