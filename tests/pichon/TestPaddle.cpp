@@ -23,11 +23,15 @@ TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreen)
     ASSERT_THAT(paddle.component<TransformComponent>().position().y, Eq(game.windowSize().height() / 2));
 }
 
-TEST(ThePaddle, CanChangeItsPosition)
+struct APaddle : testing::Test
 {
     Paddle paddle{};
+    glm::ivec2 dummyPosition{10, 100};
+};
 
-    ASSERT_THAT(paddle.component<TransformComponent>().position(), Ne(glm::ivec2{10, 100}));
-    paddle.component<TransformComponent>().setPosition(glm::ivec2{10, 100});
-    ASSERT_THAT(paddle.component<TransformComponent>().position(), Eq(glm::ivec2{10, 100}));
+TEST_F(APaddle, CanChangeItsPosition)
+{
+    ASSERT_THAT(paddle.component<TransformComponent>().position(), Ne(dummyPosition));
+    paddle.component<TransformComponent>().setPosition(dummyPosition);
+    ASSERT_THAT(paddle.component<TransformComponent>().position(), Eq(dummyPosition));
 }
