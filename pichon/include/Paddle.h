@@ -1,16 +1,8 @@
 #pragma once
-#include <memory>
-class TransformComponent;
+#include "GameObject.h"
 
-class Paddle
+class Paddle : public GameObject
 {
   public:
     explicit Paddle();
-    template <typename ComponentT> [[nodiscard]] ComponentT &component()
-    {
-        return *m_transform;
-    }
-
-  private:
-    std::unique_ptr<TransformComponent> m_transform;
 };
