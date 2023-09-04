@@ -16,7 +16,7 @@ TEST(ThePaddle, HasConstrainedTransformComponent)
     ASSERT_TRUE(paddle.hasComponent<ConstrainedTransformComponent>());
 }
 
-TEST(ThePaddle, HasDrawableComponent)
+TEST(ThePaddle, HasSimpleRectangularShapeComponent)
 {
     Paddle paddle{};
     ASSERT_TRUE(paddle.hasComponent<DrawableComponent>());
