@@ -6,35 +6,35 @@
 using testing::Eq;
 using testing::Ne;
 
-TEST(TheGame, KnowsIfItsRunning)
+TEST(AGame, IsASingleton)
 {
-    Game game{};
-    game.setRunning(true);
-    ASSERT_TRUE(game.isRunning());
+    Game *game1 = Game::getInstance();
+    Game *game2 = Game::getInstance();
+    ASSERT_TRUE(game1 != nullptr);
+    ASSERT_THAT(game1, Eq(game2));
 }
 
-TEST(TheGame, CanChangeItsWindowSize)
+struct TheGame : testing::Test
 {
-    Game game{};
-    ASSERT_THAT(game.windowSize(), Ne(RectangularGeometry{200, 200}));
-    game.setWindowSize(RectangularGeometry{200, 200});
-    ASSERT_THAT(game.windowSize(), Eq(RectangularGeometry{200, 200}));
+    Game *game{};
+    void SetUp() override
+    {
+        game = Game::getInstance();
+    }
+};
+
+TEST_F(TheGame, KnowsIfItsRunning)
+{
+    game->setRunning(true);
+    ASSERT_TRUE(game->isRunning());
+    game->setRunning(false);
+    ASSERT_FALSE(game->isRunning());
 }
 
-TEST(TheGame, RemembersItsInitialWindowSize)
+TEST_F(TheGame, CanChangeItsWindowSize)
 {
-    Game game{RectangularGeometry{600, 400}};
-    ASSERT_THAT(game.windowSize(), Eq(RectangularGeometry{600, 400}));
+    ASSERT_THAT(game->windowSize(), Ne(RectangularGeometry{200, 200}));
+    game->setWindowSize(RectangularGeometry{200, 200});
+    ASSERT_THAT(game->windowSize(), Eq(RectangularGeometry{200, 200}));
 }
 
-TEST(TheGame, InitiallyIsNotRunning)
-{
-    Game game{};
-    ASSERT_FALSE(game.isRunning());
-}
-
-TEST(TheGame, ByDefaultStartsWithTheWindowSizeGivenInTheGameConfigurationsAs_WINDOW_SIZE)
-{
-    Game game{};
-    ASSERT_THAT(game.windowSize(), Eq(WINDOW_SIZE));
-}
