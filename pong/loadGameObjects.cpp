@@ -1,8 +1,9 @@
 #include "../pichon/include/Game.h"
+#include "Paddle.h"
 #include <iostream>
 
 bool Game::loadGameObjects()
 {
-    std::cout << "This is super Cool!!" << std::endl;
+    std::cout << "Loading game objects ..." << std::endl;
     return false;
 }

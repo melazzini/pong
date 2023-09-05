@@ -1,4 +1,5 @@
 #include "Game.h"
+#include "GameObject.h"
 #include "RectangularGeometry.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -38,3 +39,29 @@ TEST_F(TheGame, CanChangeItsWindowSize)
     ASSERT_THAT(game->windowSize(), Eq(RectangularGeometry{200, 200}));
 }
 
+struct DummyGameObject : GameObject
+{
+};
+
+TEST_F(TheGame, CanAddGameObjects)
+{
+    ASSERT_FALSE(game->hasGameObject("dummyGameObject"));
+    game->addGameObject(std::make_unique<DummyGameObject>(), "dummyGameObject");
+    ASSERT_TRUE(game->hasGameObject("dummyGameObject"));
+}
+
+TEST_F(TheGame, ReturnsFalseIfYouPassItANullGameObject)
+{
+    ASSERT_FALSE(game->addGameObject(nullptr, "dummy-dummyGameObject"));
+}
+TEST_F(TheGame, ReturnsFalseIfYouPassItADuplicatedTag)
+{
+    game->addGameObject(std::make_unique<DummyGameObject>(), "dummyGameObject");
+    ASSERT_FALSE(game->addGameObject(std::make_unique<DummyGameObject>(), "dummyGameObject"));
+}
+
+TEST_F(TheGame, DoesntStoreTheGameObjectIfItReturnsFalse)
+{
+    ASSERT_FALSE(game->addGameObject(nullptr, "dummy-dummy"));
+    ASSERT_FALSE(game->hasGameObject("dummy-dummy"));
+}
