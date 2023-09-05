@@ -1,7 +1,6 @@
 #include "Paddle.h"
-#include "DrawableComponent.h"
 #include "Game.h"
-#include "TransformComponent.h"
+#include "components.h"
 #include <memory>
 
 Paddle::Paddle()
@@ -14,4 +13,5 @@ Paddle::Paddle()
 
     auto drawableComponent{addComponent<RectangularShapeComponent>()};
     auto inputComponent{addComponent<InputComponent>()};
+    auto boxColliderComponent{addComponent<BoxColliderComponent>()};
 }

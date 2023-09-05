@@ -1,8 +1,5 @@
 #include "Game.h"
 #include "Paddle.h"
-#include "TransformComponent.h"
-#include "gmock/gmock.h"
-#include "gtest/gtest.h"
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>

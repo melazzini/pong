@@ -1,7 +1,5 @@
-#include "DrawableComponent.h"
 #include "Game.h"
 #include "Paddle.h"
-#include "TransformComponent.h"
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -16,7 +14,7 @@ TEST(ThePaddle, HasConstrainedTransformComponent)
     ASSERT_TRUE(paddle.hasComponent<ConstrainedTransformComponent>());
 }
 
-TEST(ThePaddle, HasSimpleRectangularShapeComponent)
+TEST(ThePaddle, HasRectangularShapeComponent)
 {
     Paddle paddle{};
     ASSERT_TRUE(paddle.hasComponent<RectangularShapeComponent>());
@@ -26,6 +24,12 @@ TEST(ThePaddle, HasInputComponent)
 {
     Paddle paddle;
     ASSERT_TRUE(paddle.hasComponent<InputComponent>());
+}
+
+TEST(ThePaddle, HasBoxColliderComponent)
+{
+    Paddle paddle;
+    ASSERT_TRUE(paddle.hasComponent<BoxColliderComponent>());
 }
 
 TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)

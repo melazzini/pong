@@ -1,5 +1,5 @@
 #pragma once
-#include "Component.h"
+#include "components.h"
 #include <algorithm>
 #include <memory>
 #include <vector>

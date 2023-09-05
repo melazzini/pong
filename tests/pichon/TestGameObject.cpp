@@ -1,5 +1,5 @@
-#include "Component.h"
 #include "GameObject.h"
+#include "components.h"
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
