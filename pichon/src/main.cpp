@@ -1,9 +1,9 @@
-#include "BackendContextSDL.h"
+#include "../../backendsdl/include/BackendContextSDL.h"
+#include "../../examples/SimpleDrawables.h"
 #include "EventManager.h"
 #include "Interfaces.h"
 #include "Renderer.h"
 #include "Window.h"
-#include "examples/SimpleDrawables.h"
 #include <iostream>
 #include <memory>
 using namespace std;

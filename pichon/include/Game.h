@@ -6,9 +6,10 @@ static const RectangularGeometry WINDOW_SIZE{600, 400};
 class Game
 {
   public:
-    Game(RectangularGeometry windowSize = WINDOW_SIZE) : m_running{false}, m_windowSize{windowSize}
-    {
-    }
+    Game(RectangularGeometry windowSize = WINDOW_SIZE);
+
+    bool initialize();
+
     void setRunning(bool trueFalse)
     {
         m_running = trueFalse;
@@ -28,6 +29,8 @@ class Game
     {
         m_windowSize = newSize;
     }
+
+    // bool loadGameObjects();
 
   private:
     bool m_running;
