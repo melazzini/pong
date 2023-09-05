@@ -9,6 +9,13 @@ struct RectangularShapeComponent : Component
     }
 };
 
+struct InputComponent : Component
+{
+    void update(float deltatime) override
+    {
+    }
+};
+
 class Paddle : public GameObject
 {
   public:

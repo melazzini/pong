@@ -13,4 +13,5 @@ Paddle::Paddle()
         });
 
     auto drawableComponent{addComponent<RectangularShapeComponent>()};
+    auto inputComponent{addComponent<InputComponent>()};
 }

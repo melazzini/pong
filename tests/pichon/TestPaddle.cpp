@@ -22,6 +22,12 @@ TEST(ThePaddle, HasSimpleRectangularShapeComponent)
     ASSERT_TRUE(paddle.hasComponent<RectangularShapeComponent>());
 }
 
+TEST(ThePaddle, HasInputComponent)
+{
+    Paddle paddle;
+    ASSERT_TRUE(paddle.hasComponent<InputComponent>());
+}
+
 TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)
 {
     Game game{};
