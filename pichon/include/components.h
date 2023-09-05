@@ -1,5 +1,4 @@
 #pragma once
-
 #include "./components/BoxColliderComponent.h"
 #include "./components/Component.h"
 #include "./components/DrawableComponent.h"

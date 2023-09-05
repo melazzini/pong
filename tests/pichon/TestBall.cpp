@@ -1,5 +1,4 @@
-#include "Game.h"
-#include "Paddle.h"
+#include "Ball.h"
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -8,15 +7,22 @@
 using testing::Eq;
 using testing::Ne;
 
-class Ball : public GameObject
+TEST(TheBall, HasTransformComponent)
 {
-  public:
-    Ball()
-    {
-        auto transform = addComponent<TransformComponent>();
-        transform->setPosition(glm::ivec2{WINDOW_SIZE.width() / 2, WINDOW_SIZE.height() / 2});
-    }
-};
+    Ball ball{};
+    ASSERT_TRUE(ball.hasComponent<TransformComponent>());
+}
+TEST(TheBall, HasRectangularShapeComponent)
+{
+    Ball ball{};
+    ASSERT_TRUE(ball.hasComponent<RectangularShapeComponent>());
+}
+
+TEST(TheBall, HasBoxColliderComponent)
+{
+    Ball ball;
+    ASSERT_TRUE(ball.hasComponent<BoxColliderComponent>());
+}
 
 TEST(TheBall, StartsAtTheCenterOfTheScreen)
 {
