@@ -16,8 +16,11 @@ Game::Game(RectangularGeometry windowSize) : m_running{false}, m_windowSize{wind
 
 bool Game::initialize()
 {
-    loadGameObjects();
-    return false;
+    if (!loadGameObjects())
+    {
+        return false;
+    }
+    return true;
 }
 
 void Game::handleInput()
