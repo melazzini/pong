@@ -1,6 +1,7 @@
 aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} sources_in_curdir)
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR}/components/ sources_in_components)
 add_library(pichon "")
-target_sources(pichon PRIVATE ${sources_in_curdir})
+target_sources(pichon PRIVATE ${sources_in_curdir} ${sources_in_components})
 find_package(GLM REQUIRED)
 target_include_directories(pichon PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../include" "${CMAKE_SOURCE_DIR}/facineroso/include" "${GLM_INCLUDE_DIR}")
 target_link_libraries(pichon PRIVATE facineroso)

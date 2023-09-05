@@ -1,5 +1,7 @@
 #include "GameObject.h"
 #include "components/Component.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <stdexcept>
@@ -32,4 +34,13 @@ TEST(AComponent, ThrowsIfGivenANullComponentManager)
 {
     DummyGameObject gameObject;
     ASSERT_THROW(Component(&gameObject, nullptr), std::runtime_error);
+}
+
+TEST(AComponent, RemembersItsManager)
+{
+    DummyComponentManager componentManager;
+    DummyGameObject gameObject;
+    Component component{&gameObject, &componentManager};
+
+    ASSERT_THAT(component.manager(), Eq(&componentManager));
 }
