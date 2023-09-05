@@ -12,5 +12,5 @@ Paddle::Paddle()
             return glm::ivec2{oldNewPair.first.x, oldNewPair.second.y};
         });
 
-    auto drawableComponent{addComponent<DrawableComponent>()};
+    auto drawableComponent{addComponent<RectangularShapeComponent>()};
 }

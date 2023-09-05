@@ -19,7 +19,7 @@ TEST(ThePaddle, HasConstrainedTransformComponent)
 TEST(ThePaddle, HasSimpleRectangularShapeComponent)
 {
     Paddle paddle{};
-    ASSERT_TRUE(paddle.hasComponent<DrawableComponent>());
+    ASSERT_TRUE(paddle.hasComponent<RectangularShapeComponent>());
 }
 
 TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)

@@ -2,7 +2,7 @@
 #include "Component.h"
 #include "GameObject.h"
 
-struct SimpleRectShapeComponent : Component
+struct RectangularShapeComponent : Component
 {
     void update(float deltatime) override
     {
