@@ -9,6 +9,10 @@ class Game
 
   public:
     bool initialize();
+    void handleInput();
+    void update();
+    void output();
+    void destroy();
 
     void setRunning(bool trueFalse)
     {
@@ -30,8 +34,9 @@ class Game
         m_windowSize = newSize;
     }
 
+    bool loadGameObjects();
+
     static Game *getInstance();
-    // bool loadGameObjects();
 
   private:
     bool m_running;
