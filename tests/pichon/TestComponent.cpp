@@ -17,30 +17,29 @@ struct DummyComponentManager : ComponentManager
 {
 };
 
-TEST(AComponent, NeedsItsGameObjectAndComponentManagerInOrderToBeInitialized)
+struct AComponent : testing::Test
 {
     DummyComponentManager componentManager;
     DummyGameObject gameObject;
+};
+
+TEST_F(AComponent, NeedsItsGameObjectAndComponentManagerInOrderToBeInitialized)
+{
     Component component{&gameObject, &componentManager};
 }
 
-TEST(AComponent, ThrowsIfGivenANullGameObject)
+TEST_F(AComponent, ThrowsIfGivenANullGameObject)
 {
-    DummyComponentManager componentManager;
     ASSERT_THROW(Component(nullptr, &componentManager), std::runtime_error);
 }
 
-TEST(AComponent, ThrowsIfGivenANullComponentManager)
+TEST_F(AComponent, ThrowsIfGivenANullComponentManager)
 {
-    DummyGameObject gameObject;
     ASSERT_THROW(Component(&gameObject, nullptr), std::runtime_error);
 }
 
-TEST(AComponent, RemembersItsManager)
+TEST_F(AComponent, RemembersItsManager)
 {
-    DummyComponentManager componentManager;
-    DummyGameObject gameObject;
     Component component{&gameObject, &componentManager};
-
     ASSERT_THAT(component.manager(), Eq(&componentManager));
 }
