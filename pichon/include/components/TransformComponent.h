@@ -5,11 +5,16 @@
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
+class TransformComponentManager : public ComponentManager
+{
+};
+
 class TransformComponent : public Component
 {
   public:
-    TransformComponent(glm::ivec2 initialPosition = {}, RectangularGeometry initialSize = RectangularGeometry{})
-        : m_position{initialPosition}, m_size{initialSize}
+    TransformComponent(GameObject *owner, ComponentManager *manager, glm::ivec2 initialPosition = {},
+                       RectangularGeometry initialSize = RectangularGeometry{})
+        : Component(owner, manager), m_position{initialPosition}, m_size{initialSize}
     {
     }
 
@@ -46,9 +51,10 @@ class ConstrainedTransformComponent : public TransformComponent
 {
   public:
     ConstrainedTransformComponent(
-        glm::ivec2 initialPosition, RectangularGeometry initialSize,
+        GameObject *owner, ComponentManager *manager, glm::ivec2 initialPosition, RectangularGeometry initialSize,
         std::function<glm::ivec2(std::pair<const glm::ivec2 &, const glm::ivec2 &>)> positionConstraint)
-        : TransformComponent(initialPosition, initialSize), m_constraintNewPosition{std::move(positionConstraint)}
+        : TransformComponent(owner, manager, initialPosition, initialSize), m_constraintNewPosition{
+                                                                                std::move(positionConstraint)}
     {
     }
     void setPosition(glm::ivec2 newPosition)
