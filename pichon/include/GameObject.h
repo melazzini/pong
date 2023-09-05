@@ -1,5 +1,6 @@
 #pragma once
 #include "components.h"
+#include "components/Component.h"
 #include <algorithm>
 #include <memory>
 #include <vector>
@@ -48,6 +49,11 @@ struct GameObject
     }
 
     virtual ~GameObject() = default;
+
+    const std::vector<std::unique_ptr<Component>> &componentList() const
+    {
+        return m_components;
+    }
 
   protected:
     std::vector<std::unique_ptr<Component>> m_components;

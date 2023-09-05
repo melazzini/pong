@@ -52,6 +52,11 @@ bool Game::addGameObject(std::unique_ptr<GameObject> gameObject, std::string gam
         return false;
     }
 
+    for (auto &component : gameObject->componentList())
+    {
+        component->manager()->registerComponent(component.get());
+    }
+
     m_gameObjects.push_back({std::move(gameObject), gameObectTag});
 
     return true;

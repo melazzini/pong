@@ -1,7 +1,11 @@
 #pragma once
 
+struct Component;
 struct ComponentManager
 {
+    virtual void registerComponent(Component *)
+    {
+    }
     virtual ~ComponentManager() = default;
 };
 
