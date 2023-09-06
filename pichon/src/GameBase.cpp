@@ -29,7 +29,7 @@ void GameBase::update()
 
     for (auto manager : m_managers)
     {
-        if (dynamic_cast<IDrawableComponentManager *>(manager))
+        if (dynamic_cast<DrawableComponentManagerBase *>(manager))
         {
             continue;
         }
@@ -42,7 +42,7 @@ void GameBase::output()
     m_backend->window->clear(glm::u8vec4{});
     for (auto manager : m_managers)
     {
-        if (dynamic_cast<IDrawableComponentManager *>(manager))
+        if (dynamic_cast<DrawableComponentManagerBase *>(manager))
         {
             manager->update(deltatime_);
         }

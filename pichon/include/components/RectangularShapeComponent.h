@@ -3,10 +3,6 @@
 #include "components/DrawableComponent.h"
 #include <iostream>
 
-class RectangularShapeComponentManager : public IDrawableComponentManager
-{
-};
-
 class RectangularShapeComponent : public DrawableComponent
 {
   public:

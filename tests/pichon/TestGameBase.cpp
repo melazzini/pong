@@ -53,7 +53,7 @@ struct ADummyComponentManager : ComponentManager
     MOCK_METHOD(void, registerComponent, (Component *), (override));
     MOCK_METHOD(void, update, (float), (override));
 };
-struct ADummyDrawableComponentManager : IDrawableComponentManager
+struct ADummyDrawableComponentManager : DrawableComponentManagerBase
 {
     MOCK_METHOD(void, registerComponent, (Component *), (override));
     MOCK_METHOD(void, update, (float), (override));
@@ -185,7 +185,7 @@ TEST_F(AGameBase, OnlyRegisterOneInstanceOfAComponentManager)
 TEST_F(AGameBase, MakesTheNonDrawingComponentManagersUpdateWhenItUpdates)
 {
     game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject1");
-    ASSERT_TRUE(dynamic_cast<IDrawableComponentManager *>(&componenManager) == nullptr);
+    ASSERT_TRUE(dynamic_cast<DrawableComponentManagerBase *>(&componenManager) == nullptr);
     EXPECT_CALL(dummyTimer, sencondsSinceRestared).WillOnce(Return(10));
     EXPECT_CALL(componenManager, update).WillOnce([](float deltatime) { ASSERT_DOUBLE_EQ(deltatime, 10); });
     game->update();

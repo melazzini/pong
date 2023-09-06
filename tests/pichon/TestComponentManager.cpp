@@ -33,3 +33,8 @@ TEST(AComponentManager, UpdatesAllItsComponentsWhenYouUpdateIt)
     manager.update(0);
 }
 
+TEST(AComponentManager, CanBeInitializedToRefuseRegisteringCertainComponents)
+{
+    // FAIL();
+}
+

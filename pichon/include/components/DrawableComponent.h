@@ -16,22 +16,15 @@ class DrawableComponent : public Component
     }
 };
 
-class IDrawableComponentManager : public ComponentManager
+class DrawableComponentManagerBase : public ComponentManager
 {
   public:
-    IDrawableComponentManager()
-        : ComponentManager([](Component *component) { return dynamic_cast<DrawableComponent *>(component) != nullptr; })
+    DrawableComponentManagerBase()
     {
-    }
-    void update(float deltaTime) override
-    {
-        for (auto component : m_components)
-        {
-            component->update(deltaTime);
-        }
     }
 };
-class DrawableComponentManager : public IDrawableComponentManager
+
+class DrawableComponentManager : public DrawableComponentManagerBase
 {
   public:
     static DrawableComponentManager *getInstance();
