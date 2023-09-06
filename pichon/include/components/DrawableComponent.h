@@ -4,6 +4,11 @@
 
 class DrawableComponentManager : public ComponentManager
 {
+  public:
+    static DrawableComponentManager *getInstance();
+
+  private:
+    DrawableComponentManager() = default;
 };
 
 class DrawableComponent : public Component

@@ -3,6 +3,11 @@
 
 class BoxColliderComponentManager : public ComponentManager
 {
+  public:
+    static BoxColliderComponentManager *getInstance();
+
+  private:
+    BoxColliderComponentManager() = default;
 };
 
 struct BoxColliderComponent : Component

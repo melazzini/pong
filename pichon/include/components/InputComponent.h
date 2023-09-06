@@ -3,6 +3,11 @@
 
 class InputComponentManager : public ComponentManager
 {
+  public:
+    static InputComponentManager *getInstance();
+
+  private:
+    InputComponentManager() = default;
 };
 
 class InputComponent : public Component

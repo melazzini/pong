@@ -1,6 +1,8 @@
 #include "GameObject.h"
 #include "components/Component.h"
+#include "components/DrawableComponent.h"
 #include "components/TransformComponent.h"
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -10,10 +12,10 @@ using testing::Eq;
 using testing::Ne;
 using testing::Return;
 
-TEST(TheTransformComponentManager, IsASingleTon)
+TEST(TheDrawableComponentManager, IsASingleTon)
 {
-    TransformComponentManager *instance1{TransformComponentManager::getInstance()};
-    TransformComponentManager *instance2{TransformComponentManager::getInstance()};
+    DrawableComponentManager *instance1{DrawableComponentManager::getInstance()};
+    DrawableComponentManager *instance2{DrawableComponentManager::getInstance()};
     ASSERT_THAT(instance1, Ne(nullptr));
     ASSERT_THAT(instance1, Eq(instance2));
 }
