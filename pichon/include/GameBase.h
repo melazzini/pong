@@ -49,6 +49,8 @@ class GameBase
 
   protected:
     GameBackend *m_backend;
+
+  private:
     bool m_running;
     std::vector<std::pair<std::unique_ptr<GameObject>, std::string>> m_gameObjects;
     std::unordered_set<ComponentManager *> m_managers;

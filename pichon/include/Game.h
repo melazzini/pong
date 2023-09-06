@@ -1,5 +1,4 @@
 #pragma once
-#include "EventManagementInterface.h"
 #include "GameBase.h"
 #include "RectangularGeometry.h"
 

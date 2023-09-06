@@ -11,6 +11,7 @@ bool GameBase::initialize()
     {
         return false;
     }
+    m_running = true;
     return true;
 }
 

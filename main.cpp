@@ -19,7 +19,7 @@ int main()
 
     Game::GameBackend backend{window, rendererSDL, eventManager};
     auto game{Game::getInstance(&backend)};
-    if (!game || !game->initialize())
+    if (!game)
     {
         std::cerr << "Error while initializing the game!" << std::endl;
         return -1;
