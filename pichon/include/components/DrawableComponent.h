@@ -2,7 +2,10 @@
 #include "TransformComponent.h"
 #include "components/Component.h"
 
-class DrawableComponentManager : public ComponentManager
+struct IDrawableComponentManager : public ComponentManager
+{
+};
+class DrawableComponentManager : public IDrawableComponentManager
 {
   public:
     static DrawableComponentManager *getInstance();

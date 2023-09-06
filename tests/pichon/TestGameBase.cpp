@@ -5,6 +5,7 @@
 #include "GameObject.h"
 #include "Interfaces.h"
 #include "components/Component.h"
+#include "components/DrawableComponent.h"
 #include "gmock/gmock.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -52,9 +53,15 @@ struct ADummyComponentManager : ComponentManager
     MOCK_METHOD(void, registerComponent, (Component *), (override));
     MOCK_METHOD(void, update, (float), (override));
 };
+struct ADummyDrawableComponentManager : IDrawableComponentManager
+{
+    MOCK_METHOD(void, registerComponent, (Component *), (override));
+    MOCK_METHOD(void, update, (float), (override));
+};
+
 struct AGameBase : testing::Test
 {
-    DummyTimer dummyTimer;
+    NiceMock<DummyTimer> dummyTimer;
     DummyWindow window;
     DummyRenderer renderer;
     DummyEventManager eventManager;
@@ -174,11 +181,20 @@ TEST_F(AGameBase, OnlyRegisterOneInstanceOfAComponentManager)
     ASSERT_THAT(game->managers().size(), Eq(1));
 }
 
-TEST_F(AGameBase, MakesTheComponentManagersUpdateWhenItUpdates)
+TEST_F(AGameBase, MakesTheNonDrawingComponentManagersUpdateWhenItUpdates)
 {
-    InSequence s;
     game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject1");
+    ASSERT_TRUE(dynamic_cast<IDrawableComponentManager *>(&componenManager) == nullptr);
     EXPECT_CALL(dummyTimer, sencondsSinceRestared).WillOnce(Return(10));
     EXPECT_CALL(componenManager, update).WillOnce([](float deltatime) { ASSERT_DOUBLE_EQ(deltatime, 10); });
+    game->update();
+}
+
+TEST_F(AGameBase, DoesntMakeTheNonDrawingComponentManagersUpdateWhenItUpdates)
+{
+    NiceMock<ADummyDrawableComponentManager> dummyDrawableComponentManager;
+    game->addGameObject(std::make_unique<DummyGameObject>(&dummyDrawableComponentManager), "dummyGameObject");
+    ASSERT_TRUE(dynamic_cast<IDrawableComponentManager *>(&dummyDrawableComponentManager) != nullptr);
+    EXPECT_CALL(dummyDrawableComponentManager, update).Times(0);
     game->update();
 }

@@ -1,4 +1,5 @@
 #include "GameBase.h"
+#include "components/DrawableComponent.h"
 #include <iostream>
 
 GameBase::GameBase(GameBackend *backend) : m_backend(backend), m_running(false)
@@ -25,6 +26,10 @@ void GameBase::update()
     auto deltatime{(m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0};
     for (auto manager : m_managers)
     {
+        if (dynamic_cast<IDrawableComponentManager *>(manager))
+        {
+            continue;
+        }
         manager->update(deltatime);
     }
 }
