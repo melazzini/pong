@@ -1,19 +1,23 @@
 #pragma once
 #include "Component.h"
+#include "components/DrawableComponent.h"
+#include <iostream>
 
-class RectangularShapeComponentManager : public ComponentManager
+class RectangularShapeComponentManager : public IDrawableComponentManager
 {
 };
 
-class RectangularShapeComponent : public Component
+class RectangularShapeComponent : public DrawableComponent
 {
   public:
-    RectangularShapeComponent(GameObject *owner, ComponentManager *manager) : Component(owner, manager)
+    RectangularShapeComponent(GameObject *owner, ComponentManager *manager) : DrawableComponent(owner, manager)
     {
     }
 
     void update(float deltatime) override
     {
+        std::cout << "RectangularShapeComponent: " << __FUNCTION__ << std::endl;
+        std::cout << __FUNCTION__ << std::endl;
     }
 };
 
