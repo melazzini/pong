@@ -28,3 +28,11 @@ ComponentManager *Component::manager() const
 {
     return m_manager;
 }
+
+void ComponentManager::update(float deltatime)
+{
+    for (auto component : m_components)
+    {
+        component->update(deltatime);
+    }
+}

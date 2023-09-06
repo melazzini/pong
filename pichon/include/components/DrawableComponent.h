@@ -19,6 +19,10 @@ class DrawableComponent : public Component
 class IDrawableComponentManager : public ComponentManager
 {
   public:
+    IDrawableComponentManager()
+        : ComponentManager([](Component *component) { return dynamic_cast<DrawableComponent *>(component) != nullptr; })
+    {
+    }
     void update(float deltaTime) override
     {
         for (auto component : m_components)
@@ -26,18 +30,6 @@ class IDrawableComponentManager : public ComponentManager
             component->update(deltaTime);
         }
     }
-
-    void registerComponent(Component *component) override
-    {
-        std::cout << "IDrawableComponentManager: " << __FUNCTION__ << std::endl;
-        if (dynamic_cast<DrawableComponent *>(component))
-        {
-            m_components.push_back(component);
-        }
-    }
-
-  private:
-    std::vector<Component *> m_components;
 };
 class DrawableComponentManager : public IDrawableComponentManager
 {

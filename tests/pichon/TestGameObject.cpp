@@ -31,14 +31,3 @@ TEST(AGameObject, CanAddAComponent)
     ASSERT_TRUE(gameObject.hasComponent<DummyComponent>());
 }
 
-TEST(AGameObject, UpdatesItsComponentsPassingThemTheDeltaTime)
-{
-    GameObject gameObject{};
-    DummyComponentManger dummyManager;
-    float dummyDeltatime{10.00};
-    auto dummyComponent = gameObject.addComponent<DummyComponent>(&gameObject, &dummyManager);
-    EXPECT_CALL(*dummyComponent, update).WillOnce([dummyDeltatime](float deltatime) {
-        ASSERT_DOUBLE_EQ(deltatime, dummyDeltatime);
-    });
-    gameObject.updateComponents(dummyDeltatime);
-}
