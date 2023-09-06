@@ -19,6 +19,8 @@ class ComponentManager
         }
     }
 
+    bool hasComponent(Component *component) const;
+
     virtual void update(float deltatime);
 
     virtual ~ComponentManager() = default;

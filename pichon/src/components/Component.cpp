@@ -1,4 +1,6 @@
 #include "components/Component.h"
+#include <algorithm>
+#include <iterator>
 #include <stdexcept>
 
 Component::Component(GameObject *owner, ComponentManager *manager_) : m_manager(validateManager(manager_))
@@ -35,4 +37,9 @@ void ComponentManager::update(float deltatime)
     {
         component->update(deltatime);
     }
+}
+
+bool ComponentManager::hasComponent(Component *component) const
+{
+    return std::find(std::begin(m_components), std::end(m_components), component) != std::end(m_components);
 }

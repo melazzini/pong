@@ -17,6 +17,8 @@ struct MockComponent : Component
     }
 
     MOCK_METHOD(void, update, (float), (override));
+
+    bool badComponent{};
 };
 
 struct ADummyGameObject : GameObject
@@ -33,8 +35,23 @@ TEST(AComponentManager, UpdatesAllItsComponentsWhenYouUpdateIt)
     manager.update(0);
 }
 
-TEST(AComponentManager, CanBeInitializedToRefuseRegisteringCertainComponents)
+TEST(AComponentManager, CanBeSetupToRefuseRegisteringCertainComponents)
 {
-    // FAIL();
+    ComponentManager manager{[](Component *component) {
+        if (static_cast<MockComponent *>(component)->badComponent)
+        {
+            return false;
+        }
+        return true;
+    }};
+    ADummyGameObject gameObject;
+    MockComponent dummyComponent{&gameObject, &manager};
+    dummyComponent.badComponent = true;
+    ASSERT_FALSE(manager.hasComponent(&dummyComponent));
+    manager.registerComponent(&dummyComponent);
+    ASSERT_FALSE(manager.hasComponent(&dummyComponent));
+    dummyComponent.badComponent = false;
+    manager.registerComponent(&dummyComponent);
+    ASSERT_TRUE(manager.hasComponent(&dummyComponent));
 }
 
