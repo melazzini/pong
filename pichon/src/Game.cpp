@@ -13,13 +13,12 @@ Game *Game::getInstance(Game::GameBackend *backend)
     return &game;
 }
 
-Game::Game(Game::GameBackend *backend, RectangularGeometry windowSize)
-    : m_running{false}, m_windowSize{windowSize}, m_backend{backend}
+Game::Game(Game::GameBackend *backend, RectangularGeometry windowSize) : GameBase(backend), m_windowSize{windowSize}
 {
     std::cout << "Creating the game..." << std::endl;
 }
 
-bool Game::initialize()
+bool GameBase::initialize()
 {
     if (!loadGameObjects())
     {
@@ -28,19 +27,22 @@ bool Game::initialize()
     return true;
 }
 
-void Game::handleInput()
+void GameBase::handleInput()
 {
 }
 
-void Game::update()
+void GameBase::update()
 {
 }
 
-void Game::output()
+void GameBase::output()
 {
+    m_backend->window->clear(glm::u8vec4{});
+
+    m_backend->window->present();
 }
 
-void Game::destroy()
+void GameBase::destroy()
 {
     std::cout << "Bye!" << std::endl;
 }

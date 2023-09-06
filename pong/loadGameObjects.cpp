@@ -3,7 +3,7 @@
 #include <iostream>
 #include <memory>
 
-bool Game::loadGameObjects()
+bool GameBase::loadGameObjects()
 {
     std::cout << "Loading game objects ..." << std::endl;
 
