@@ -1,13 +1,11 @@
 #include "Drawable.h"
 #include "EventManagementInterface.h"
 #include "EventUtils.h"
-#include "Game.h"
+#include "GameBase.h"
 #include "GameObject.h"
 #include "Interfaces.h"
-#include "RectangularGeometry.h"
 #include "components/Component.h"
 #include "gmock/gmock.h"
-#include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -43,6 +41,10 @@ struct DummyEventManager : IEventManager
     MOCK_METHOD(void, dispatchEvents, (), (override));
 };
 
+struct ADummyComponentManager : ComponentManager
+{
+    MOCK_METHOD(void, registerComponent, (Component *), (override));
+};
 struct AGameBase : testing::Test
 {
     DummyWindow window;
@@ -50,6 +52,7 @@ struct AGameBase : testing::Test
     DummyEventManager eventManager;
     GameBase::GameBackend backend;
     std::unique_ptr<GameBase> game;
+    NiceMock<ADummyComponentManager> componenManager;
     void SetUp() override
     {
         backend.window = &window;
@@ -72,4 +75,92 @@ TEST_F(AGameBase, PollsTheSystemEventsWhenItHandlesInput)
 {
     EXPECT_CALL(eventManager, pollEvents);
     game->handleInput();
+}
+
+TEST_F(AGameBase, KnowsIfItsRunning)
+{
+    game->setRunning(true);
+    ASSERT_TRUE(game->isRunning());
+    game->setRunning(false);
+    ASSERT_FALSE(game->isRunning());
+}
+
+struct ADummyComponent : Component
+{
+    ADummyComponent(GameObject *owner, ComponentManager *manager) : Component(owner, manager)
+    {
+    }
+};
+
+struct DummyGameObject : GameObject
+{
+    DummyGameObject(ComponentManager *manager_)
+    {
+        addComponent<ADummyComponent>(this, manager_);
+    }
+
+    ADummyComponent *getDummyComponentSpy() const
+    {
+        return dynamic_cast<ADummyComponent *>(m_components.back().get());
+    }
+};
+
+TEST_F(AGameBase, CanAddGameObjects)
+{
+    ASSERT_FALSE(game->hasGameObject("dummyGameObject"));
+    game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject");
+    ASSERT_TRUE(game->hasGameObject("dummyGameObject"));
+}
+
+TEST_F(AGameBase, ReturnsFalseIfYouPassItANullGameObject)
+{
+    ASSERT_FALSE(game->addGameObject(nullptr, "dummy-dummyGameObject"));
+}
+
+TEST_F(AGameBase, ReturnsFalseIfYouPassItADuplicatedTag)
+{
+    game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject");
+    ASSERT_FALSE(game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject"));
+}
+
+TEST_F(AGameBase, DoesntStoreTheGameObjectIfItReturnsFalse)
+{
+    ASSERT_FALSE(game->addGameObject(nullptr, "dummy-dummy"));
+    ASSERT_FALSE(game->hasGameObject("dummy-dummy"));
+}
+
+TEST_F(AGameBase, PassesEachComponentToItsCorrespondingComponentManagerForTheGivenGameObject)
+{
+    auto gameObject = std::make_unique<DummyGameObject>(&componenManager);
+    EXPECT_CALL(componenManager, registerComponent)
+        .WillOnce(
+            [spy = gameObject->getDummyComponentSpy()](Component *component_) { ASSERT_THAT(component_, Eq(spy)); });
+
+    game->addGameObject(std::move(gameObject), "dummyGameObject");
+}
+
+TEST_F(AGameBase, RegistersTheComponentManagersOfTheGivenGameObject)
+{
+    auto gameObject = std::make_unique<DummyGameObject>(&componenManager);
+    ASSERT_FALSE(game->hasComponentManager(&componenManager));
+    game->addGameObject(std::move(gameObject), "dummyGameObject");
+    ASSERT_TRUE(game->hasComponentManager(&componenManager));
+}
+
+TEST_F(AGameBase, CanRemoveAllTheComponentManagers)
+{
+    auto gameObject = std::make_unique<DummyGameObject>(&componenManager);
+    game->addGameObject(std::move(gameObject), "dummyGameObject");
+    auto managersCount = game->managers().size();
+    ASSERT_THAT(game->managers().size(), Gt(0));
+    game->removeAllManagers();
+    ASSERT_THAT(game->managers().size(), Eq(0));
+}
+
+TEST_F(AGameBase, OnlyRegisterOneInstanceOfAComponentManager)
+{
+    game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject1");
+    game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject2");
+    auto managersCount = game->managers().size();
+    ASSERT_THAT(game->managers().size(), Eq(1));
 }
