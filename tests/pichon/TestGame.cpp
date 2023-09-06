@@ -10,6 +10,7 @@
 #include <utility>
 
 using testing::Eq;
+using testing::Gt;
 using testing::Mock;
 using testing::Ne;
 using testing::NiceMock;
@@ -34,6 +35,10 @@ struct TheGame : testing::Test
     void SetUp() override
     {
         game = Game::getInstance();
+    }
+    void TearDown() override
+    {
+        game->removeAllManagers();
     }
 };
 
@@ -103,4 +108,36 @@ TEST_F(TheGame, PassesEachComponentToItsCorrespondingComponentManagerForTheGiven
             [spy = gameObject->getDummyComponentSpy()](Component *component_) { ASSERT_THAT(component_, Eq(spy)); });
 
     game->addGameObject(std::move(gameObject), "dummyGameObject10");
+}
+
+struct ADummyComponentManager2 : ComponentManager
+{
+    MOCK_METHOD(void, registerComponent, (Component *), (override));
+};
+
+TEST_F(TheGame, RegistersTheComponentManagersOfTheGivenGameObject)
+{
+    NiceMock<ADummyComponentManager2> componenManager;
+    auto gameObject = std::make_unique<DummyGameObject>(&componenManager);
+    ASSERT_FALSE(game->hasComponentManager(&componenManager));
+    game->addGameObject(std::move(gameObject), "dummyGameObject11");
+    ASSERT_TRUE(game->hasComponentManager(&componenManager));
+}
+
+TEST_F(TheGame, CanRemoveAllTheComponentManagers)
+{
+    auto gameObject = std::make_unique<DummyGameObject>(&componenManager);
+    game->addGameObject(std::move(gameObject), "dummyGameObject12");
+    auto managersCount = game->managers().size();
+    ASSERT_THAT(game->managers().size(), Gt(0));
+    game->removeAllManagers();
+    ASSERT_THAT(game->managers().size(), Eq(0));
+}
+
+TEST_F(TheGame, OnlyRegisterOneInstanceOfAComponentManager)
+{
+    game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject13");
+    game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject14");
+    auto managersCount = game->managers().size();
+    ASSERT_THAT(game->managers().size(), Eq(1));
 }

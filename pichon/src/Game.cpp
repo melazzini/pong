@@ -55,6 +55,7 @@ bool Game::addGameObject(std::unique_ptr<GameObject> gameObject, std::string gam
     for (auto &component : gameObject->componentList())
     {
         component->manager()->registerComponent(component.get());
+        m_managers.insert(component->manager());
     }
 
     m_gameObjects.push_back({std::move(gameObject), gameObectTag});
@@ -67,6 +68,16 @@ bool Game::hasGameObject(std::string_view tag) const
     if (auto itr{std::find_if(std::begin(m_gameObjects), std::end(m_gameObjects),
                               [tag](const auto &gameObject) { return gameObject.second == tag; })};
         itr != std::end(m_gameObjects))
+    {
+        return true;
+    }
+    return false;
+}
+
+bool Game::hasComponentManager(ComponentManager *manager) const
+{
+
+    if (auto itr{std::find(std::begin(m_managers), std::end(m_managers), manager)}; itr != std::end(m_managers))
     {
         return true;
     }
