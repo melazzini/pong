@@ -1,4 +1,6 @@
 #include "Paddle.h"
+#include "EventManagementInterface.h"
+#include "EventUtils.h"
 #include "Game.h"
 #include "GameObject.h"
 #include "components.h"
@@ -10,20 +12,32 @@
 
 struct PaddleInputComponent : InputComponent
 {
-    PaddleInputComponent(GameObject *owner, ComponentManager *manager) : InputComponent{owner, manager}
+    struct KeyBoardEventListener : IListener
+    {
+        EventType eventType() const override
+        {
+            return EventType::ARROW_KEYS_PRESSED;
+        }
+        void onEvent(const IEvent &event) override
+        {
+            std::cout << "Great!!!" << std::endl;
+        }
+    };
+    PaddleInputComponent(GameObject *owner, ComponentManager *manager_) : InputComponent{owner, manager_}
     {
         /*
          *manager->registerListener(eventtype,[](){})
          */
-        // dynamic_cast<InputComponentManagerBase *>(manager);
+        m_inputManager = dynamic_cast<InputComponentManagerBase *>(manager());
+        m_inputManager->registerListener(&m_listener);
     }
     void update(float deltatime) override
     {
-        std::cout << "Paddle's InputComponent: " << __FUNCTION__ << std::endl;
-        /*
-         *manager->isKeyPressed(up);
-         */
     }
+
+  private:
+    InputComponentManagerBase *m_inputManager;
+    KeyBoardEventListener m_listener;
 };
 
 Paddle::Paddle(IEventManager *eventManager)

@@ -12,8 +12,6 @@ class RectangularShapeComponent : public DrawableComponent
 
     void update(float deltatime) override
     {
-        std::cout << "RectangularShapeComponent: " << __FUNCTION__ << std::endl;
-        std::cout << __FUNCTION__ << std::endl;
     }
 };
 
