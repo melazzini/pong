@@ -24,7 +24,7 @@ int main()
         std::cerr << "Error while initializing the game!" << std::endl;
         return -1;
     }
-    if (!game->addGameObject(std::make_unique<Paddle>(), "player"))
+    if (!game->addGameObject(std::make_unique<Paddle>(eventManager), "player"))
     {
         return -1;
     }

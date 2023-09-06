@@ -1,7 +1,8 @@
+#include "EventManagementInterface.h"
 #include "components/InputComponent.h"
 
-InputComponentManager *InputComponentManager::getInstance()
+InputComponentManager *InputComponentManager::getInstance(IEventManager *eventManager)
 {
-    static InputComponentManager instance;
+    static InputComponentManager instance{eventManager};
     return &instance;
 }

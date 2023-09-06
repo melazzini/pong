@@ -4,5 +4,5 @@
 class Paddle : public GameObject
 {
   public:
-    explicit Paddle();
+    explicit Paddle(IEventManager *);
 };

@@ -1,3 +1,4 @@
+#include "../pichon/MockEventManager.h"
 #include "Game.h"
 #include "Paddle.h"
 #include <glm/glm.hpp>
@@ -8,33 +9,38 @@
 using testing::Eq;
 using testing::Ne;
 
-TEST(ThePaddle, HasConstrainedTransformComponent)
+struct ThePaddle : testing::Test
 {
-    Paddle paddle{};
+    MockEventManager eventManger;
+};
+
+TEST_F(ThePaddle, HasConstrainedTransformComponent)
+{
+    Paddle paddle{&eventManger};
     ASSERT_TRUE(paddle.hasComponent<ConstrainedTransformComponent>());
 }
 
-TEST(ThePaddle, HasRectangularShapeComponent)
+TEST_F(ThePaddle, HasRectangularShapeComponent)
 {
-    Paddle paddle{};
+    Paddle paddle{&eventManger};
     ASSERT_TRUE(paddle.hasComponent<RectangularShapeComponent>());
 }
 
-TEST(ThePaddle, HasInputComponent)
+TEST_F(ThePaddle, HasInputComponent)
 {
-    Paddle paddle;
+    Paddle paddle{&eventManger};
     ASSERT_TRUE(paddle.hasComponent<InputComponent>());
 }
 
-TEST(ThePaddle, HasBoxColliderComponent)
+TEST_F(ThePaddle, HasBoxColliderComponent)
 {
-    Paddle paddle;
+    Paddle paddle{&eventManger};
     ASSERT_TRUE(paddle.hasComponent<BoxColliderComponent>());
 }
 
-TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)
+TEST_F(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)
 {
-    Paddle paddle{};
+    Paddle paddle{&eventManger};
     ASSERT_THAT(paddle.component<TransformComponent>()->position().x,
                 Eq(paddle.component<TransformComponent>()->size().width() / 2));
     ASSERT_THAT(paddle.component<TransformComponent>()->position().y, Eq(WINDOW_SIZE.height() / 2));
@@ -42,7 +48,8 @@ TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)
 
 struct APaddle : testing::Test
 {
-    Paddle paddle{};
+    MockEventManager eventManger;
+    Paddle paddle{&eventManger};
     glm::ivec2 dummyPosition{40, 100};
 };
 

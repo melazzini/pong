@@ -4,6 +4,7 @@
 #include "GameBase.h"
 #include "GameObject.h"
 #include "Interfaces.h"
+#include "MockEventManager.h"
 #include "components/Component.h"
 #include "components/DrawableComponent.h"
 #include "gmock/gmock.h"
@@ -37,17 +38,6 @@ struct DummyRenderer : IRenderer
     MOCK_METHOD(IRendererPrimitive *, primitive, (), (override));
 };
 
-struct DummyEventManager : IEventManager
-{
-    MOCK_METHOD(void, registerListener, (IListener *), (override));
-    MOCK_METHOD(bool, isListenerRegistered, (IListener *), (const override));
-    MOCK_METHOD(bool, eventQueueHasEventType, (EventType), (const override));
-    MOCK_METHOD(bool, isEventQueueEmpty, (), (const override));
-    MOCK_METHOD(void, pollEvents, (), (override));
-    MOCK_METHOD(void, enqueueEvent, (std::unique_ptr<IEvent>), (override));
-    MOCK_METHOD(void, dispatchEvents, (), (override));
-};
-
 struct ADummyComponentManager : ComponentManager
 {
     MOCK_METHOD(void, registerComponent, (Component *), (override));
@@ -65,7 +55,7 @@ struct AGameBase : testing::Test
     NiceMock<ADummyDrawableComponentManager> dummyDrawableComponentManager;
     DummyWindow window;
     DummyRenderer renderer;
-    DummyEventManager eventManager;
+    MockEventManager eventManager;
     GameBase::GameBackend backend;
     std::unique_ptr<GameBase> game;
     NiceMock<ADummyComponentManager> componenManager;

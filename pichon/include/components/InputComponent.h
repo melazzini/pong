@@ -1,13 +1,32 @@
 #pragma once
 #include "Component.h"
-
-class InputComponentManager : public ComponentManager
+#include "EventManagementInterface.h"
+#include "EventManager.h"
+class InputComponentManagerBase : public ComponentManager
 {
   public:
-    static InputComponentManager *getInstance();
+    InputComponentManagerBase(IEventManager *eventManager) : m_eventManager(eventManager)
+    {
+    }
+
+    void registerListener(IListener *listener)
+    {
+        m_eventManager->registerListener(listener);
+    }
 
   private:
-    InputComponentManager() = default;
+    IEventManager *m_eventManager;
+};
+
+class InputComponentManager : public InputComponentManagerBase
+{
+  public:
+    static InputComponentManager *getInstance(IEventManager *);
+
+  private:
+    InputComponentManager(IEventManager *eventManager) : InputComponentManagerBase{eventManager}
+    {
+    }
 };
 
 class InputComponent : public Component
