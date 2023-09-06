@@ -29,6 +29,7 @@ bool GameBase::initialize()
 
 void GameBase::handleInput()
 {
+    m_backend->eventManager->pollEvents();
 }
 
 void GameBase::update()

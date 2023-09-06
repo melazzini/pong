@@ -67,3 +67,9 @@ TEST_F(AGameBase, ClearsAndThenShowsTheNewWindowWhenItOutputsContent)
     game->output();
     Mock::VerifyAndClearExpectations(&window);
 }
+
+TEST_F(AGameBase, PollsTheSystemEventsWhenItHandlesInput)
+{
+    EXPECT_CALL(eventManager, pollEvents);
+    game->handleInput();
+}
