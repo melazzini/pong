@@ -2,6 +2,11 @@
 #include <glm/glm.hpp>
 #include <memory>
 
+struct ITimer
+{
+    [[nodiscard]] virtual float sencondsSinceRestared() = 0;
+};
+
 struct Drawable;
 struct IRendererPrimitive
 {

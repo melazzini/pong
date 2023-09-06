@@ -17,6 +17,12 @@ using testing::InSequence;
 using testing::Mock;
 using testing::Ne;
 using testing::NiceMock;
+using testing::Return;
+
+struct DummyTimer : ITimer
+{
+    MOCK_METHOD(float, sencondsSinceRestared, (), (override));
+};
 
 struct DummyWindow : IWindow
 {
@@ -44,9 +50,11 @@ struct DummyEventManager : IEventManager
 struct ADummyComponentManager : ComponentManager
 {
     MOCK_METHOD(void, registerComponent, (Component *), (override));
+    MOCK_METHOD(void, update, (float), (override));
 };
 struct AGameBase : testing::Test
 {
+    DummyTimer dummyTimer;
     DummyWindow window;
     DummyRenderer renderer;
     DummyEventManager eventManager;
@@ -58,6 +66,7 @@ struct AGameBase : testing::Test
         backend.window = &window;
         backend.renderer = &renderer;
         backend.eventManager = &eventManager;
+        backend.timer = &dummyTimer;
         game = std::make_unique<GameBase>(&backend);
     }
 };
@@ -163,4 +172,13 @@ TEST_F(AGameBase, OnlyRegisterOneInstanceOfAComponentManager)
     game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject2");
     auto managersCount = game->managers().size();
     ASSERT_THAT(game->managers().size(), Eq(1));
+}
+
+TEST_F(AGameBase, MakesTheComponentManagersUpdateWhenItUpdates)
+{
+    InSequence s;
+    game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject1");
+    EXPECT_CALL(dummyTimer, sencondsSinceRestared).WillOnce(Return(10));
+    EXPECT_CALL(componenManager, update).WillOnce([](float deltatime) { ASSERT_DOUBLE_EQ(deltatime, 10); });
+    game->update();
 }

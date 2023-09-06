@@ -6,6 +6,11 @@ struct ComponentManager
     virtual void registerComponent(Component *)
     {
     }
+
+    virtual void update(float deltatime)
+    {
+    }
+
     virtual ~ComponentManager() = default;
 };
 

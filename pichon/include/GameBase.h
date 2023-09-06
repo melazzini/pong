@@ -13,6 +13,7 @@ class GameBase
         IWindow *window;
         IRenderer *renderer;
         IEventManager *eventManager;
+        ITimer *timer;
     };
 
     GameBase(GameBackend *backend);
