@@ -1,7 +1,7 @@
 #pragma once
 #include "Interfaces.h"
 
-class Window : IWindow
+class Window : public IWindow
 {
   public:
     void clear(glm::u8vec4 color) override;

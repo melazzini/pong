@@ -1,5 +1,7 @@
 #pragma once
+#include "EventManagementInterface.h"
 #include "GameObject.h"
+#include "Interfaces.h"
 #include "RectangularGeometry.h"
 #include "components/Component.h"
 #include <memory>
@@ -11,7 +13,14 @@ static const RectangularGeometry WINDOW_SIZE{600, 400};
 class Game
 {
   public:
-    static Game *getInstance();
+    struct GameBackend
+    {
+        IWindow *window;
+        IRenderer *renderer;
+        IEventManager *eventManager;
+    };
+
+    static Game *getInstance(GameBackend *backend);
 
   public:
     bool initialize();
@@ -59,10 +68,12 @@ class Game
     }
 
   private:
-    Game(RectangularGeometry windowSize = WINDOW_SIZE);
+    Game(GameBackend *backend, RectangularGeometry windowSize = WINDOW_SIZE);
 
     bool m_running;
     RectangularGeometry m_windowSize;
+    GameBackend *m_backend;
+
     std::vector<std::pair<std::unique_ptr<GameObject>, std::string>> m_gameObjects;
     std::unordered_set<ComponentManager *> m_managers;
 };

@@ -1,5 +1,6 @@
 #include "Game.h"
 #include "GameObject.h"
+#include "Interfaces.h"
 #include "RectangularGeometry.h"
 #include "components/Component.h"
 #include "gmock/gmock.h"
@@ -15,12 +16,19 @@ using testing::Mock;
 using testing::Ne;
 using testing::NiceMock;
 
+Game::GameBackend backend_;
 TEST(AGame, IsASingleton)
 {
-    Game *game1 = Game::getInstance();
-    Game *game2 = Game::getInstance();
+    Game *game1 = Game::getInstance(&backend_);
+    Game *game2 = Game::getInstance(&backend_);
     ASSERT_TRUE(game1 != nullptr);
     ASSERT_THAT(game1, Eq(game2));
+}
+
+TEST(TheGetInstanceFunction, ReturnsNullIfYouPassItANullGameBackend)
+{
+    Game *game = Game::getInstance(nullptr);
+    ASSERT_TRUE(game == nullptr);
 }
 
 struct ADummyComponentManager : ComponentManager
@@ -34,7 +42,7 @@ struct TheGame : testing::Test
     NiceMock<ADummyComponentManager> componenManager;
     void SetUp() override
     {
-        game = Game::getInstance();
+        game = Game::getInstance(&backend_);
     }
     void TearDown() override
     {

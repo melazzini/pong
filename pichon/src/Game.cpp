@@ -3,13 +3,18 @@
 #include <iterator>
 #include <memory>
 
-Game *Game::getInstance()
+Game *Game::getInstance(Game::GameBackend *backend)
 {
-    static Game game{WINDOW_SIZE};
+    if (!backend)
+    {
+        return nullptr;
+    }
+    static Game game{backend, WINDOW_SIZE};
     return &game;
 }
 
-Game::Game(RectangularGeometry windowSize) : m_running{false}, m_windowSize{windowSize}
+Game::Game(Game::GameBackend *backend, RectangularGeometry windowSize)
+    : m_running{false}, m_windowSize{windowSize}, m_backend{backend}
 {
     std::cout << "Creating the game..." << std::endl;
 }
