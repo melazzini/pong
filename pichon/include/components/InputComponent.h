@@ -14,6 +14,11 @@ class InputComponentManagerBase : public ComponentManager
         m_eventManager->registerListener(listener);
     }
 
+    bool isKeyPressed(Keyboard letter)
+    {
+        return m_eventManager->isKeyPressed(letter);
+    }
+
   private:
     IEventManager *m_eventManager;
 };

@@ -33,6 +33,10 @@ struct PaddleInputComponent : InputComponent
     }
     void update(float deltatime) override
     {
+        if (m_inputManager->isKeyPressed(Keyboard::A))
+        {
+            std::cout << "Yes SR!" << std::endl;
+        }
     }
 
   private:

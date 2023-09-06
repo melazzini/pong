@@ -1,8 +1,12 @@
 #pragma once
 #include "BackendContextInterface.h"
+#include "EventUtils.h"
 #include "Events.h"
 #include "Interfaces.h"
 #include <SDL2/SDL.h>
+#include <SDL2/SDL_events.h>
+#include <SDL2/SDL_keyboard.h>
+#include <SDL2/SDL_scancode.h>
 #include <iostream>
 #include <memory>
 #include <stdexcept>
@@ -41,6 +45,12 @@ struct EventManagerPrimitiveSDL : IEventManagerPrimitive
                 eventManager.enqueueEvent(std::make_unique<ArrowKeyPressed>(ArrowKey::DOWN));
             }
         }
+    }
+
+    bool isKeyPressed(Keyboard key) const override
+    {
+        auto keys = SDL_GetKeyboardState(nullptr);
+        return keys[SDL_SCANCODE_A];
     }
 };
 

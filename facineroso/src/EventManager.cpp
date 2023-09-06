@@ -16,6 +16,11 @@ EventManager *EventManager::getInstance(backendContext::IEventManagerPrimitivePr
     return &instance;
 }
 
+bool EventManager::isKeyPressed(Keyboard key) const
+{
+    return m_primitive->isKeyPressed(key);
+}
+
 void EventManager::validateBackend(backendContext::IEventManagerPrimitiveProvider *contextProvider)
 {
     if (!contextProvider)

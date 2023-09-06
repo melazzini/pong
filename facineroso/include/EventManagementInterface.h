@@ -22,6 +22,7 @@ struct IEventManager
     [[nodiscard]] virtual bool isListenerRegistered(IListener *listener) const = 0;
     [[nodiscard]] virtual bool eventQueueHasEventType(EventType eventType) const = 0;
     [[nodiscard]] virtual bool isEventQueueEmpty() const = 0;
+    [[nodiscard]] virtual bool isKeyPressed(Keyboard letter) const = 0;
     virtual void pollEvents() = 0;
     virtual void enqueueEvent(std::unique_ptr<IEvent> event) = 0;
     virtual void dispatchEvents() = 0;
@@ -31,6 +32,7 @@ struct IEventManager
 struct IEventManagerPrimitive
 {
     virtual void pollEvents(IEventManager &) const = 0;
+    virtual bool isKeyPressed(Keyboard key) const = 0;
     virtual ~IEventManagerPrimitive() = default;
 };
 

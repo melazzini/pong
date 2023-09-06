@@ -41,3 +41,11 @@ TEST_F(AnInputComponentManager, UsesItsEventManagerToRegisterListeners)
     EXPECT_CALL(eventManager, registerListener);
     componentManager.registerListener(&listener);
 }
+
+TEST_F(AnInputComponentManager, UsesItsEventManagerToCheckForKeyboardKeyStatus)
+{
+    DummyListener listener;
+    InputComponentManagerBase componentManager{&eventManager};
+    EXPECT_CALL(eventManager, isKeyPressed);
+    componentManager.isKeyPressed(Keyboard::A);
+}

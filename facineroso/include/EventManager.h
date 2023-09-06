@@ -1,6 +1,7 @@
 #pragma once
 #include "BackendContextInterface.h"
 #include "EventManagementInterface.h"
+#include "EventUtils.h"
 #include <functional>
 #include <list>
 #include <memory>
@@ -54,6 +55,8 @@ class EventManager : public IEventManager
     [[nodiscard]] bool isEventQueueEmpty() const override;
 
     void pollEvents() override;
+
+    bool isKeyPressed(Keyboard key) const override;
 
     void enqueueEvent(std::unique_ptr<IEvent> event) override;
 

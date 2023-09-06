@@ -1,5 +1,6 @@
 #include "EventManagementInterface.h"
 #include "EventManager.h"
+#include "EventUtils.h"
 #include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -30,6 +31,10 @@ struct DummyListener : IListener
 struct DummyEventManagerPrimitive : IEventManagerPrimitive
 {
     MOCK_METHOD(void, pollEvents, (IEventManager &), (const override));
+    bool isKeyPressed(Keyboard key) const override
+    {
+        return false;
+    }
 };
 
 struct DummyEventManagerPrimitiveProvider : backendContext::IEventManagerPrimitiveProvider
