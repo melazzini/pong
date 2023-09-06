@@ -7,6 +7,11 @@
 
 class TransformComponentManager : public ComponentManager
 {
+  public:
+    static TransformComponentManager *getInstance();
+
+  private:
+    TransformComponentManager() = default;
 };
 
 class TransformComponent : public Component

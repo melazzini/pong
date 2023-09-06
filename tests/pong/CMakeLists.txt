@@ -1,0 +1,8 @@
+aux_source_directory(${CMAKE_CURRENT_SOURCE_DIR} sources_in_curdir)
+aux_source_directory(${CMAKE_SOURCE_DIR}/pong/ sources_in_pong)
+find_package(GTest REQUIRED)
+find_package(GLM REQUIRED)
+add_executable(pongtest "")
+target_sources(pongtest PRIVATE ${sources_in_curdir} ${sources_in_pong})
+target_include_directories(pongtest PRIVATE ${GLM_INCLUDE_DIR} ${CMAKE_SOURCE_DIR}/facineroso/include ${CMAKE_SOURCE_DIR}/pichon/include ${CMAKE_SOURCE_DIR}/pong/)
+target_link_libraries(pongtest PRIVATE GTest::gtest GTest::gtest_main GTest::gmock pthread facineroso pichon)

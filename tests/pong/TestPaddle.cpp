@@ -34,11 +34,10 @@ TEST(ThePaddle, HasBoxColliderComponent)
 
 TEST(ThePaddle, StartsCenteredOnTheLeftOfTheScreenWithAGivenSize)
 {
-    Game game{};
     Paddle paddle{};
     ASSERT_THAT(paddle.component<TransformComponent>()->position().x,
                 Eq(paddle.component<TransformComponent>()->size().width() / 2));
-    ASSERT_THAT(paddle.component<TransformComponent>()->position().y, Eq(game.windowSize().height() / 2));
+    ASSERT_THAT(paddle.component<TransformComponent>()->position().y, Eq(WINDOW_SIZE.height() / 2));
 }
 
 struct APaddle : testing::Test

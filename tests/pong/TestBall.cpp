@@ -1,4 +1,6 @@
 #include "Ball.h"
+#include "Game.h"
+#include "RectangularGeometry.h"
 #include <glm/glm.hpp>
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -26,10 +28,9 @@ TEST(TheBall, HasBoxColliderComponent)
 
 TEST(TheBall, StartsAtTheCenterOfTheScreen)
 {
-    Game game{};
     Ball ball{};
-    ASSERT_THAT(ball.component<TransformComponent>()->position().x, Eq(game.windowSize().width() / 2));
-    ASSERT_THAT(ball.component<TransformComponent>()->position().y, Eq(game.windowSize().height() / 2));
+    ASSERT_THAT(ball.component<TransformComponent>()->position().x, Eq(WINDOW_SIZE.width() / 2));
+    ASSERT_THAT(ball.component<TransformComponent>()->position().y, Eq(WINDOW_SIZE.height() / 2));
 }
 
 struct ABall : testing::Test
