@@ -21,23 +21,32 @@ void GameBase::handleInput()
     m_backend->eventManager->pollEvents();
 }
 
+static float deltatime_;
+
 void GameBase::update()
 {
-    auto deltatime{(m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0};
+    deltatime_ = (m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0;
+
     for (auto manager : m_managers)
     {
         if (dynamic_cast<IDrawableComponentManager *>(manager))
         {
             continue;
         }
-        manager->update(deltatime);
+        manager->update(deltatime_);
     }
 }
 
 void GameBase::output()
 {
     m_backend->window->clear(glm::u8vec4{});
-
+    for (auto manager : m_managers)
+    {
+        if (dynamic_cast<IDrawableComponentManager *>(manager))
+        {
+            manager->update(deltatime_);
+        }
+    }
     m_backend->window->present();
 }
 

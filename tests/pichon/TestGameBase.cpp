@@ -62,6 +62,7 @@ struct ADummyDrawableComponentManager : IDrawableComponentManager
 struct AGameBase : testing::Test
 {
     NiceMock<DummyTimer> dummyTimer;
+    NiceMock<ADummyDrawableComponentManager> dummyDrawableComponentManager;
     DummyWindow window;
     DummyRenderer renderer;
     DummyEventManager eventManager;
@@ -192,9 +193,17 @@ TEST_F(AGameBase, MakesTheNonDrawingComponentManagersUpdateWhenItUpdates)
 
 TEST_F(AGameBase, DoesntMakeTheNonDrawingComponentManagersUpdateWhenItUpdates)
 {
-    NiceMock<ADummyDrawableComponentManager> dummyDrawableComponentManager;
     game->addGameObject(std::make_unique<DummyGameObject>(&dummyDrawableComponentManager), "dummyGameObject");
-    ASSERT_TRUE(dynamic_cast<IDrawableComponentManager *>(&dummyDrawableComponentManager) != nullptr);
     EXPECT_CALL(dummyDrawableComponentManager, update).Times(0);
     game->update();
+}
+
+TEST_F(AGameBase, MakesTheDrawingComponentManagersUpdateWhenItOutputsTheNewContent)
+{
+    InSequence s;
+    game->addGameObject(std::make_unique<DummyGameObject>(&dummyDrawableComponentManager), "dummyGameObject");
+    EXPECT_CALL(window, clear);
+    EXPECT_CALL(dummyDrawableComponentManager, update);
+    EXPECT_CALL(window, present);
+    game->output();
 }
