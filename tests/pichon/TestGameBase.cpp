@@ -59,7 +59,7 @@ struct AGameBase : testing::Test
     }
 };
 
-TEST_F(AGameBase, ClearsAndThenShowsTheNewWindowWhenItOutputContect)
+TEST_F(AGameBase, ClearsAndThenShowsTheNewWindowWhenItOutputsContent)
 {
     InSequence s;
     EXPECT_CALL(window, clear);
