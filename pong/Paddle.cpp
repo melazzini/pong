@@ -9,6 +9,7 @@
 #include "components/DrawableComponent.h"
 #include "components/InputComponent.h"
 #include "components/TransformComponent.h"
+#include <glm/fwd.hpp>
 #include <memory>
 
 struct PaddleInputComponent : InputComponent
@@ -31,18 +32,21 @@ struct PaddleInputComponent : InputComponent
          */
         m_inputManager = dynamic_cast<InputComponentManagerBase *>(manager());
         m_inputManager->registerListener(&m_listener);
+        m_owner = dynamic_cast<Paddle *>(owner);
     }
     void update(float deltatime) override
     {
         if (m_inputManager->isKeyPressed(Keyboard::A))
         {
             std::cout << "Yes SR!" << std::endl;
+            m_owner->component<RectangularShapeComponent>()->setColor(glm::u8vec4{100, 100, 255, 255});
         }
     }
 
   private:
     InputComponentManagerBase *m_inputManager;
     KeyBoardEventListener m_listener;
+    Paddle *m_owner;
 };
 
 Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)

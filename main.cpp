@@ -28,10 +28,10 @@ int main()
     {
         return -1;
     }
-    if (!game->addGameObject(std::make_unique<Ball>(rendererSDL), "ball"))
-    {
-        return -1;
-    }
+    // if (!game->addGameObject(std::make_unique<Ball>(rendererSDL), "ball"))
+    //  {
+    //       return -1;
+    //    }
 
     while (game->isRunning())
     {
