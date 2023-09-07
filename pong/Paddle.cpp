@@ -4,6 +4,7 @@
 #include "Game.h"
 #include "GameObject.h"
 #include "Interfaces.h"
+#include "RectangularShape.h"
 #include "components.h"
 #include "components/BoxColliderComponent.h"
 #include "components/Component.h"
@@ -13,36 +14,11 @@
 #include <glm/fwd.hpp>
 #include <memory>
 
-struct PaddleShape : Box
-{
-    PaddleShape(glm::ivec2 position, int size)
-        : Box(position, RectangularGeometry{size, size}, std::make_unique<BoxDrawablePrimitiveSDL>()),
-          m_boxDrawablePrimitive(dynamic_cast<BoxDrawablePrimitiveSDL *>(m_primitive.get()))
-    {
-    }
-
-    void draw() override
-    {
-        std::cout << "drawing ..." << std::endl;
-        m_boxDrawablePrimitive->position = position();
-        m_boxDrawablePrimitive->size = {width(), height()};
-        m_boxDrawablePrimitive->color = m_color;
-    }
-
-    void setColor(glm::u8vec4 color)
-    {
-        m_color = color;
-    }
-
-  private:
-    BoxDrawablePrimitiveSDL *m_boxDrawablePrimitive;
-    glm::u8vec4 m_color{255, 0, 0, 255};
-};
-
 struct PaddleDrawableComponent : DrawableComponent
 {
     PaddleDrawableComponent(Paddle *owner, DrawableComponentManagerBase *manager)
-        : DrawableComponent{owner, manager}, m_owner{owner}, m_manager(manager), m_shape(glm::ivec2{100, 100}, 60)
+        : DrawableComponent{owner, manager}, m_owner{owner}, m_manager(manager),
+          m_shape(glm::ivec2{100, 100}, 60, glm::u8vec4{200, 200, 100, 255})
     {
         m_drawable = &m_shape;
     }
@@ -64,7 +40,7 @@ struct PaddleDrawableComponent : DrawableComponent
   private:
     Paddle *m_owner;
     DrawableComponentManagerBase *m_manager;
-    PaddleShape m_shape;
+    RectangularShape m_shape;
 };
 
 struct PaddleInputComponent : InputComponent
@@ -87,9 +63,6 @@ struct PaddleInputComponent : InputComponent
     };
     PaddleInputComponent(Paddle *owner, ComponentManager *manager_) : InputComponent{owner, manager_}, m_listener{owner}
     {
-        /*
-         *manager->registerListener(eventtype,[](){})
-         */
         m_inputManager = dynamic_cast<InputComponentManagerBase *>(manager());
         m_inputManager->registerListener(&m_listener);
         m_owner = dynamic_cast<Paddle *>(owner);
