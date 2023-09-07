@@ -4,7 +4,7 @@
 #include "TransformComponent.h"
 #include "components/Component.h"
 #include <iostream>
-
+struct DrawableComponent;
 class DrawableComponentManagerBase : public ComponentManager
 {
   public:
@@ -17,9 +17,7 @@ class DrawableComponentManagerBase : public ComponentManager
         m_renderer->render(drawable);
     }
 
-    virtual void paintComponents()
-    {
-    }
+    virtual void paintComponents();
 
   private:
     IRenderer *m_renderer;
@@ -38,7 +36,7 @@ class DrawableComponent : public Component
         std::cout << "DrawableComponent: " << __FUNCTION__ << std::endl;
     }
 
-    void draw()
+    virtual void draw()
     {
         if (m_drawable)
         {
