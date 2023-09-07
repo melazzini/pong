@@ -1,10 +1,11 @@
 #pragma once
 #include "Box.h"
+#include "RectangularGeometry.h"
 
 class RectangularShape : public Box
 {
   public:
-    RectangularShape(glm::ivec2 position, int size, glm::u8vec4 color);
+    RectangularShape(glm::ivec2 position, RectangularGeometry size, glm::u8vec4 color);
 
     void draw() override;
 

@@ -31,9 +31,9 @@ class DrawableComponent : public Component
     {
     }
 
+    // maybe in the future you can perform animations from here
     void update(float deltaTime) override
     {
-        std::cout << "DrawableComponent: " << __FUNCTION__ << std::endl;
     }
 
     virtual void draw()
