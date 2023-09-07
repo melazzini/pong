@@ -10,6 +10,12 @@ class Paddle : public GameObject
     explicit Paddle(IEventManager *, IRenderer *renderer);
 };
 
+// A transformComponent is the component that you update
+// from the outside of the gameobject, for example
+// from the user input or an ai system.
+//
+// Other components will consume the information provided
+// by this component in order to do their things(eg drawing)
 class ConstrainedTransformComponent : public TransformComponent
 {
   public:
@@ -33,6 +39,13 @@ class ConstrainedTransformComponent : public TransformComponent
     std::function<glm::ivec2(std::pair<const glm::ivec2 &, const glm::ivec2 &>)> m_constraintNewPosition;
 };
 
+// In this component you simply do all the drawing that you need
+// inside the update(deltatime) method, normally you will need
+// to query the transformComponent to get position and size info
+// about the gameobject
+//
+// This class should store the drawable that will be used
+// by the gameobject (simple-drawable, animated drawable etc).
 struct PaddleDrawableComponent : DrawableComponent
 {
     PaddleDrawableComponent(Paddle *owner, DrawableComponentManagerBase *manager)
@@ -58,6 +71,11 @@ struct PaddleDrawableComponent : DrawableComponent
     RectangularShape m_shape;
 };
 
+// This class is in charge of handling input, thus
+// it should have a ref to the input component manager,
+// which will provide the input-reading capabilities,
+// and it also probably uses a listener to listen for
+// events.
 struct PaddleInputComponent : InputComponent
 {
     struct KeyBoardEventListener : IListener
@@ -76,6 +94,7 @@ struct PaddleInputComponent : InputComponent
         }
         Paddle *m_owner;
     };
+
     PaddleInputComponent(Paddle *owner, ComponentManager *manager_) : InputComponent{owner, manager_}, m_listener{owner}
     {
         m_inputManager = dynamic_cast<InputComponentManagerBase *>(manager());
