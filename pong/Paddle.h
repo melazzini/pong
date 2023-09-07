@@ -1,8 +1,11 @@
 #pragma once
+#include "EventUtils.h"
+#include "Events.h"
 #include "GameObject.h"
 #include "Interfaces.h"
 #include "RectangularShape.h"
 #include "components/TransformComponent.h"
+#include "utils.h"
 
 class Paddle : public GameObject
 {
@@ -89,8 +92,16 @@ struct PaddleInputComponent : InputComponent
         }
         void onEvent(const IEvent &event) override
         {
-            std::cout << "Great!!!" << std::endl;
-            m_owner->component<ConstrainedTransformComponent>()->jump(10);
+
+            auto &evt{dynamic_cast<const ArrowKeyPressed &>(event)};
+            if (evt.key() == ArrowKey::UP)
+            {
+                m_owner->component<ConstrainedTransformComponent>()->jump(-10);
+            }
+            else if (evt.key() == ArrowKey::DOWN)
+            {
+                m_owner->component<ConstrainedTransformComponent>()->jump(10);
+            }
         }
         Paddle *m_owner;
     };
