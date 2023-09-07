@@ -23,6 +23,7 @@ struct PaddleShape : Box
 
     void draw() override
     {
+        std::cout << "drawing ..." << std::endl;
         m_boxDrawablePrimitive->position = position();
         m_boxDrawablePrimitive->size = {width(), height()};
         m_boxDrawablePrimitive->color = m_color;
@@ -41,27 +42,38 @@ struct PaddleShape : Box
 struct PaddleDrawableComponent : DrawableComponent
 {
     PaddleDrawableComponent(Paddle *owner, DrawableComponentManagerBase *manager)
-        : DrawableComponent{owner, manager}, m_owner{owner}, m_manager(manager)
+        : DrawableComponent{owner, manager}, m_owner{owner}, m_manager(manager), m_shape(glm::ivec2{100, 100}, 60)
     {
+        m_drawable = &m_shape;
     }
 
     void update(float deltatime) override
     {
     }
 
-    void draw()
+    void jump(int y)
     {
+        m_shape.setPosition({m_shape.position().x, m_shape.position().y + y});
+    }
+
+    void setColor(glm::u8vec4 color)
+    {
+        m_shape.setColor(color);
     }
 
   private:
     Paddle *m_owner;
     DrawableComponentManagerBase *m_manager;
+    PaddleShape m_shape;
 };
 
 struct PaddleInputComponent : InputComponent
 {
     struct KeyBoardEventListener : IListener
     {
+        KeyBoardEventListener(Paddle *owner) : m_owner(owner)
+        {
+        }
         EventType eventType() const override
         {
             return EventType::ARROW_KEYS_PRESSED;
@@ -69,9 +81,11 @@ struct PaddleInputComponent : InputComponent
         void onEvent(const IEvent &event) override
         {
             std::cout << "Great!!!" << std::endl;
+            m_owner->component<PaddleDrawableComponent>()->jump(10);
         }
+        Paddle *m_owner;
     };
-    PaddleInputComponent(GameObject *owner, ComponentManager *manager_) : InputComponent{owner, manager_}
+    PaddleInputComponent(Paddle *owner, ComponentManager *manager_) : InputComponent{owner, manager_}, m_listener{owner}
     {
         /*
          *manager->registerListener(eventtype,[](){})
@@ -85,7 +99,7 @@ struct PaddleInputComponent : InputComponent
         if (m_inputManager->isKeyPressed(Keyboard::A))
         {
             std::cout << "Yes SR!" << std::endl;
-            m_owner->component<RectangularShapeComponent>()->setColor(glm::u8vec4{100, 100, 255, 255});
+            m_owner->component<PaddleDrawableComponent>()->setColor(glm::u8vec4{100, 100, 255, 255});
         }
     }
 
@@ -105,7 +119,7 @@ Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
         });
 
     auto drawableComponent{
-        addComponent<RectangularShapeComponent>(this, DrawableComponentManager::getInstance(renderer))};
+        addComponent<PaddleDrawableComponent>(this, DrawableComponentManager::getInstance(renderer))};
     auto inputComponent{addComponent<PaddleInputComponent>(this, InputComponentManager::getInstance(eventManager))};
     auto boxColliderComponent{addComponent<BoxColliderComponent>(this, BoxColliderComponentManager::getInstance())};
 }

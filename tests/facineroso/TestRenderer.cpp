@@ -1,12 +1,14 @@
 #include "Drawable.h"
 #include "Interfaces.h"
 #include "Renderer.h"
+#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
 
 using testing::Eq;
+using testing::InSequence;
 using testing::Ne;
 
 struct Dummy2RendererPrimitive : IRendererPrimitive
@@ -40,10 +42,7 @@ struct TheRenderer : testing::Test
         Dummy2Drawable(std::unique_ptr<IDrawablePrimitive> primitive) : Drawable(std::move(primitive))
         {
         }
-        void draw() override
-        {
-        }
-
+        MOCK_METHOD(void, draw, (), (override));
         MOCK_METHOD(void, paint, (IRenderer *), (override));
     };
 
@@ -54,14 +53,22 @@ struct TheRenderer : testing::Test
         }
     };
 
-    std::unique_ptr<Dummy2Drawable> drawable{};
+    std::unique_ptr<testing::NiceMock<Dummy2Drawable>> drawable{};
     Renderer *renderer{Renderer::getInstance(&engine)};
 
     void SetUp() override
     {
-        drawable = std::make_unique<Dummy2Drawable>(std::make_unique<Dummy2DrawablePrimitive>());
+        drawable = std::make_unique<testing::NiceMock<Dummy2Drawable>>(std::make_unique<Dummy2DrawablePrimitive>());
     }
 };
+
+TEST_F(TheRenderer, RendersTheDrawableFirstMakingItDrawAnThenPaintItSelf)
+{
+    InSequence s;
+    EXPECT_CALL(*(drawable.get()), draw);
+    EXPECT_CALL(*(drawable.get()), paint);
+    renderer->render(drawable.get());
+}
 
 TEST_F(TheRenderer, PassesItselfToTheDrawableForPainting)
 {
