@@ -50,6 +50,7 @@ struct ADummyDrawableComponentManager : DrawableComponentManagerBase
     }
     MOCK_METHOD(void, registerComponent, (Component *), (override));
     MOCK_METHOD(void, update, (float), (override));
+    MOCK_METHOD(void, paintComponents, (), (override));
 };
 
 struct AGameBase : testing::Test
@@ -175,10 +176,9 @@ TEST_F(AGameBase, OnlyRegisterOneInstanceOfAComponentManager)
     ASSERT_THAT(game->managers().size(), Eq(1));
 }
 
-TEST_F(AGameBase, MakesTheNonDrawingComponentManagersUpdateWhenItUpdates)
+TEST_F(AGameBase, MakesTheComponentManagersUpdateWhenItUpdates)
 {
     game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject1");
-    ASSERT_TRUE(dynamic_cast<DrawableComponentManagerBase *>(&componenManager) == nullptr);
     EXPECT_CALL(dummyTimer, sencondsSinceRestared).WillOnce(Return(10));
     EXPECT_CALL(componenManager, update).WillOnce([](float deltatime) { ASSERT_DOUBLE_EQ(deltatime, 10); });
     game->update();
@@ -187,16 +187,16 @@ TEST_F(AGameBase, MakesTheNonDrawingComponentManagersUpdateWhenItUpdates)
 TEST_F(AGameBase, DoesntMakeTheNonDrawingComponentManagersUpdateWhenItUpdates)
 {
     game->addGameObject(std::make_unique<DummyGameObject>(&dummyDrawableComponentManager), "dummyGameObject");
-    EXPECT_CALL(dummyDrawableComponentManager, update).Times(0);
+    EXPECT_CALL(dummyDrawableComponentManager, update);
     game->update();
 }
 
-TEST_F(AGameBase, MakesTheDrawingComponentManagersUpdateWhenItOutputsTheNewContent)
+TEST_F(AGameBase, MakesTheDrawingComponentManagersPaintTheirComponentsAfterClearingWindowAndBeforePresentingIt)
 {
     InSequence s;
     game->addGameObject(std::make_unique<DummyGameObject>(&dummyDrawableComponentManager), "dummyGameObject");
     EXPECT_CALL(window, clear);
-    EXPECT_CALL(dummyDrawableComponentManager, update);
+    EXPECT_CALL(dummyDrawableComponentManager, paintComponents);
     EXPECT_CALL(window, present);
     game->output();
 }

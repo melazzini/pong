@@ -17,6 +17,10 @@ class DrawableComponentManagerBase : public ComponentManager
         m_renderer->render(drawable);
     }
 
+    virtual void paintComponents()
+    {
+    }
+
   private:
     IRenderer *m_renderer;
 };
@@ -24,7 +28,8 @@ class DrawableComponentManagerBase : public ComponentManager
 class DrawableComponent : public Component
 {
   public:
-    DrawableComponent(GameObject *owner, ComponentManager *manager) : Component(owner, manager)
+    DrawableComponent(GameObject *owner, DrawableComponentManagerBase *manager)
+        : Component(owner, manager), m_manager{manager}, m_drawable{nullptr}
     {
     }
 
@@ -32,6 +37,18 @@ class DrawableComponent : public Component
     {
         std::cout << "DrawableComponent: " << __FUNCTION__ << std::endl;
     }
+
+    void draw()
+    {
+        if (m_drawable)
+        {
+            m_manager->draw(m_drawable);
+        }
+    }
+
+  protected:
+    DrawableComponentManagerBase *m_manager;
+    Drawable *m_drawable;
 };
 
 class DrawableComponentManager : public DrawableComponentManagerBase

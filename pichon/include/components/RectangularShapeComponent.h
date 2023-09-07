@@ -33,7 +33,7 @@ struct BallShape : Box
 class RectangularShapeComponent : public DrawableComponent
 {
   public:
-    RectangularShapeComponent(GameObject *owner, ComponentManager *manager_)
+    RectangularShapeComponent(GameObject *owner, DrawableComponentManagerBase *manager_)
         : DrawableComponent(owner, manager_), m_manager{nullptr}, m_ballShape{glm::ivec2{100, 100}, 20}
     {
         m_manager = dynamic_cast<DrawableComponentManagerBase *>(manager_);
