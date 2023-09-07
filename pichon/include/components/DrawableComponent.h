@@ -1,4 +1,6 @@
 #pragma once
+#include "Drawable.h"
+#include "Interfaces.h"
 #include "TransformComponent.h"
 #include "components/Component.h"
 #include <iostream>
@@ -19,17 +21,27 @@ class DrawableComponent : public Component
 class DrawableComponentManagerBase : public ComponentManager
 {
   public:
-    DrawableComponentManagerBase()
+    DrawableComponentManagerBase(IRenderer *renderer) : m_renderer{renderer}
     {
     }
+
+    void draw(Drawable *drawable)
+    {
+        m_renderer->render(drawable);
+    }
+
+  private:
+    IRenderer *m_renderer;
 };
 
 class DrawableComponentManager : public DrawableComponentManagerBase
 {
   public:
-    static DrawableComponentManager *getInstance();
+    static DrawableComponentManager *getInstance(IRenderer *renderer);
 
   private:
-    DrawableComponentManager() = default;
+    explicit DrawableComponentManager(IRenderer *renderer) : DrawableComponentManagerBase(renderer)
+    {
+    }
 };
 

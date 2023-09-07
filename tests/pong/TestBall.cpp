@@ -1,3 +1,4 @@
+#include "../pichon/MockRenderer.h"
 #include "Ball.h"
 #include "Game.h"
 #include "RectangularGeometry.h"
@@ -11,31 +12,36 @@ using testing::Ne;
 
 TEST(TheBall, HasTransformComponent)
 {
-    Ball ball{};
+    MockRenderer renderer;
+    Ball ball{&renderer};
     ASSERT_TRUE(ball.hasComponent<TransformComponent>());
 }
 TEST(TheBall, HasRectangularShapeComponent)
 {
-    Ball ball{};
+    MockRenderer renderer;
+    Ball ball{&renderer};
     ASSERT_TRUE(ball.hasComponent<RectangularShapeComponent>());
 }
 
 TEST(TheBall, HasBoxColliderComponent)
 {
-    Ball ball;
+    MockRenderer renderer;
+    Ball ball{&renderer};
     ASSERT_TRUE(ball.hasComponent<BoxColliderComponent>());
 }
 
 TEST(TheBall, StartsAtTheCenterOfTheScreen)
 {
-    Ball ball{};
+    MockRenderer renderer;
+    Ball ball{&renderer};
     ASSERT_THAT(ball.component<TransformComponent>()->position().x, Eq(WINDOW_SIZE.width() / 2));
     ASSERT_THAT(ball.component<TransformComponent>()->position().y, Eq(WINDOW_SIZE.height() / 2));
 }
 
 struct ABall : testing::Test
 {
-    Ball ball{};
+    MockRenderer renderer;
+    Ball ball{&renderer};
     glm::ivec2 dummyPosition{10, 100};
 };
 

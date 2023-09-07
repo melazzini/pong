@@ -1,7 +1,8 @@
+#include "Interfaces.h"
 #include "components/DrawableComponent.h"
 
-DrawableComponentManager *DrawableComponentManager::getInstance()
+DrawableComponentManager *DrawableComponentManager::getInstance(IRenderer *renderer)
 {
-    static DrawableComponentManager instance;
+    static DrawableComponentManager instance{renderer};
     return &instance;
 }

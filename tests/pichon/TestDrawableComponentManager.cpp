@@ -1,8 +1,5 @@
-#include "GameObject.h"
-#include "components/Component.h"
+#include "MockRenderer.h"
 #include "components/DrawableComponent.h"
-#include "components/TransformComponent.h"
-#include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
@@ -14,8 +11,9 @@ using testing::Return;
 
 TEST(TheDrawableComponentManager, IsASingleTon)
 {
-    DrawableComponentManager *instance1{DrawableComponentManager::getInstance()};
-    DrawableComponentManager *instance2{DrawableComponentManager::getInstance()};
+    MockRenderer mockRenderer;
+    DrawableComponentManager *instance1{DrawableComponentManager::getInstance(&mockRenderer)};
+    DrawableComponentManager *instance2{DrawableComponentManager::getInstance(&mockRenderer)};
     ASSERT_THAT(instance1, Ne(nullptr));
     ASSERT_THAT(instance1, Eq(instance2));
 }

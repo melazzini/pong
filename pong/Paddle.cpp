@@ -3,6 +3,7 @@
 #include "EventUtils.h"
 #include "Game.h"
 #include "GameObject.h"
+#include "Interfaces.h"
 #include "components.h"
 #include "components/BoxColliderComponent.h"
 #include "components/DrawableComponent.h"
@@ -44,7 +45,7 @@ struct PaddleInputComponent : InputComponent
     KeyBoardEventListener m_listener;
 };
 
-Paddle::Paddle(IEventManager *eventManager)
+Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
 {
     const RectangularGeometry size{20, 100};
     auto transformComponent = addComponent<ConstrainedTransformComponent>(
@@ -53,7 +54,8 @@ Paddle::Paddle(IEventManager *eventManager)
             return glm::ivec2{oldNewPair.first.x, oldNewPair.second.y};
         });
 
-    auto drawableComponent{addComponent<RectangularShapeComponent>(this, DrawableComponentManager::getInstance())};
+    auto drawableComponent{
+        addComponent<RectangularShapeComponent>(this, DrawableComponentManager::getInstance(renderer))};
     auto inputComponent{addComponent<PaddleInputComponent>(this, InputComponentManager::getInstance(eventManager))};
     auto boxColliderComponent{addComponent<BoxColliderComponent>(this, BoxColliderComponentManager::getInstance())};
 }

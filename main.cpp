@@ -24,11 +24,11 @@ int main()
         std::cerr << "Error while initializing the game!" << std::endl;
         return -1;
     }
-    if (!game->addGameObject(std::make_unique<Paddle>(eventManager), "player"))
+    if (!game->addGameObject(std::make_unique<Paddle>(eventManager, rendererSDL), "player"))
     {
         return -1;
     }
-    if (!game->addGameObject(std::make_unique<Ball>(), "ball"))
+    if (!game->addGameObject(std::make_unique<Ball>(rendererSDL), "ball"))
     {
         return -1;
     }

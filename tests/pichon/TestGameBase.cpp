@@ -45,6 +45,9 @@ struct ADummyComponentManager : ComponentManager
 };
 struct ADummyDrawableComponentManager : DrawableComponentManagerBase
 {
+    ADummyDrawableComponentManager() : DrawableComponentManagerBase{nullptr}
+    {
+    }
     MOCK_METHOD(void, registerComponent, (Component *), (override));
     MOCK_METHOD(void, update, (float), (override));
 };
