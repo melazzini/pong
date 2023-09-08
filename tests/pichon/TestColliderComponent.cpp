@@ -1,5 +1,6 @@
-#include "GameObject.h"
-#include "components/ColliderComponent.h"
+#include "MockColliderComponent.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -9,29 +10,13 @@ using testing::Eq;
 using testing::Ne;
 using testing::Return;
 
-struct DummyColliderShape
-{
-    bool collidesWith(const DummyColliderShape &other) const
-    {
-        return collides;
-    }
-
-    bool collides;
-};
-
-using ColliderComponentWithDummyShape = ColliderComponent<DummyColliderShape>;
-using ColliderComponentManagerWithDummyShape = ColliderComponentManagerBase<DummyColliderShape>;
-
-struct MockColliderComponentManagerBase : ColliderComponentManagerWithDummyShape
-{
-};
-
 struct AColliderComponent : testing::Test
 {
     MockColliderComponentManagerBase manager;
     GameObject gameObject;
-    ColliderComponentWithDummyShape collider1{std::make_unique<DummyColliderShape>(), &gameObject, &manager};
-    ColliderComponentWithDummyShape collider2{std::make_unique<DummyColliderShape>(), &gameObject, &manager};
+    std::string role{"role"};
+    ColliderComponentWithDummyShape collider1{role, std::make_unique<DummyColliderShape>(), &gameObject, &manager};
+    ColliderComponentWithDummyShape collider2{role, std::make_unique<DummyColliderShape>(), &gameObject, &manager};
 };
 
 TEST_F(AColliderComponent, UsesItsShapeToDetermineWhetherThereIsACollision)
@@ -40,4 +25,10 @@ TEST_F(AColliderComponent, UsesItsShapeToDetermineWhetherThereIsACollision)
     ASSERT_FALSE(collider1.collidesWith(collider2));
     collider1.shape()->collides = true;
     ASSERT_TRUE(collider1.collidesWith(collider2));
+}
+
+TEST_F(AColliderComponent, HasItsRole)
+{
+    ColliderComponentWithDummyShape collider_{role, std::make_unique<DummyColliderShape>(), &gameObject, &manager};
+    ASSERT_THAT(collider_.role(), Eq(role));
 }

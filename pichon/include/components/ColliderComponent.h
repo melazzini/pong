@@ -9,9 +9,9 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
 template <typename TColliderShape> class ColliderComponent : public Component
 {
   public:
-    ColliderComponent(std::unique_ptr<TColliderShape> colliderShape, GameObject *owner,
+    ColliderComponent(std::string role, std::unique_ptr<TColliderShape> colliderShape, GameObject *owner,
                       ColliderComponentManagerBase<TColliderShape> *manager)
-        : Component{owner, manager}, m_shape{std::move(colliderShape)}
+        : Component{owner, manager}, m_role{std::move(role)}, m_shape{std::move(colliderShape)}
     {
     }
     bool collidesWith(const ColliderComponent<TColliderShape> &other) const
@@ -24,7 +24,13 @@ template <typename TColliderShape> class ColliderComponent : public Component
         return m_shape;
     }
 
-  protected:
+    const std::string &role() const
+    {
+        return m_role;
+    }
+
+  private:
+    std::string m_role;
     std::unique_ptr<TColliderShape> m_shape;
 };
 
