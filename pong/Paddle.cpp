@@ -12,6 +12,21 @@
 #include <glm/fwd.hpp>
 #include <memory>
 
+class PaddleBoxCollider : public BoxColliderComponent
+{
+  public:
+    PaddleBoxCollider(Paddle *owner, BoxColliderComponentManager *manager)
+        : BoxColliderComponent(owner, manager, "paddle")
+    {
+    }
+
+    void update(float deltatime) override
+    {
+        std::cout << "PaddleBoxCollider: " << __FUNCTION__ << std::endl;
+        // m_manager->checkCollisionWith("tag");
+    }
+};
+
 Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
 {
     const RectangularGeometry size{20, 100};
@@ -28,5 +43,5 @@ Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
     auto drawableComponent{
         addComponent<PaddleDrawableComponent>(this, DrawableComponentManager::getInstance(renderer))};
     auto inputComponent{addComponent<PaddleInputComponent>(this, InputComponentManager::getInstance(eventManager))};
-    auto boxColliderComponent{addComponent<BoxColliderComponent>(this, BoxColliderComponentManager::getInstance())};
+    auto boxColliderComponent{addComponent<PaddleBoxCollider>(this, BoxColliderComponentManager::getInstance())};
 }

@@ -1,7 +1,42 @@
 #pragma once
 #include "Component.h"
+#include "GameObject.h"
+#include <string>
+#include <vector>
 
-class BoxColliderComponentManager : public ComponentManager
+struct BoxColliderComponent;
+
+struct BoxColliderComponentManagerBase : ComponentManager
+{
+    void checkForCollisionsWith(std::string)
+    {
+    }
+};
+
+class BoxColliderComponent : public Component
+{
+  public:
+    BoxColliderComponent(GameObject *owner, BoxColliderComponentManagerBase *manager, std::string tag = "unknown")
+        : Component(owner, manager), m_manager{manager}, m_tag{tag}
+    {
+    }
+    void update(float deltatime) override
+    {
+    }
+
+    const std::string &tag() const
+    {
+        return m_tag;
+    }
+
+  protected:
+    BoxColliderComponentManagerBase *m_manager;
+
+  private:
+    std::string m_tag;
+};
+
+class BoxColliderComponentManager : public BoxColliderComponentManagerBase
 {
   public:
     static BoxColliderComponentManager *getInstance();
@@ -9,14 +44,3 @@ class BoxColliderComponentManager : public ComponentManager
   private:
     BoxColliderComponentManager() = default;
 };
-
-struct BoxColliderComponent : Component
-{
-    BoxColliderComponent(GameObject *owner, ComponentManager *manager) : Component(owner, manager)
-    {
-    }
-    void update(float deltatime) override
-    {
-    }
-};
-
