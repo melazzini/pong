@@ -1,10 +1,25 @@
 #pragma once
 #include "Component.h"
+#include <iostream>
 #include <memory>
 #include <set>
 
+template <typename TColliderShape> struct ColliderComponent;
+
 template <typename TColliderShape> class ColliderComponentManagerBase : public ComponentManager
 {
+  public:
+    [[nodiscard]] const std::set<std::string> &collisionTags() const
+    {
+    }
+
+    [[nodiscard]] std::set<std::string> collisionTagsFor(
+        const ColliderComponent<TColliderShape> &colliderComponent) const;
+
+    void registerComponent(Component *component) override;
+
+  private:
+    std::set<std::string> m_tags;
 };
 
 struct CollisionType
@@ -64,7 +79,7 @@ template <typename TColliderShape> class ColliderComponent : public Component
         return m_collisionTypes.contains(collision);
     }
 
-    const std::set<CollisionType> collisions() const
+    const std::set<CollisionType> &collisions() const
     {
         return m_collisionTypes;
     }
@@ -95,3 +110,20 @@ class CircularColliderShape
 
 using CircularColliderComponet = ColliderComponent<CircularColliderShape>;
 using RectangularColliderComponent = ColliderComponent<Boxcollidershape>;
+
+template <typename TColliderShape>
+std::set<std::string> ColliderComponentManagerBase<TColliderShape>::collisionTagsFor(
+    const ColliderComponent<TColliderShape> &colliderComponent) const
+{
+    return m_tags;
+}
+
+template <typename TColliderShape>
+void ColliderComponentManagerBase<TColliderShape>::registerComponent(Component *component)
+{
+    ComponentManager::registerComponent(component);
+
+    dynamic_cast<ColliderComponent<TColliderShape> *>(component);
+    m_tags.emplace("yeah!");
+}
+

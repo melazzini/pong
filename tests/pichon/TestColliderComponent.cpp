@@ -53,3 +53,4 @@ TEST_F(AColliderComponent, HasItsCollisionsList)
     ColliderComponentWithDummyShape collider_{std::move(colliderDescriptor_), &gameObject, &manager};
     ASSERT_TRUE(collisions == collider_.collisions());
 }
+
