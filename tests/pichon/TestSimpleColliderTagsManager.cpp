@@ -10,30 +10,8 @@
 #include <stdexcept>
 #include <vector>
 
-// TODO: test drive this first!
-struct IColliderTagsManager
-{
-    virtual std::string buildTag(const std::string &colliderRoleA, const std::string &colliderRoleB) const = 0;
+using testing::Eq;
 
-    virtual bool tagsAreEqual(const std::string &tagA, const std::string &tagB) const = 0;
-};
-
-struct SimpleColliderTagsManager : IColliderTagsManager
-{
-    inline static const std::string SEPARATOR{"_"};
-    std::string buildTag(const std::string &colliderRoleA, const std::string &colliderRoleB) const override
-    {
-        return colliderRoleA + SEPARATOR + colliderRoleB;
-    }
-
-    bool tagsAreEqual(const std::string &tagA, const std::string &tagB) const override
-    {
-        std::vector<std::string> rolesTagsA{splitByListOfCharSeparators(tagA, SEPARATOR)};
-        std::vector<std::string> rolesTagsB{splitByListOfCharSeparators(tagB, SEPARATOR)};
-        return (rolesTagsA[0] == rolesTagsB[0] && rolesTagsA[1] == rolesTagsB[1]) ||
-               (rolesTagsA[0] == rolesTagsB[1] && rolesTagsA[1] == rolesTagsB[0]);
-    }
-};
 
 struct SimpleColliderTagsManagerTest : testing::Test
 {

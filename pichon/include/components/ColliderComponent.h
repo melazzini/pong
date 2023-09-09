@@ -4,6 +4,22 @@
 #include <memory>
 #include <set>
 
+struct IColliderTagsManager
+{
+    virtual std::string buildTag(const std::string &colliderRoleA, const std::string &colliderRoleB) const = 0;
+
+    virtual bool tagsAreEqual(const std::string &tagA, const std::string &tagB) const = 0;
+};
+
+class SimpleColliderTagsManager : IColliderTagsManager
+{
+  public:
+    inline static const std::string SEPARATOR{"_"};
+    std::string buildTag(const std::string &colliderRoleA, const std::string &colliderRoleB) const override;
+
+    bool tagsAreEqual(const std::string &tagA, const std::string &tagB) const override;
+};
+
 template <typename TColliderShape> struct ColliderComponent;
 
 template <typename TColliderShape> class ColliderComponentManagerBase : public ComponentManager
