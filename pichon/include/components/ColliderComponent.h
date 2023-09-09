@@ -1,17 +1,42 @@
 #pragma once
 #include "Component.h"
 #include <memory>
+#include <set>
 
 template <typename TColliderShape> class ColliderComponentManagerBase : public ComponentManager
 {
 };
 
+struct CollisionType
+{
+    std::string roleOfInterest{""};
+    size_t maxNumberOfCollisions{};
+
+    bool operator<(const CollisionType &other) const
+    {
+
+        return std::pair<std::string, int>{roleOfInterest, maxNumberOfCollisions} <
+               std::pair<std::string, int>{other.roleOfInterest, maxNumberOfCollisions};
+    }
+};
+
+template <typename TColliderShape> struct ColliderDescriptor
+{
+    std::unique_ptr<TColliderShape> colliderShape;
+    std::string role;
+    std::set<CollisionType> collisions;
+};
+
 template <typename TColliderShape> class ColliderComponent : public Component
 {
   public:
-    ColliderComponent(std::string role, std::unique_ptr<TColliderShape> colliderShape, GameObject *owner,
+    ColliderComponent(ColliderDescriptor<TColliderShape> colliderDescriptor, GameObject *owner,
                       ColliderComponentManagerBase<TColliderShape> *manager)
-        : Component{owner, manager}, m_role{std::move(role)}, m_shape{std::move(colliderShape)}
+        : Component{owner, manager}, m_shape{std::move(colliderDescriptor.colliderShape)},
+          m_role{std::move(
+
+              colliderDescriptor.role)},
+          m_collisionTypes{std::move(colliderDescriptor.collisions)}
     {
     }
     bool collidesWith(const ColliderComponent<TColliderShape> &other) const
@@ -29,9 +54,15 @@ template <typename TColliderShape> class ColliderComponent : public Component
         return m_role;
     }
 
+    bool hasCollision(const CollisionType &collision) const
+    {
+        return m_collisionTypes.contains(collision);
+    }
+
   private:
-    std::string m_role;
     std::unique_ptr<TColliderShape> m_shape;
+    std::string m_role;
+    std::set<CollisionType> m_collisionTypes;
 };
 
 class Boxcollidershape

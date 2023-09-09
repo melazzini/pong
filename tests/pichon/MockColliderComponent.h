@@ -14,6 +14,7 @@ struct DummyColliderShape
 
 using ColliderComponentWithDummyShape = ColliderComponent<DummyColliderShape>;
 using ColliderComponentManagerWithDummyShape = ColliderComponentManagerBase<DummyColliderShape>;
+using DummyColliderDescriptor = ColliderDescriptor<DummyColliderShape>;
 
 struct MockColliderComponentManagerBase : ColliderComponentManagerWithDummyShape
 {
