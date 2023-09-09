@@ -1,12 +1,14 @@
 #include "MockColliderComponent.h"
 #include "components/BoxColliderComponent.h"
 #include "components/ColliderComponent.h"
+#include "utils.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 using testing::Eq;
 using testing::Ge;
@@ -64,20 +66,40 @@ struct IColliderTagsManager
 
 struct SimpleColliderTagsManager : IColliderTagsManager
 {
+    inline static const std::string SEPARATOR{"_"};
     std::string buildTag(const std::string &colliderRoleA, const std::string &colliderRoleB) const override
     {
-        return colliderRoleA + "-" + colliderRoleB;
+        return colliderRoleA + SEPARATOR + colliderRoleB;
     }
 
     bool tagsAreEqual(const std::string &tagA, const std::string &tagB) const override
     {
-        return false;
+        std::vector<std::string> rolesTagsA{splitByListOfCharSeparators(tagA, SEPARATOR)};
+        std::vector<std::string> rolesTagsB{splitByListOfCharSeparators(tagB, SEPARATOR)};
+        return (rolesTagsA[0] == rolesTagsB[0] && rolesTagsA[1] == rolesTagsB[1]) ||
+               (rolesTagsA[0] == rolesTagsB[1] && rolesTagsA[1] == rolesTagsB[0]);
     }
 };
 
-TEST(SimpleColliderTagsManager, BuildsTagsFromTwoRolesAsFollows_RoleLeft_dash_RoleRight)
+struct SimpleColliderTagsManagerTest : testing::Test
 {
     SimpleColliderTagsManager tagsManager;
-    auto tag{tagsManager.buildTag("RoleA", "RoleB")};
-    ASSERT_THAT(tag, Eq("RoleA-RoleB"));
+    const char *roleA{"RoleA"};
+    const char *roleB{"RoleB"};
+};
+
+TEST_F(SimpleColliderTagsManagerTest, BuildsTagsFromTwoRolesAsFollows_RoleLeft_SEPARATOR_RoleRight)
+{
+    auto tag{tagsManager.buildTag(roleA, roleB)};
+    ASSERT_THAT(tag, Eq(roleA + SimpleColliderTagsManager::SEPARATOR + roleB));
+}
+
+TEST_F(SimpleColliderTagsManagerTest, ConsidersTag_RoleA_RoleB_EqualTo_RoleB_RoleA)
+{
+    ASSERT_TRUE(tagsManager.tagsAreEqual("RoleA_RoleB", "RoleB_RoleA"));
+}
+
+TEST_F(SimpleColliderTagsManagerTest, ConsidersTwoTagsAsDifferentIfTheRolesAreDifferent)
+{
+    ASSERT_FALSE(tagsManager.tagsAreEqual("RoleA_RoleC", "RoleB_RoleA"));
 }
