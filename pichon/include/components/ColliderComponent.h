@@ -18,6 +18,11 @@ struct CollisionType
         return std::pair<std::string, int>{roleOfInterest, maxNumberOfCollisions} <
                std::pair<std::string, int>{other.roleOfInterest, maxNumberOfCollisions};
     }
+
+    bool operator==(const CollisionType &other) const
+    {
+        return (roleOfInterest == other.roleOfInterest) && (maxNumberOfCollisions == other.maxNumberOfCollisions);
+    }
 };
 
 template <typename TColliderShape> struct ColliderDescriptor
@@ -57,6 +62,11 @@ template <typename TColliderShape> class ColliderComponent : public Component
     bool hasCollision(const CollisionType &collision) const
     {
         return m_collisionTypes.contains(collision);
+    }
+
+    const std::set<CollisionType> collisions() const
+    {
+        return m_collisionTypes;
     }
 
   private:

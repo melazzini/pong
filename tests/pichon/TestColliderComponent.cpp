@@ -22,7 +22,6 @@ struct AColliderComponent : testing::Test
     size_t nColisions2{1};
     std::set<CollisionType> collisions;
     CollisionType collisionToBeInserted{otherRole1, nColisions1};
-    CollisionType collisionNotToBeInserted{otherRole2, nColisions2};
     DummyColliderDescriptor colliderDescriptor1{std::make_unique<DummyColliderShape>(), role};
     DummyColliderDescriptor colliderDescriptor2{std::make_unique<DummyColliderShape>(), role};
     ColliderComponentWithDummyShape collider1{std::move(colliderDescriptor1), &gameObject, &manager};
@@ -50,10 +49,7 @@ TEST_F(AColliderComponent, HasItsRole)
 
 TEST_F(AColliderComponent, HasItsCollisionsList)
 {
-    ASSERT_TRUE(collisions.contains(collisionToBeInserted));
-    ASSERT_FALSE(collisions.contains(collisionNotToBeInserted));
     DummyColliderDescriptor colliderDescriptor_{std::make_unique<DummyColliderShape>(), role, collisions};
     ColliderComponentWithDummyShape collider_{std::move(colliderDescriptor_), &gameObject, &manager};
-    ASSERT_TRUE(collider_.hasCollision(collisionToBeInserted));
-    ASSERT_FALSE(collider_.hasCollision(collisionNotToBeInserted));
+    ASSERT_TRUE(collisions == collider_.collisions());
 }
