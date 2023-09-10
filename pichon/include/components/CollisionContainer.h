@@ -1,5 +1,6 @@
 #pragma once
 #include "ColliderComponent.h"
+#include "ColliderTagsManager.h"
 #include "utils.h"
 #include <list>
 #include <optional>
@@ -19,10 +20,10 @@ template <typename TColliderShape> struct CollisionInfo
 template <typename TColliderShape> struct ICollisionContainer
 {
     virtual void insertCollision(CollisionInfo<TColliderShape> collisionInfo) = 0;
-    virtual bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) = 0;
-    virtual std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) = 0;
+    [[nodiscard]] virtual bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
+    virtual std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
     virtual std::optional<size_t> maxNumberOfCollisions(const std::string &colliderTag,
-                                                        ColliderComponent<TColliderShape> *collider) const = 0;
+                                                        const ColliderComponent<TColliderShape> *collider) const = 0;
     virtual std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
         const std::string &role) = 0;
 
@@ -51,7 +52,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         }
     }
 
-    bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) override
+    bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) const override
     {
         auto [possibleTag1, possibleTag2]{buildPossibleTags(collisionInfo.colliderRole, collisionInfo.roleOfInterest)};
         if (!containsAnyOfThePossibleTags(possibleTag1, possibleTag2))
@@ -61,7 +62,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         return true;
     }
 
-    std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) override
+    std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) const override
     {
         auto [possibleTag1, possibleTag2]{buildPossibleTags(collisionInfo.colliderRole, collisionInfo.roleOfInterest)};
         if (!containsAnyOfThePossibleTags(possibleTag1, possibleTag2))
@@ -72,7 +73,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     }
 
     std::optional<size_t> maxNumberOfCollisions(const std::string &colliderTag,
-                                                ColliderComponent<TColliderShape> *collider) const override
+                                                const ColliderComponent<TColliderShape> *collider) const override
     {
         if (m_maxNumberOfCollisions.contains({colliderTag, collider}))
         {
@@ -100,7 +101,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     std::shared_ptr<IColliderTagsManager> m_colliderTagsManager;
     std::unordered_set<std::string> m_tags;
     std::unordered_map<std::string, std::unordered_set<ColliderComponent<TColliderShape> *>> m_collidersByRole;
-    std::unordered_map<std::pair<std::string, ColliderComponent<TColliderShape> *>, size_t, hash_pair>
+    std::unordered_map<std::pair<std::string, const ColliderComponent<TColliderShape> *>, size_t, hash_pair>
         m_maxNumberOfCollisions;
 
   private:

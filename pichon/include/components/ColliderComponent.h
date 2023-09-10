@@ -6,52 +6,6 @@
 #include <string>
 #include <tuple>
 
-struct IColliderTagsManager
-{
-    [[nodiscard]] virtual std::string buildTag(const std::string &colliderRoleA,
-                                               const std::string &colliderRoleB) const = 0;
-    [[nodiscard]] virtual bool tagsAreEqual(const std::string &tagA, const std::string &tagB) const = 0;
-    [[nodiscard]] virtual std::pair<std::string, std::string> getRolesForTag(const std::string &tag) const = 0;
-    [[nodiscard]] virtual bool validTag(const std::string &tag) const = 0;
-    virtual ~IColliderTagsManager() = default;
-};
-
-class SimpleColliderTagsManager : public IColliderTagsManager
-{
-  public:
-    inline static const size_t NUM_SEPARATORS{1};
-    inline static const size_t NUM_ROLES{2};
-
-    inline static const std::string SEPARATOR{"_"};
-    std::string buildTag(const std::string &colliderRoleA, const std::string &colliderRoleB) const override;
-    bool tagsAreEqual(const std::string &tagA, const std::string &tagB) const override;
-    std::pair<std::string, std::string> getRolesForTag(const std::string &tag) const override;
-    bool validTag(const std::string &tag) const override;
-
-  private:
-    size_t countNumberOfSeparatorsInTag(const std::string &tag) const;
-    bool validNumberOfSeparators(const std::string &tag) const;
-    bool validNumberOfRoles(const std::string &tag) const;
-};
-
-template <typename TColliderShape> struct ColliderComponent;
-
-template <typename TColliderShape> class ColliderComponentManagerBase : public ComponentManager
-{
-  public:
-    [[nodiscard]] const std::set<std::string> &collisionTags() const
-    {
-    }
-
-    [[nodiscard]] std::set<std::string> collisionTagsFor(
-        const ColliderComponent<TColliderShape> &colliderComponent) const;
-
-    void registerComponent(Component *component) override;
-
-  private:
-    std::set<std::string> m_tags;
-};
-
 struct CollisionType
 {
     std::string roleOfInterest{""};
@@ -76,6 +30,8 @@ template <typename TColliderShape> struct ColliderDescriptor
     std::string role;
     std::set<CollisionType> collisions;
 };
+
+template <typename TColliderShape> class ColliderComponentManagerBase;
 
 template <typename TColliderShape> class ColliderComponent : public Component
 {
@@ -140,20 +96,4 @@ class CircularColliderShape
 
 using CircularColliderComponet = ColliderComponent<CircularColliderShape>;
 using RectangularColliderComponent = ColliderComponent<Boxcollidershape>;
-
-template <typename TColliderShape>
-std::set<std::string> ColliderComponentManagerBase<TColliderShape>::collisionTagsFor(
-    const ColliderComponent<TColliderShape> &colliderComponent) const
-{
-    return m_tags;
-}
-
-template <typename TColliderShape>
-void ColliderComponentManagerBase<TColliderShape>::registerComponent(Component *component)
-{
-    ComponentManager::registerComponent(component);
-
-    dynamic_cast<ColliderComponent<TColliderShape> *>(component);
-    m_tags.emplace("yeah!");
-}
 

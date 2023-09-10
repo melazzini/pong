@@ -1,4 +1,5 @@
 #include "components/ColliderComponent.h"
+#include "components/ColliderTagsManager.h"
 #include "utils.h"
 #include <stdexcept>
 #include <utility>
