@@ -32,8 +32,7 @@ template <typename TColliderShape> struct ICollisionContainer
 template <typename TColliderShape> class CollisionContainer : public ICollisionContainer<TColliderShape>
 {
   public:
-    CollisionContainer(std::unique_ptr<IColliderTagsManager> tagsManager)
-        : m_colliderTagsManager{std::move(tagsManager)}
+    CollisionContainer(std::shared_ptr<IColliderTagsManager> tagsManager) : m_colliderTagsManager{tagsManager}
     {
     }
     void insertCollision(CollisionInfo<TColliderShape> collisionInfo) override
@@ -98,7 +97,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     }
 
   private:
-    std::unique_ptr<IColliderTagsManager> m_colliderTagsManager;
+    std::shared_ptr<IColliderTagsManager> m_colliderTagsManager;
     std::unordered_set<std::string> m_tags;
     std::unordered_map<std::string, std::unordered_set<ColliderComponent<TColliderShape> *>> m_collidersByRole;
     std::unordered_map<std::pair<std::string, ColliderComponent<TColliderShape> *>, size_t, hash_pair>

@@ -33,14 +33,14 @@ struct CollisionContainerTest : testing::Test
     DummyColliderDescriptor colliderDescriptor{std::make_unique<DummyColliderShape>(), role};
     ColliderComponentWithDummyShape collider{std::move(colliderDescriptor), &gameObject, &manager};
     CollisionInfo<DummyColliderShape> info{role, &collider, roleOfInterest, nColisions};
-    std::unique_ptr<MockColliderTagsManager> tagsManager{std::make_unique<MockColliderTagsManager>()};
+    std::shared_ptr<MockColliderTagsManager> tagsManager{std::make_shared<MockColliderTagsManager>()};
     MockColliderTagsManager *tagsManagerSpy{tagsManager.get()};
     std::unique_ptr<CollisionContainerWithDummyShape> container; //{std::move(tagsManager)};
     std::string dummyTag{"DummyTag"};
     std::string emptyTag{""};
     void SetUp() override
     {
-        container = std::make_unique<CollisionContainerWithDummyShape>(std::move(tagsManager));
+        container = std::make_unique<CollisionContainerWithDummyShape>(tagsManager);
     }
     void TearDown() override
     {
