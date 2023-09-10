@@ -38,6 +38,7 @@ TEST_F(SimpleColliderTagsManagerTest, ConsidersATagAsBeingInvalidIfItStartsOrEnd
 {
     ASSERT_FALSE(tagsManager.validTag("_RoleARoleB"));
     ASSERT_FALSE(tagsManager.validTag("RoleARoleB_"));
+    ASSERT_FALSE(tagsManager.validTag("_RoleARole_B"));
 }
 
 TEST_F(SimpleColliderTagsManagerTest, BuildsTagsFromTwoRolesAsFollows_RoleLeft_SEPARATOR_RoleRight)

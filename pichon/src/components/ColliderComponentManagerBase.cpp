@@ -23,7 +23,21 @@ std::pair<std::string, std::string> SimpleColliderTagsManager::getRolesForTag(co
 
 bool SimpleColliderTagsManager::validTag(const std::string &tag) const
 {
+    return validNumberOfRoles(tag) && validNumberOfSeparators(tag);
+}
+
+bool SimpleColliderTagsManager::validNumberOfRoles(const std::string &tag) const
+{
     std::vector<std::string> roles{splitByListOfCharSeparators(tag, SEPARATOR)};
+    return roles.size() == NUM_ROLES;
+}
+bool SimpleColliderTagsManager::validNumberOfSeparators(const std::string &tag) const
+{
+    return countNumberOfSeparatorsInTag(tag) == NUM_SEPARATORS;
+}
+
+size_t SimpleColliderTagsManager::countNumberOfSeparatorsInTag(const std::string &tag) const
+{
     size_t numOfSeparators{};
     for (auto character : tag)
     {
@@ -32,9 +46,5 @@ bool SimpleColliderTagsManager::validTag(const std::string &tag) const
             ++numOfSeparators;
         }
     }
-    if (roles.size() == 2 && numOfSeparators == 1)
-    {
-        return true;
-    }
-    return false;
+    return numOfSeparators;
 }
