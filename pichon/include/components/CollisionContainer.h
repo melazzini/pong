@@ -22,6 +22,8 @@ template <typename TColliderShape> struct ICollisionContainer
     virtual std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) = 0;
     virtual std::optional<size_t> maxNumberOfCollisions(const std::string &colliderTag,
                                                         ColliderComponent<TColliderShape> *collider) const = 0;
+    virtual std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
+        const std::string &role) = 0;
 };
 
 template <typename TColliderShape> class CollisionContainer : public ICollisionContainer<TColliderShape>
@@ -39,6 +41,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
             m_tags.emplace(possibleTag1);
             m_maxNumberOfCollisions[std::pair{possibleTag1, collisionInfo.colliderComponent}] =
                 collisionInfo.maxNumberOfCollisions;
+            m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
         }
     }
 
@@ -72,10 +75,20 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         return std::nullopt;
     }
 
+    virtual std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
+        const std::string &role) override
+    {
+        if (m_collidersByRole.contains(role))
+        {
+            return &m_collidersByRole.at(role);
+        }
+        return std::nullopt;
+    }
+
   private:
     std::unique_ptr<IColliderTagsManager> m_colliderTagsManager;
     std::unordered_set<std::string> m_tags;
-    std::unordered_map<std::string, std::list<ColliderComponent<TColliderShape> *>> m_collidersByRole;
+    std::unordered_map<std::string, std::unordered_set<ColliderComponent<TColliderShape> *>> m_collidersByRole;
     std::unordered_map<std::pair<std::string, ColliderComponent<TColliderShape> *>, size_t, hash_pair>
         m_maxNumberOfCollisions;
 

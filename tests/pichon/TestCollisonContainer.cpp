@@ -1,5 +1,7 @@
 #include "MockColliderComponent.h"
 #include "components/CollisionContainer.h"
+#include "gmock/gmock.h"
+#include "gtest/gtest.h"
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
@@ -8,6 +10,7 @@
 using testing::AtLeast;
 using testing::Eq;
 using testing::Mock;
+using testing::Ne;
 using testing::Return;
 
 using CollisionContainerWithDummyShape = CollisionContainer<DummyColliderShape>;
@@ -78,4 +81,13 @@ TEST_F(CollisionContainerTest, KnowsMaxNumberOfCollisionsForColliderAndItsCollis
     auto tagForCollision{container->tagForCollision(info)};
     auto maxNumberOfCollisions{container->maxNumberOfCollisions(tagForCollision.value(), info.colliderComponent)};
     ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
+}
+
+TEST_F(CollisionContainerTest, RemembersInsertedCollidersByRole)
+{
+    container->insertCollision(info);
+    auto colliderComponents{container->getCollidersByRole(info.colliderRole)};
+    ASSERT_TRUE(colliderComponents.has_value());
+    ASSERT_TRUE(colliderComponents.value() != nullptr);
+    ASSERT_TRUE(colliderComponents.value()->contains(info.colliderComponent));
 }
