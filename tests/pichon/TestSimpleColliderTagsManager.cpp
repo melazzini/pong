@@ -24,6 +24,16 @@ TEST_F(SimpleColliderTagsManagerTest, ConsidersATagAsBeingInvalidIfItContainsMor
     ASSERT_FALSE(tagsManager.validTag("RoleA_Role_B"));
 }
 
+TEST_F(SimpleColliderTagsManagerTest, ConsidersATagAsBeingInvalidIfItIsEmpty)
+{
+    ASSERT_FALSE(tagsManager.validTag(""));
+}
+
+TEST_F(SimpleColliderTagsManagerTest, ConsidersATagAsBeingValidIfItIsOfTheForm_RoleA_Separator_RoleB)
+{
+    ASSERT_TRUE(tagsManager.validTag("RoleA_RoleB"));
+}
+
 TEST_F(SimpleColliderTagsManagerTest, BuildsTagsFromTwoRolesAsFollows_RoleLeft_SEPARATOR_RoleRight)
 {
     auto tag{tagsManager.buildTag(roleA, roleB)};
