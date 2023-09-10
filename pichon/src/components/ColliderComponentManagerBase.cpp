@@ -1,5 +1,6 @@
 #include "components/ColliderComponent.h"
 #include "utils.h"
+#include <stdexcept>
 #include <utility>
 
 std::string SimpleColliderTagsManager::buildTag(const std::string &colliderRoleA,
@@ -9,16 +10,30 @@ std::string SimpleColliderTagsManager::buildTag(const std::string &colliderRoleA
 }
 bool SimpleColliderTagsManager::tagsAreEqual(const std::string &tagA, const std::string &tagB) const
 {
-    std::vector<std::string> rolesTagsA{splitByListOfCharSeparators(tagA, SEPARATOR)};
-    std::vector<std::string> rolesTagsB{splitByListOfCharSeparators(tagB, SEPARATOR)};
-    return (rolesTagsA[0] == rolesTagsB[0] && rolesTagsA[1] == rolesTagsB[1]) ||
-           (rolesTagsA[0] == rolesTagsB[1] && rolesTagsA[1] == rolesTagsB[0]);
+    if (validTag(tagA) && validTag(tagB))
+    {
+        std::vector<std::string> rolesTagsA{splitByListOfCharSeparators(tagA, SEPARATOR)};
+        std::vector<std::string> rolesTagsB{splitByListOfCharSeparators(tagB, SEPARATOR)};
+        return (rolesTagsA[0] == rolesTagsB[0] && rolesTagsA[1] == rolesTagsB[1]) ||
+               (rolesTagsA[0] == rolesTagsB[1] && rolesTagsA[1] == rolesTagsB[0]);
+    }
+    else
+    {
+        throw std::runtime_error{"Provided invalid tag when attempting to compare two tags for equality!"};
+    }
 }
 
 std::pair<std::string, std::string> SimpleColliderTagsManager::getRolesForTag(const std::string &tag) const
 {
-    std::vector<std::string> roles{splitByListOfCharSeparators(tag, SEPARATOR)};
-    return {std::string{roles[0]}, std::string{roles[1]}};
+    if (validTag(tag))
+    {
+        std::vector<std::string> roles{splitByListOfCharSeparators(tag, SEPARATOR)};
+        return {std::string{roles[0]}, std::string{roles[1]}};
+    }
+    else
+    {
+        throw std::runtime_error{"Provided invalid tag when attempting to get the roles of the colliders!"};
+    }
 }
 
 bool SimpleColliderTagsManager::validTag(const std::string &tag) const

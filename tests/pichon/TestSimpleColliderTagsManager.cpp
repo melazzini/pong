@@ -64,3 +64,14 @@ TEST_F(SimpleColliderTagsManagerTest, GivesYouTheRolesFromAGivenTag)
     ASSERT_TRUE(role1 == "RoleA" || role1 == "RoleB");
     ASSERT_TRUE(role2 == "RoleA" || role2 == "RoleB");
 }
+
+TEST_F(SimpleColliderTagsManagerTest, ThrowsIfGivenAnInvalidTagToGetTheRoles)
+{
+    ASSERT_THROW(tagsManager.getRolesForTag("RoleA_Role_B"), std::runtime_error);
+}
+
+TEST_F(SimpleColliderTagsManagerTest, ThrowsIfGivenAtLeastAnInvalidTagToCompareForEquality)
+{
+    ASSERT_THROW(tagsManager.tagsAreEqual("", "RoleA_RoleB"), std::runtime_error);
+    ASSERT_THROW(tagsManager.tagsAreEqual("", ""), std::runtime_error);
+}
