@@ -34,6 +34,12 @@ TEST_F(SimpleColliderTagsManagerTest, ConsidersATagAsBeingValidIfItIsOfTheForm_R
     ASSERT_TRUE(tagsManager.validTag("RoleA_RoleB"));
 }
 
+TEST_F(SimpleColliderTagsManagerTest, ConsidersATagAsBeingInvalidIfItStartsOrEndsWithTheSeparator)
+{
+    ASSERT_FALSE(tagsManager.validTag("_RoleARoleB"));
+    ASSERT_FALSE(tagsManager.validTag("RoleARoleB_"));
+}
+
 TEST_F(SimpleColliderTagsManagerTest, BuildsTagsFromTwoRolesAsFollows_RoleLeft_SEPARATOR_RoleRight)
 {
     auto tag{tagsManager.buildTag(roleA, roleB)};
