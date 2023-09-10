@@ -12,13 +12,17 @@
 
 using testing::Eq;
 
-
 struct SimpleColliderTagsManagerTest : testing::Test
 {
     SimpleColliderTagsManager tagsManager;
     const char *roleA{"RoleA"};
     const char *roleB{"RoleB"};
 };
+
+TEST_F(SimpleColliderTagsManagerTest, ConsidersATagAsBeingInvalidIfItContainsMoreThanTwoSeparators)
+{
+    ASSERT_FALSE(tagsManager.validTag("RoleA_Role_B"));
+}
 
 TEST_F(SimpleColliderTagsManagerTest, BuildsTagsFromTwoRolesAsFollows_RoleLeft_SEPARATOR_RoleRight)
 {
@@ -34,4 +38,12 @@ TEST_F(SimpleColliderTagsManagerTest, ConsidersTag_RoleA_RoleB_EqualTo_RoleB_Rol
 TEST_F(SimpleColliderTagsManagerTest, ConsidersTwoTagsAsDifferentIfTheRolesAreDifferent)
 {
     ASSERT_FALSE(tagsManager.tagsAreEqual("RoleA_RoleC", "RoleB_RoleA"));
+}
+
+TEST_F(SimpleColliderTagsManagerTest, GivesYouTheRolesFromAGivenTag)
+{
+    auto [role1, role2]{tagsManager.getRolesForTag("RoleA_RoleB")};
+    ASSERT_TRUE(role1 != role2);
+    ASSERT_TRUE(role1 == "RoleA" || role1 == "RoleB");
+    ASSERT_TRUE(role2 == "RoleA" || role2 == "RoleB");
 }

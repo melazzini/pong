@@ -20,6 +20,8 @@ struct MockColliderTagsManager : IColliderTagsManager
 {
     MOCK_METHOD(std::string, buildTag, (const std::string &, const std::string &), (const override));
     MOCK_METHOD(bool, tagsAreEqual, (const std::string &, const std::string &), (const override));
+    MOCK_METHOD((std::pair<std::string, std::string>), getRolesForTag, (const std::string &), (const override));
+    MOCK_METHOD(bool, validTag, (const std::string &), (const override));
 };
 
 struct CollisionContainerTest : testing::Test
