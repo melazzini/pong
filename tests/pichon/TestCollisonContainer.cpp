@@ -108,3 +108,9 @@ TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, Reme
     ASSERT_TRUE(colliderComponents.value() != nullptr);
     ASSERT_TRUE(colliderComponents.value()->contains(info.colliderComponent));
 }
+
+TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, ReturnsASetOfAllTheTagsItHas)
+{
+    container->insertCollision(info);
+    ASSERT_FALSE(container->getAllTags().empty());
+}

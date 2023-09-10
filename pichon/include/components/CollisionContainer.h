@@ -25,6 +25,8 @@ template <typename TColliderShape> struct ICollisionContainer
                                                         ColliderComponent<TColliderShape> *collider) const = 0;
     virtual std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
         const std::string &role) = 0;
+
+    virtual const std::unordered_set<std::string> &getAllTags() const = 0;
 };
 
 template <typename TColliderShape> class CollisionContainer : public ICollisionContainer<TColliderShape>
@@ -80,7 +82,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         return std::nullopt;
     }
 
-    virtual std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
+    std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
         const std::string &role) override
     {
         if (m_collidersByRole.contains(role))
@@ -88,6 +90,11 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
             return &m_collidersByRole.at(role);
         }
         return std::nullopt;
+    }
+
+    const std::unordered_set<std::string> &getAllTags() const override
+    {
+        return m_tags;
     }
 
   private:
