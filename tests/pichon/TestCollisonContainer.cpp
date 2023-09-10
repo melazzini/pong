@@ -5,6 +5,7 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
+#include <stdexcept>
 #include <utility>
 
 using testing::AtLeast;
@@ -36,6 +37,7 @@ struct CollisionContainerTest : testing::Test
     MockColliderTagsManager *tagsManagerSpy{tagsManager.get()};
     std::unique_ptr<CollisionContainerWithDummyShape> container; //{std::move(tagsManager)};
     std::string dummyTag{"DummyTag"};
+    std::string emptyTag{""};
     void SetUp() override
     {
         container = std::make_unique<CollisionContainerWithDummyShape>(std::move(tagsManager));
@@ -47,35 +49,50 @@ struct CollisionContainerTest : testing::Test
     }
 };
 
+struct CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag : CollisionContainerTest
+{
+    void SetUp() override
+    {
+        CollisionContainerTest::SetUp();
+        EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
+    }
+};
+
 TEST_F(CollisionContainerTest, UsesItsTagsManagerToBuildATagWhenACollisionIsInserted)
 {
-    EXPECT_CALL(*tagsManagerSpy, buildTag).Times(AtLeast(1));
+    EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
     container->insertCollision(info);
+}
+
+TEST_F(CollisionContainerTest, ThrowsIfTheTagsManagerBuildEmpyTag)
+{
+    EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(emptyTag));
+    ASSERT_THROW(container->insertCollision(info), std::runtime_error);
 }
 
 TEST_F(CollisionContainerTest, CanAddACollision)
 {
+    EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
     ASSERT_FALSE(container->hasCollision(info));
     container->insertCollision(info);
     ASSERT_TRUE(container->hasCollision(info));
 }
 
-TEST_F(CollisionContainerTest, ReturnsANonEmptyTagIfTheCollisionExist)
+TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, ReturnsANonEmptyTagIfTheCollisionExist)
 {
-    EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
     container->insertCollision(info);
     ASSERT_TRUE(container->hasCollision(info));
     auto tagForCollision{container->tagForCollision(info)};
     ASSERT_FALSE(tagForCollision->empty());
 }
-TEST_F(CollisionContainerTest, DoesntReturnATagIfTheCollisionDoesntExist)
+TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, DoesntReturnATagIfTheCollisionDoesntExist)
 {
-    EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
     ASSERT_FALSE(container->hasCollision(info));
     auto tagForCollision{container->tagForCollision(info)};
     ASSERT_FALSE(tagForCollision.has_value());
 }
-TEST_F(CollisionContainerTest, KnowsMaxNumberOfCollisionsForColliderAndItsCollisionTag)
+TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag,
+       KnowsMaxNumberOfCollisionsForColliderAndItsCollisionTag)
 {
     container->insertCollision(info);
     auto tagForCollision{container->tagForCollision(info)};
@@ -83,7 +100,7 @@ TEST_F(CollisionContainerTest, KnowsMaxNumberOfCollisionsForColliderAndItsCollis
     ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
 }
 
-TEST_F(CollisionContainerTest, RemembersInsertedCollidersByRole)
+TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, RemembersInsertedCollidersByRole)
 {
     container->insertCollision(info);
     auto colliderComponents{container->getCollidersByRole(info.colliderRole)};

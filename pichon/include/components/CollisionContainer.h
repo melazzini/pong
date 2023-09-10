@@ -3,6 +3,7 @@
 #include "utils.h"
 #include <list>
 #include <optional>
+#include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
@@ -36,6 +37,10 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     void insertCollision(CollisionInfo<TColliderShape> collisionInfo) override
     {
         auto [possibleTag1, possibleTag2]{buildPossibleTags(collisionInfo.colliderRole, collisionInfo.roleOfInterest)};
+        if (possibleTag1.empty() || possibleTag2.empty())
+        {
+            throw std::runtime_error{"Received empty tags from the tags manager!"};
+        }
         if (!containsAnyOfThePossibleTags(possibleTag1, possibleTag2))
         {
             m_tags.emplace(possibleTag1);
