@@ -70,7 +70,7 @@ TEST_F(CollisionContainerTest, ThrowsIfTheTagsManagerBuildEmpyTag)
     ASSERT_THROW(container->insertCollisionInfo(info), std::runtime_error);
 }
 
-TEST_F(CollisionContainerTest, CanAddACollision)
+TEST_F(CollisionContainerTest, CanInsertACollisionInfo)
 {
     EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
     ASSERT_FALSE(container->hasCollision(info));
