@@ -85,6 +85,12 @@ TEST_F(CollisionContainerTest, CanRecordAnOccurredCollision)
     ASSERT_TRUE(container->colliderHasRecordOfCollisions(&collider));
 }
 
+TEST_F(CollisionContainerTest, CanReportTheRecordOfAllCollisions)
+{
+    container->recordCollision(&collider, OccurredCollisionInfoWithDummyShape{otherRole, &colliderOtherRole});
+    ASSERT_FALSE(container->recordsOfAllCollisions().empty());
+}
+
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, ReturnsANonEmptyTagIfTheCollisionExist)
 {
     container->insertCollisionInfo(info);

@@ -35,6 +35,9 @@ struct MockCollisionContainerWithDummyShape : ICollisionContainerWithDummyShape
     MOCK_METHOD((std::optional<std::unordered_set<ColliderComponentWithDummyShape *> *>), getCollidersByRole,
                 (const std::string &), (override));
     MOCK_METHOD(const std::unordered_set<std::string> &, getAllTags, (), (const override));
+    MOCK_METHOD((const std::unordered_map<ColliderComponentWithDummyShape *,
+                                          std::vector<OccurredCollisionInfoWithDummyShape>> &),
+                recordsOfAllCollisions, (), (const override));
 };
 
 struct MockColliderTagsManager : IColliderTagsManager
