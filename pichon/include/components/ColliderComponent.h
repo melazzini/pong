@@ -95,16 +95,16 @@ template <typename TColliderShape> class ColliderComponent : public Component
 class Boxcollidershape
 {
   public:
-    bool collideswith(const Boxcollidershape &other) const
+    bool collidesWith(const Boxcollidershape &other) const
     {
-        return false;
+        return true;
     };
 };
 
 class CircularColliderShape
 {
   public:
-    bool collideswith(const CircularColliderShape &other) const
+    bool collidesWith(const CircularColliderShape &other) const
     {
         return false;
     };

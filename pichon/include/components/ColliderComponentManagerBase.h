@@ -2,6 +2,8 @@
 #include "ColliderTagsManager.h"
 #include "Component.h"
 #include "components/ColliderValidator.h"
+#include "components/CollisionContainer.h"
+#include <cstdlib>
 #include <iomanip>
 #include <iostream>
 #include <memory>
@@ -25,11 +27,20 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
         ComponentManager::registerComponent(component);
     }
 
+    void insertCollisionInfo(CollisionInfo<TColliderShape> info)
+    {
+        m_collisionContainer->insertCollisionInfo(info);
+        std::cout << "Inserting info" << std::endl;
+    }
+
     void update(float deltatime) override
     {
+        std::cout << "Updating the ColliderComponentManagerBase!!!!" << std::endl;
+        m_collisionContainer->clearRecordedCollisions();
         const std::unordered_set<std::string> &allTags = m_collisionContainer->getAllTags();
         for (const auto &tag : allTags)
         {
+            std::cout << "I have tags!" << std::endl;
             auto [roleA, roleB]{m_tagsManager->getRolesForTag(tag)};
             auto collidersA = m_collisionContainer->getCollidersByRole(roleA);
             auto collidersB = m_collisionContainer->getCollidersByRole(roleB);
@@ -53,10 +64,29 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
                         }
                         if (col_A->collidesWith(col_B))
                         {
-                        };
+                            if (m_validator.colliderIsInterestedInRecordingCollisions(col_A))
+                            {
+                                OccurredCollisionInfo<TColliderShape> infoA{roleB, col_B};
+                                m_collisionContainer->recordCollision(col_A, infoA);
+                            }
+                            if (m_validator.colliderIsInterestedInRecordingCollisions(col_B))
+                            {
+                                OccurredCollisionInfo<TColliderShape> infoB{roleA, col_A};
+                                m_collisionContainer->recordCollision(col_B, infoB);
+                            }
+                        }
+                        if (!m_validator.canColliderAcceptMoreCollisions(m_collisionContainer.get(), col_A))
+                        {
+                            break;
+                        }
                     }
                 }
             }
+        }
+
+        for (auto colliderRecordPair : m_collisionContainer->recordsOfAllCollisions())
+        {
+            colliderRecordPair.first->update(deltatime);
         }
     }
 

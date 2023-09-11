@@ -3,6 +3,7 @@
 #include "EventUtils.h"
 #include "Game.h"
 #include "Interfaces.h"
+#include "RectangularColliderComponentManager.h"
 #include "components.h"
 #include "components/BoxColliderComponent.h"
 #include "components/Component.h"
@@ -11,6 +12,16 @@
 #include "components/TransformComponent.h"
 #include <glm/fwd.hpp>
 #include <memory>
+
+struct MyRectangularCollider : RectangularColliderComponent
+{
+    MyRectangularCollider(RectangularColliderDescriptor descriptor, GameObject *owner,
+                          RectangularColliderComponentManager *manager_)
+        : RectangularColliderComponent(std::move(descriptor), owner, manager_)
+    {
+        manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"paddle", this, "ball"});
+    }
+};
 
 class PaddleBoxCollider : public BoxColliderComponent
 {
@@ -43,5 +54,8 @@ Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
     auto drawableComponent{
         addComponent<PaddleDrawableComponent>(this, DrawableComponentManager::getInstance(renderer))};
     auto inputComponent{addComponent<PaddleInputComponent>(this, InputComponentManager::getInstance(eventManager))};
-    auto boxColliderComponent{addComponent<PaddleBoxCollider>(this, BoxColliderComponentManager::getInstance())};
+
+    auto ll{addComponent<MyRectangularCollider>(
+        RectangularColliderDescriptor{std::make_unique<Boxcollidershape>(), "paddleRole"}, this,
+        RectangularColliderComponentManager::getInstance())};
 }

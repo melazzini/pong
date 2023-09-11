@@ -3,9 +3,12 @@
 #include "Events.h"
 #include "GameObject.h"
 #include "Interfaces.h"
+#include "RectangularColliderComponentManager.h"
 #include "RectangularShape.h"
 #include "components/TransformComponent.h"
 #include "utils.h"
+#include <memory>
+#include <type_traits>
 
 class Paddle : public GameObject
 {

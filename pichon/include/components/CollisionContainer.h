@@ -38,6 +38,7 @@ template <typename TColliderShape> struct ICollisionContainer
         &recordsOfAllCollisions() const = 0;
 
     virtual const std::unordered_set<std::string> &getAllTags() const = 0;
+    virtual void clearRecordedCollisions() = 0;
 };
 
 template <typename TColliderShape> class CollisionContainer : public ICollisionContainer<TColliderShape>
@@ -119,6 +120,11 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         &recordsOfAllCollisions() const override
     {
         return m_recordsOfCollisionsForEachCollider;
+    }
+
+    void clearRecordedCollisions() override
+    {
+        m_recordsOfCollisionsForEachCollider.clear();
     }
 
   private:

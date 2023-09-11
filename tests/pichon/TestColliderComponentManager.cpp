@@ -9,6 +9,7 @@
 #include <memory>
 #include <optional>
 #include <stdexcept>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -34,6 +35,8 @@ struct AColliderComponentManager : testing::Test
     float dummyDeltatime{0};
     std::unordered_set<std::string> dummyTags;
     std::string dummyTag1{"RoleA_RoleB"};
+    std::unordered_map<ColliderComponentWithDummyShape *, std::vector<OccurredCollisionInfoWithDummyShape>>
+        dummyRecoredCollisions;
     void SetUp() override
     {
         dummyTags.emplace(dummyTag1);
@@ -41,6 +44,11 @@ struct AColliderComponentManager : testing::Test
         auto container_{std::make_unique<NiceMock<MockCollisionContainerWithDummyShape>>()};
         containerSpy = container_.get();
         ccm = new ColliderComponentManagerWithDummyShape{tagsManager, std::move(container_)};
+        EXPECT_CALL(*containerSpy, recordsOfAllCollisions)
+            .WillRepeatedly([this]() -> const std::unordered_map<ColliderComponentWithDummyShape *,
+                                                                 std::vector<OccurredCollisionInfoWithDummyShape>> & {
+                return dummyRecoredCollisions;
+            });
     }
     void TearDown() override
     {
@@ -138,14 +146,3 @@ TEST_F(AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTags
             });
     ccm->update(dummyDeltatime);
 }
-
-// struct AColliderComponentManagerWhenDetectsACollision
-//     : AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTagsManager
-//{
-// };
-//
-// TEST_F(AColliderComponentManagerWhenDetectsACollision, StoresTheCollisionForTheGivenColliders)
-//{
-//     FAIL();
-// }
-
