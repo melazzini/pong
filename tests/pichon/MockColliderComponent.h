@@ -27,6 +27,8 @@ struct MockCollisionContainerWithDummyShape : ICollisionContainerWithDummyShape
     MOCK_METHOD(void, insertCollisionInfo, (CollisionInfoWithDummyShape), (override));
     MOCK_METHOD(void, recordCollision, (ColliderComponentWithDummyShape *, OccurredCollisionInfoWithDummyShape),
                 (override));
+    MOCK_METHOD(std::optional<size_t>, numberOfRecordedCollisionsForCollider, (ColliderComponentWithDummyShape *),
+                (const override));
     MOCK_METHOD(bool, hasCollision, (const CollisionInfoWithDummyShape &), (const override));
     MOCK_METHOD(bool, colliderHasRecordOfCollisions, (ColliderComponentWithDummyShape *), (const override));
     MOCK_METHOD(std::optional<std::string>, tagForCollision, (const CollisionInfoWithDummyShape &), (const override));

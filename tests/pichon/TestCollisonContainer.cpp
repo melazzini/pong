@@ -102,10 +102,9 @@ TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, Does
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag,
        KnowsCurrentNumberOfRecordedCollisionsForACollider)
 {
-    // container->recordCollision(&collider, OccurredCollisionInfoWithDummyShape{otherRole, &colliderOtherRole});
-    // auto tagForCollision{container->tagForCollision(info)};
-    // auto maxNumberOfCollisions{container->maxNumberOfCollisions(tagForCollision.value(), info.colliderComponent)};
-    // ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
+    ASSERT_FALSE(container->numberOfRecordedCollisionsForCollider(&collider).has_value());
+    container->recordCollision(&collider, OccurredCollisionInfoWithDummyShape{otherRole, &colliderOtherRole});
+    ASSERT_THAT(container->numberOfRecordedCollisionsForCollider(&collider), Eq(1));
 }
 
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, RemembersInsertedCollidersByRole)

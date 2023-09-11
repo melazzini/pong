@@ -2,12 +2,12 @@
 #include "ColliderComponent.h"
 #include "ColliderTagsManager.h"
 #include "utils.h"
-#include <list>
 #include <optional>
 #include <stdexcept>
 #include <string>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 template <typename TColliderShape> struct CollisionInfo
 {
@@ -29,6 +29,7 @@ template <typename TColliderShape> struct ICollisionContainer
                                  OccurredCollisionInfo<TColliderShape>) = 0;
     [[nodiscard]] virtual bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
     [[nodiscard]] virtual bool colliderHasRecordOfCollisions(ColliderComponent<TColliderShape> *) const = 0;
+    virtual std::optional<size_t> numberOfRecordedCollisionsForCollider(ColliderComponent<TColliderShape> *) const = 0;
     virtual std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
     virtual std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
         const std::string &role) = 0;
@@ -52,8 +53,6 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         if (!containsAnyOfThePossibleTags(possibleTag1, possibleTag2))
         {
             m_tags.emplace(possibleTag1);
-            //            m_numberOfCollisions[std::pair{possibleTag1, collisionInfo.colliderComponent}] =
-            //               std::pair<size_t, size_t>{0, collisionInfo.maxNumberOfCollisions};
             m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
         }
     }
@@ -75,6 +74,16 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     virtual bool colliderHasRecordOfCollisions(ColliderComponent<TColliderShape> *collider) const override
     {
         return m_collidersToBeUpdated.contains(collider);
+    }
+
+    virtual std::optional<size_t> numberOfRecordedCollisionsForCollider(
+        ColliderComponent<TColliderShape> *collider) const
+    {
+        if (m_collidersToBeUpdated.contains(collider))
+        {
+            return m_collidersToBeUpdated.at(collider).size();
+        }
+        return std::nullopt;
     }
 
     std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) const override
@@ -106,10 +115,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     std::shared_ptr<IColliderTagsManager> m_colliderTagsManager;
     std::unordered_set<std::string> m_tags;
     std::unordered_map<std::string, std::unordered_set<ColliderComponent<TColliderShape> *>> m_collidersByRole;
-    std::unordered_map<std::pair<std::string, const ColliderComponent<TColliderShape> *>, std::pair<size_t, size_t>,
-                       hash_pair>
-        m_numberOfCollisions;
-    std::unordered_map<ColliderComponent<TColliderShape> *, std::list<OccurredCollisionInfo<TColliderShape>>>
+    std::unordered_map<ColliderComponent<TColliderShape> *, std::vector<OccurredCollisionInfo<TColliderShape>>>
         m_collidersToBeUpdated;
 
   private:
