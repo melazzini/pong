@@ -14,7 +14,6 @@ template <typename TColliderShape> struct CollisionInfo
     std::string colliderRole{};
     ColliderComponent<TColliderShape> *colliderComponent{};
     std::string roleOfInterest{};
-    size_t maxNumberOfCollisions{};
 };
 
 template <typename TColliderShape> struct OccurredCollisionInfo
@@ -31,8 +30,6 @@ template <typename TColliderShape> struct ICollisionContainer
     [[nodiscard]] virtual bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
     [[nodiscard]] virtual bool colliderHasRecordOfCollisions(ColliderComponent<TColliderShape> *) const = 0;
     virtual std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
-    virtual std::optional<size_t> maxNumberOfCollisions(const std::string &colliderTag,
-                                                        const ColliderComponent<TColliderShape> *collider) const = 0;
     virtual std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(
         const std::string &role) = 0;
 
@@ -55,8 +52,8 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         if (!containsAnyOfThePossibleTags(possibleTag1, possibleTag2))
         {
             m_tags.emplace(possibleTag1);
-            m_numberOfCollisions[std::pair{possibleTag1, collisionInfo.colliderComponent}] =
-                std::pair<size_t, size_t>{0, collisionInfo.maxNumberOfCollisions};
+            //            m_numberOfCollisions[std::pair{possibleTag1, collisionInfo.colliderComponent}] =
+            //               std::pair<size_t, size_t>{0, collisionInfo.maxNumberOfCollisions};
             m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
         }
     }
@@ -88,16 +85,6 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
             return std::nullopt;
         }
         return possibleTag1;
-    }
-
-    std::optional<size_t> maxNumberOfCollisions(const std::string &colliderTag,
-                                                const ColliderComponent<TColliderShape> *collider) const override
-    {
-        if (m_numberOfCollisions.contains({colliderTag, collider}))
-        {
-            return m_numberOfCollisions.at({colliderTag, collider}).second;
-        }
-        return std::nullopt;
     }
 
     std::optional<std::unordered_set<ColliderComponent<TColliderShape> *> *> getCollidersByRole(

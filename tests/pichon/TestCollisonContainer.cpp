@@ -32,7 +32,7 @@ struct CollisionContainerTest : testing::Test
     ColliderComponentWithDummyShape collider{std::move(colliderDescriptor), &gameObject, &manager};
     ColliderComponentWithDummyShape colliderOtherRole{std::move(colliderDescriptorOtherRole), &gameObjectOtherRole,
                                                       &manager};
-    CollisionInfo<DummyColliderShape> info{role, &collider, roleOfInterest, nColisions};
+    CollisionInfo<DummyColliderShape> info{role, &collider, roleOfInterest};
     std::shared_ptr<MockColliderTagsManager> tagsManager{std::make_shared<MockColliderTagsManager>()};
     MockColliderTagsManager *tagsManagerSpy{tagsManager.get()};
     std::unique_ptr<CollisionContainerWithDummyShape> container; //{std::move(tagsManager)};
@@ -98,22 +98,15 @@ TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, Does
     auto tagForCollision{container->tagForCollision(info)};
     ASSERT_FALSE(tagForCollision.has_value());
 }
+
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag,
-       KnowsMaxNumberOfCollisionsForColliderAndItsCollisionTag)
+       KnowsCurrentNumberOfRecordedCollisionsForACollider)
 {
-    container->insertCollisionInfo(info);
-    auto tagForCollision{container->tagForCollision(info)};
-    auto maxNumberOfCollisions{container->maxNumberOfCollisions(tagForCollision.value(), info.colliderComponent)};
-    ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
+    // container->recordCollision(&collider, OccurredCollisionInfoWithDummyShape{otherRole, &colliderOtherRole});
+    // auto tagForCollision{container->tagForCollision(info)};
+    // auto maxNumberOfCollisions{container->maxNumberOfCollisions(tagForCollision.value(), info.colliderComponent)};
+    // ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
 }
-// TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag,
-//        KnowsMaxNumberOfCollisionsForColliderAndItsCollisionTag)
-//{
-//     container->insertCollisionInfo(info);
-//     auto tagForCollision{container->tagForCollision(info)};
-//     auto maxNumberOfCollisions{container->maxNumberOfCollisions(tagForCollision.value(), info.colliderComponent)};
-//     ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
-// }
 
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, RemembersInsertedCollidersByRole)
 {

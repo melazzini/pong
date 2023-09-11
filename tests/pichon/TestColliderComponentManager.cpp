@@ -136,7 +136,6 @@ TEST_F(AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTags
             [this](const std::string &role) -> std::optional<std::unordered_set<ColliderComponentWithDummyShape *> *> {
                 return &collidersB;
             });
-    EXPECT_CALL(*containerSpy, maxNumberOfCollisions).WillRepeatedly(Return(1));
     ccm->update(dummyDeltatime);
 }
 

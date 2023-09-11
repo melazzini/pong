@@ -26,6 +26,7 @@ struct AColliderComponent : testing::Test
     DummyColliderDescriptor colliderDescriptor2{std::make_unique<DummyColliderShape>(), role};
     ColliderComponentWithDummyShape collider1{std::move(colliderDescriptor1), &gameObject, &manager};
     ColliderComponentWithDummyShape collider2{std::move(colliderDescriptor2), &gameObject, &manager};
+    size_t dummyNumberOfCollisions{20};
     void SetUp() override
     {
         collisions.emplace(collisionToBeInserted);
@@ -54,3 +55,9 @@ TEST_F(AColliderComponent, HasItsCollisionsList)
     ASSERT_TRUE(collisions == collider_.collisions());
 }
 
+TEST_F(AColliderComponent, CanDetermineItsMaxNumberOfCollisionsItCanWantsToHandleAtOnce)
+{
+    ASSERT_THAT(collider1.maxNumberOfCollisions(), Ne(dummyNumberOfCollisions));
+    collider1.setMaxNumberOfCollisions(dummyNumberOfCollisions);
+    ASSERT_THAT(collider1.maxNumberOfCollisions(), Eq(dummyNumberOfCollisions));
+}

@@ -42,7 +42,7 @@ template <typename TColliderShape> class ColliderComponent : public Component
           m_role{std::move(
 
               colliderDescriptor.role)},
-          m_collisionTypes{std::move(colliderDescriptor.collisions)}
+          m_collisionTypes{std::move(colliderDescriptor.collisions)}, m_maxNumberOfCollisions{0}
     {
     }
     bool collidesWith(const ColliderComponent<TColliderShape> &other) const
@@ -75,10 +75,21 @@ template <typename TColliderShape> class ColliderComponent : public Component
         std::cout << "Updating ..." << std::endl;
     }
 
+    size_t maxNumberOfCollisions() const
+    {
+        return m_maxNumberOfCollisions;
+    }
+
+    virtual void setMaxNumberOfCollisions(size_t n)
+    {
+        m_maxNumberOfCollisions = n;
+    }
+
   private:
     std::unique_ptr<TColliderShape> m_shape;
     std::string m_role;
     std::set<CollisionType> m_collisionTypes;
+    size_t m_maxNumberOfCollisions;
 };
 
 class Boxcollidershape
