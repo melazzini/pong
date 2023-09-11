@@ -2,6 +2,7 @@
 #include "ColliderComponent.h"
 #include "ColliderTagsManager.h"
 #include "utils.h"
+#include <cstdlib>
 #include <optional>
 #include <stdexcept>
 #include <string>
@@ -57,8 +58,8 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         if (!containsAnyOfThePossibleTags(possibleTag1, possibleTag2))
         {
             m_tags.emplace(possibleTag1);
-            m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
         }
+        m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
     }
     virtual void recordCollision(ColliderComponent<TColliderShape> *collider,
                                  OccurredCollisionInfo<TColliderShape> info) override

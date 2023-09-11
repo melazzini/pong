@@ -16,6 +16,7 @@ template <typename TColliderShape> struct ColliderComponent;
 template <typename TColliderShape> class ColliderComponentManagerBase : public ComponentManager
 {
   public:
+    inline static int count{};
     ColliderComponentManagerBase(std::shared_ptr<IColliderTagsManager> tagsManager,
                                  std::unique_ptr<ICollisionContainer<TColliderShape>> container)
         : m_tagsManager{tagsManager}, m_collisionContainer{std::move(container)}
@@ -30,7 +31,6 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
     void insertCollisionInfo(CollisionInfo<TColliderShape> info)
     {
         m_collisionContainer->insertCollisionInfo(info);
-        std::cout << "Inserting info" << std::endl;
     }
 
     void update(float deltatime) override
@@ -40,12 +40,25 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
         const std::unordered_set<std::string> &allTags = m_collisionContainer->getAllTags();
         for (const auto &tag : allTags)
         {
-            std::cout << "I have tags!" << std::endl;
+            std::cout << "I have tag: " << tag << std::endl;
             auto [roleA, roleB]{m_tagsManager->getRolesForTag(tag)};
+            std::cout << "RA: " << roleA << std::endl;
+            std::cout << "RB: " << roleB << std::endl;
             auto collidersA = m_collisionContainer->getCollidersByRole(roleA);
             auto collidersB = m_collisionContainer->getCollidersByRole(roleB);
+
+            if (collidersA.has_value())
+            {
+                std::cout << "collidersA has value!" << std::endl;
+            }
+            if (collidersB.has_value())
+            {
+                std::cout << "collidersB has value!" << std::endl;
+            }
+
             if (collidersA.has_value() && collidersB.has_value())
             {
+                std::cout << "I have colliders for tag: " << tag << std::endl;
                 std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersA(collidersA.value());
                 std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersB(collidersB.value());
 

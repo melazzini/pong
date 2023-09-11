@@ -13,31 +13,6 @@
 #include <glm/fwd.hpp>
 #include <memory>
 
-struct MyRectangularCollider : RectangularColliderComponent
-{
-    MyRectangularCollider(RectangularColliderDescriptor descriptor, GameObject *owner,
-                          RectangularColliderComponentManager *manager_)
-        : RectangularColliderComponent(std::move(descriptor), owner, manager_)
-    {
-        manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"paddle", this, "ball"});
-    }
-};
-
-class PaddleBoxCollider : public BoxColliderComponent
-{
-  public:
-    PaddleBoxCollider(Paddle *owner, BoxColliderComponentManager *manager)
-        : BoxColliderComponent(owner, manager, "paddle")
-    {
-    }
-
-    void update(float deltatime) override
-    {
-        std::cout << "PaddleBoxCollider: " << __FUNCTION__ << std::endl;
-        // m_manager->checkCollisionWith("tag");
-    }
-};
-
 Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
 {
     const RectangularGeometry size{20, 100};
@@ -56,6 +31,6 @@ Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
     auto inputComponent{addComponent<PaddleInputComponent>(this, InputComponentManager::getInstance(eventManager))};
 
     auto ll{addComponent<MyRectangularCollider>(
-        RectangularColliderDescriptor{std::make_unique<Boxcollidershape>(), "paddleRole"}, this,
+        RectangularColliderDescriptor{std::make_unique<Boxcollidershape>(), "paddle"}, this,
         RectangularColliderComponentManager::getInstance())};
 }
