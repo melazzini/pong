@@ -32,6 +32,7 @@ struct MyRectangularCollider : RectangularColliderComponent
         : RectangularColliderComponent(std::move(descriptor), owner, manager_)
     {
         manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"paddle", this, "ball"});
+        setMaxNumberOfCollisions(1);
     }
 };
 
@@ -42,5 +43,6 @@ struct MyBallRectangularCollider : RectangularColliderComponent
         : RectangularColliderComponent(std::move(descriptor), owner, manager_)
     {
         manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"ball", this, "paddle"});
+        setMaxNumberOfCollisions(1);
     }
 };

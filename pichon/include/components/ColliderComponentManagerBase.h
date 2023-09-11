@@ -40,25 +40,12 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
         const std::unordered_set<std::string> &allTags = m_collisionContainer->getAllTags();
         for (const auto &tag : allTags)
         {
-            std::cout << "I have tag: " << tag << std::endl;
             auto [roleA, roleB]{m_tagsManager->getRolesForTag(tag)};
-            std::cout << "RA: " << roleA << std::endl;
-            std::cout << "RB: " << roleB << std::endl;
             auto collidersA = m_collisionContainer->getCollidersByRole(roleA);
             auto collidersB = m_collisionContainer->getCollidersByRole(roleB);
 
-            if (collidersA.has_value())
-            {
-                std::cout << "collidersA has value!" << std::endl;
-            }
-            if (collidersB.has_value())
-            {
-                std::cout << "collidersB has value!" << std::endl;
-            }
-
             if (collidersA.has_value() && collidersB.has_value())
             {
-                std::cout << "I have colliders for tag: " << tag << std::endl;
                 std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersA(collidersA.value());
                 std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersB(collidersB.value());
 
@@ -68,6 +55,7 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
                     {
                         continue;
                     }
+                    std::cout << "Can collider" << std::endl;
 
                     for (auto col_B : *setOfCollidersB)
                     {
@@ -79,11 +67,13 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
                         {
                             if (m_validator.colliderIsInterestedInRecordingCollisions(col_A))
                             {
+                                std::cout << "Can colliderAAAA" << std::endl;
                                 OccurredCollisionInfo<TColliderShape> infoA{roleB, col_B};
                                 m_collisionContainer->recordCollision(col_A, infoA);
                             }
                             if (m_validator.colliderIsInterestedInRecordingCollisions(col_B))
                             {
+                                std::cout << "Can colliderBBBB" << std::endl;
                                 OccurredCollisionInfo<TColliderShape> infoB{roleA, col_A};
                                 m_collisionContainer->recordCollision(col_B, infoB);
                             }
@@ -99,7 +89,10 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
 
         for (auto colliderRecordPair : m_collisionContainer->recordsOfAllCollisions())
         {
-            colliderRecordPair.first->update(deltatime);
+            if (!colliderRecordPair.second.empty())
+            {
+                colliderRecordPair.first->update(deltatime);
+            }
         }
     }
 

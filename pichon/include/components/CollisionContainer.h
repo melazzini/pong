@@ -60,6 +60,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
             m_tags.emplace(possibleTag1);
         }
         m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
+        m_recordsOfCollisionsForEachCollider[collisionInfo.colliderComponent];
     }
     virtual void recordCollision(ColliderComponent<TColliderShape> *collider,
                                  OccurredCollisionInfo<TColliderShape> info) override
@@ -125,7 +126,10 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
 
     void clearRecordedCollisions() override
     {
-        m_recordsOfCollisionsForEachCollider.clear();
+        for (auto colliderPair : m_recordsOfCollisionsForEachCollider)
+        {
+            colliderPair.second.clear();
+        }
     }
 
   private:

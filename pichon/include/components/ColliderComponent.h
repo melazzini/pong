@@ -72,7 +72,7 @@ template <typename TColliderShape> class ColliderComponent : public Component
 
     void update(float deltatime) override
     {
-        std::cout << "Updating ..." << std::endl;
+        std::cout << "Updating ... my friend!" << std::endl;
     }
 
     size_t maxNumberOfCollisions() const
