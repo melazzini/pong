@@ -46,8 +46,8 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         if (!containsAnyOfThePossibleTags(possibleTag1, possibleTag2))
         {
             m_tags.emplace(possibleTag1);
-            m_maxNumberOfCollisions[std::pair{possibleTag1, collisionInfo.colliderComponent}] =
-                collisionInfo.maxNumberOfCollisions;
+            m_numberOfCollisions[std::pair{possibleTag1, collisionInfo.colliderComponent}] =
+                std::pair<size_t, size_t>{0, collisionInfo.maxNumberOfCollisions};
             m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
         }
     }
@@ -75,9 +75,9 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     std::optional<size_t> maxNumberOfCollisions(const std::string &colliderTag,
                                                 const ColliderComponent<TColliderShape> *collider) const override
     {
-        if (m_maxNumberOfCollisions.contains({colliderTag, collider}))
+        if (m_numberOfCollisions.contains({colliderTag, collider}))
         {
-            return m_maxNumberOfCollisions.at({colliderTag, collider});
+            return m_numberOfCollisions.at({colliderTag, collider}).second;
         }
         return std::nullopt;
     }
@@ -101,8 +101,12 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     std::shared_ptr<IColliderTagsManager> m_colliderTagsManager;
     std::unordered_set<std::string> m_tags;
     std::unordered_map<std::string, std::unordered_set<ColliderComponent<TColliderShape> *>> m_collidersByRole;
-    std::unordered_map<std::pair<std::string, const ColliderComponent<TColliderShape> *>, size_t, hash_pair>
-        m_maxNumberOfCollisions;
+    std::unordered_map<std::pair<std::string, const ColliderComponent<TColliderShape> *>, std::pair<size_t, size_t>,
+                       hash_pair>
+        m_numberOfCollisions;
+    std::unordered_map<ColliderComponent<TColliderShape> *,
+                       std::list<std::pair<std::string, ColliderComponent<TColliderShape> *>>>
+        m_collidersToBeUpdated;
 
   private:
     std::pair<std::string, std::string> buildPossibleTags(const std::string &roleA, const std::string &roleB) const

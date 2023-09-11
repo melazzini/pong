@@ -85,23 +85,30 @@ struct AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTags
     std::unordered_set<ColliderComponentWithDummyShape *> collidersB;
     ColliderComponentWithDummyShape *colliderA1{};
     ColliderComponentWithDummyShape *colliderB1{};
+    ColliderComponentWithDummyShape *colliderB2{};
     GameObject ownerA;
     GameObject ownerB;
+    GameObject ownerBprime;
     DummyColliderShape *shapeASpy{};
     void SetUp() override
     {
         AColliderComponentManagerExpectedToGetAllTagsUsingTheContainerWhenUpdates::SetUp();
         CollisionType collisionTypeA{.roleOfInterest = "RoleB", .maxNumberOfCollisions = 1};
         CollisionType collisionTypeB{.roleOfInterest = "RoleA", .maxNumberOfCollisions = 1};
+        CollisionType collisionTypeBprime{.roleOfInterest = "RoleA", .maxNumberOfCollisions = 1};
         std::unique_ptr<DummyColliderShape> shapeA{std::make_unique<DummyColliderShape>()};
         shapeASpy = shapeA.get();
         DummyColliderDescriptor descriptorA{std::move(shapeA), "RoleA", {collisionTypeA}};
-        DummyColliderDescriptor descriptorB{std::make_unique<DummyColliderShape>(), "RoleA", {collisionTypeB}};
+        DummyColliderDescriptor descriptorB{std::make_unique<DummyColliderShape>(), "RoleB", {collisionTypeB}};
+        DummyColliderDescriptor descriptorBprime{
+            std::make_unique<DummyColliderShape>(), "RoleB", {collisionTypeBprime}};
         colliderA1 = new ColliderComponentWithDummyShape(std::move(descriptorA), &ownerA, ccm);
         colliderB1 = new ColliderComponentWithDummyShape(std::move(descriptorB), &ownerB, ccm);
+        colliderB2 = new ColliderComponentWithDummyShape(std::move(descriptorBprime), &ownerBprime, ccm);
 
         collidersA.emplace(colliderA1);
         collidersB.emplace(colliderB1);
+        collidersB.emplace(colliderB2);
 
         EXPECT_CALL(*tagsManager, getRolesForTag).WillOnce([]() -> std::pair<std::string, std::string> {
             return {"RoleA", "RoleB"};
@@ -129,6 +136,7 @@ TEST_F(AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTags
             [this](const std::string &role) -> std::optional<std::unordered_set<ColliderComponentWithDummyShape *> *> {
                 return &collidersB;
             });
+    EXPECT_CALL(*containerSpy, maxNumberOfCollisions).WillRepeatedly(Return(1));
     ccm->update(dummyDeltatime);
 }
 
@@ -140,24 +148,5 @@ TEST_F(AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTags
 // TEST_F(AColliderComponentManagerWhenDetectsACollision, StoresTheCollisionForTheGivenColliders)
 //{
 //     FAIL();
-// }
-
-// TEST_F(AColliderComponentManager, HasASetOfCollisionTags)
-//{
-//     ccm.collisionTags();
-// }
-//
-// TEST_F(AColliderComponentManager, GivesAnEmptySetOfTagsIfTheGivenColliderComponentHasntBeenAddedYet)
-//{
-//     ASSERT_TRUE(ccm.collisionTagsFor(colliderComponentNotInsertedYet).empty());
-// }
-//
-// TEST_F(AColliderComponentManager,
-//        GivesANumberOfTagsCorrespondingTo_ATLEAST_TheNumberOfCollisionsTheAddedColliderCaresAbout)
-//{
-//     auto numberOfCollisions{colliderComponent->collisions().size()};
-//     ASSERT_THAT(numberOfCollisions, Eq(1));
-//     ccm.registerComponent(colliderComponent.get());
-//     ASSERT_THAT(ccm.collisionTagsFor(*colliderComponent).size(), Ge(numberOfCollisions));
 // }
 

@@ -70,6 +70,11 @@ template <typename TColliderShape> class ColliderComponent : public Component
         return m_collisionTypes;
     }
 
+    void update(float deltatime) override
+    {
+        std::cout << "Updating ..." << std::endl;
+    }
+
   private:
     std::unique_ptr<TColliderShape> m_shape;
     std::string m_role;
