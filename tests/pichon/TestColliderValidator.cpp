@@ -1,7 +1,7 @@
 #include "GameObject.h"
 #include "MockColliderComponent.h"
 #include "components/ColliderComponent.h"
-#include "components/CollisionContainer.h"
+#include "components/ColliderValidator.h"
 #include "utils.h"
 #include "gmock/gmock.h"
 #include "gtest/gtest.h"
@@ -17,34 +17,6 @@ using testing::AtLeast;
 using testing::Eq;
 using testing::Mock;
 using testing::Return;
-
-template <typename TColliderShape> struct IColliderValidator
-{
-
-    [[nodiscard]] virtual bool canColliderAcceptMoreCollisions(const ICollisionContainer<TColliderShape> *container,
-                                                               ColliderComponent<TColliderShape> *) const = 0;
-
-    virtual ~IColliderValidator() = default;
-};
-
-template <typename TColliderShape> class ColliderValidator : public IColliderValidator<TColliderShape>
-{
-  public:
-    bool canColliderAcceptMoreCollisions(const ICollisionContainer<TColliderShape> *container,
-                                         ColliderComponent<TColliderShape> *collider) const override
-    {
-        if (collider->maxNumberOfCollisions() == 0)
-        {
-            return true;
-        }
-        if (container->numberOfRecordedCollisionsForCollider(collider).has_value())
-        {
-            return container->numberOfRecordedCollisionsForCollider(collider) < collider->maxNumberOfCollisions();
-        }
-
-        return false;
-    }
-};
 
 using ColliderValidatorWithDummyShape = ColliderValidator<DummyColliderShape>;
 using CollisionContainerWithDummyShape = CollisionContainer<DummyColliderShape>;
