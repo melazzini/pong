@@ -45,6 +45,20 @@ TEST_F(ColliderValidatorTest, AssertThatAColliderIsValidIfTheMaxNumberOfCollisio
     ASSERT_TRUE(validator.canColliderAcceptMoreCollisions(&container, &collider));
 }
 
+TEST_F(ColliderValidatorTest, AColliderIsInterestedInRecordingCollisionsIfItsMaxNumberOfCollisionsIsGreaterThanZero)
+{
+    ColliderValidatorWithDummyShape validator;
+    collider.setMaxNumberOfCollisions(1);
+    ASSERT_TRUE(validator.colliderIsInterestedInRecordingCollisions(&collider));
+}
+
+TEST_F(ColliderValidatorTest, AColliderIsNotInterestedInRecordingCollisionsIfItsMaxNumberOfCollisionsIsZero)
+{
+    ColliderValidatorWithDummyShape validator;
+    collider.setMaxNumberOfCollisions(0);
+    ASSERT_FALSE(validator.colliderIsInterestedInRecordingCollisions(&collider));
+}
+
 TEST_F(ColliderValidatorTest,
        AssertThatAColliderIsValidIfTheNumberOfRecordedCollisionsIsLessThanTheMaximumWhichIsGreatedThanZero)
 {

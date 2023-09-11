@@ -36,9 +36,9 @@ struct AColliderComponent : testing::Test
 TEST_F(AColliderComponent, UsesItsShapeToDetermineWhetherThereIsACollision)
 {
     collider1.shape()->collides = false;
-    ASSERT_FALSE(collider1.collidesWith(collider2));
+    ASSERT_FALSE(collider1.collidesWith(&collider2));
     collider1.shape()->collides = true;
-    ASSERT_TRUE(collider1.collidesWith(collider2));
+    ASSERT_TRUE(collider1.collidesWith(&collider2));
 }
 
 TEST_F(AColliderComponent, HasItsRole)

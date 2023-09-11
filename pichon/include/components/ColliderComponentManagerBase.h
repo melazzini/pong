@@ -1,7 +1,7 @@
 #pragma once
 #include "ColliderTagsManager.h"
 #include "Component.h"
-#include "components/CollisionContainer.h"
+#include "components/ColliderValidator.h"
 #include <iomanip>
 #include <iostream>
 #include <memory>
@@ -37,6 +37,25 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
             {
                 std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersA(collidersA.value());
                 std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersB(collidersB.value());
+
+                for (auto col_A : *setOfCollidersA)
+                {
+                    if (!m_validator.canColliderAcceptMoreCollisions(m_collisionContainer.get(), col_A))
+                    {
+                        continue;
+                    }
+
+                    for (auto col_B : *setOfCollidersB)
+                    {
+                        if (!m_validator.canColliderAcceptMoreCollisions(m_collisionContainer.get(), col_B))
+                        {
+                            continue;
+                        }
+                        if (col_A->collidesWith(col_B))
+                        {
+                        };
+                    }
+                }
             }
         }
     }
@@ -44,4 +63,5 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
   private:
     std::shared_ptr<IColliderTagsManager> m_tagsManager;
     std::unique_ptr<ICollisionContainer<TColliderShape>> m_collisionContainer;
+    ColliderValidator<TColliderShape> m_validator;
 };

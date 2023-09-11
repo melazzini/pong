@@ -45,9 +45,9 @@ template <typename TColliderShape> class ColliderComponent : public Component
           m_collisionTypes{std::move(colliderDescriptor.collisions)}, m_maxNumberOfCollisions{0}
     {
     }
-    bool collidesWith(const ColliderComponent<TColliderShape> &other) const
+    bool collidesWith(const ColliderComponent<TColliderShape> *other) const
     {
-        return m_shape->collidesWith(*other.m_shape);
+        return m_shape->collidesWith(*other->m_shape);
     }
 
     const std::unique_ptr<TColliderShape> &shape() const
