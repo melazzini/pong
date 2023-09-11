@@ -17,10 +17,19 @@ template <typename TColliderShape> struct CollisionInfo
     size_t maxNumberOfCollisions{};
 };
 
+template <typename TColliderShape> struct OccurredCollisionInfo
+{
+    std::string roleOfOtherCollider;
+    ColliderComponent<TColliderShape> *otherCollider;
+};
+
 template <typename TColliderShape> struct ICollisionContainer
 {
-    virtual void insertCollision(CollisionInfo<TColliderShape> collisionInfo) = 0;
+    virtual void insertCollisionInfo(CollisionInfo<TColliderShape> collisionInfo) = 0;
+    virtual void recordCollision(ColliderComponent<TColliderShape> *collider,
+                                 OccurredCollisionInfo<TColliderShape>) = 0;
     [[nodiscard]] virtual bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
+    [[nodiscard]] virtual bool colliderHasRecordOfCollisions(ColliderComponent<TColliderShape> *) const = 0;
     virtual std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) const = 0;
     virtual std::optional<size_t> maxNumberOfCollisions(const std::string &colliderTag,
                                                         const ColliderComponent<TColliderShape> *collider) const = 0;
@@ -36,7 +45,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     CollisionContainer(std::shared_ptr<IColliderTagsManager> tagsManager) : m_colliderTagsManager{tagsManager}
     {
     }
-    void insertCollision(CollisionInfo<TColliderShape> collisionInfo) override
+    void insertCollisionInfo(CollisionInfo<TColliderShape> collisionInfo) override
     {
         auto [possibleTag1, possibleTag2]{buildPossibleTags(collisionInfo.colliderRole, collisionInfo.roleOfInterest)};
         if (possibleTag1.empty() || possibleTag2.empty())
@@ -51,6 +60,11 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
             m_collidersByRole[collisionInfo.colliderRole].emplace(collisionInfo.colliderComponent);
         }
     }
+    virtual void recordCollision(ColliderComponent<TColliderShape> *collider,
+                                 OccurredCollisionInfo<TColliderShape> info) override
+    {
+        m_collidersToBeUpdated[collider].emplace_back(std::move(info));
+    }
 
     bool hasCollision(const CollisionInfo<TColliderShape> &collisionInfo) const override
     {
@@ -60,6 +74,10 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
             return false;
         }
         return true;
+    }
+    virtual bool colliderHasRecordOfCollisions(ColliderComponent<TColliderShape> *collider) const override
+    {
+        return m_collidersToBeUpdated.contains(collider);
     }
 
     std::optional<std::string> tagForCollision(const CollisionInfo<TColliderShape> &collisionInfo) const override
@@ -104,8 +122,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
     std::unordered_map<std::pair<std::string, const ColliderComponent<TColliderShape> *>, std::pair<size_t, size_t>,
                        hash_pair>
         m_numberOfCollisions;
-    std::unordered_map<ColliderComponent<TColliderShape> *,
-                       std::list<std::pair<std::string, ColliderComponent<TColliderShape> *>>>
+    std::unordered_map<ColliderComponent<TColliderShape> *, std::list<OccurredCollisionInfo<TColliderShape>>>
         m_collidersToBeUpdated;
 
   private:

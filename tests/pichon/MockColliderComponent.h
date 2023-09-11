@@ -20,11 +20,15 @@ using ColliderComponentManagerWithDummyShape = ColliderComponentManagerBase<Dumm
 using DummyColliderDescriptor = ColliderDescriptor<DummyColliderShape>;
 using ICollisionContainerWithDummyShape = ICollisionContainer<DummyColliderShape>;
 using CollisionInfoWithDummyShape = CollisionInfo<DummyColliderShape>;
+using OccurredCollisionInfoWithDummyShape = OccurredCollisionInfo<DummyColliderShape>;
 
 struct MockCollisionContainerWithDummyShape : ICollisionContainerWithDummyShape
 {
-    MOCK_METHOD(void, insertCollision, (CollisionInfoWithDummyShape), (override));
+    MOCK_METHOD(void, insertCollisionInfo, (CollisionInfoWithDummyShape), (override));
+    MOCK_METHOD(void, recordCollision, (ColliderComponentWithDummyShape *, OccurredCollisionInfoWithDummyShape),
+                (override));
     MOCK_METHOD(bool, hasCollision, (const CollisionInfoWithDummyShape &), (const override));
+    MOCK_METHOD(bool, colliderHasRecordOfCollisions, (ColliderComponentWithDummyShape *), (const override));
     MOCK_METHOD(std::optional<std::string>, tagForCollision, (const CollisionInfoWithDummyShape &), (const override));
     MOCK_METHOD(std::optional<size_t>, maxNumberOfCollisions,
                 (const std::string &, const ColliderComponentWithDummyShape *), (const override));

@@ -20,12 +20,18 @@ struct CollisionContainerTest : testing::Test
 {
     MockColliderComponentManagerBase manager;
     GameObject gameObject;
-    std::string role{"role"};
-    std::string roleOfInterest{"otherRole1"};
+    GameObject gameObjectOtherRole;
+    std::string role{"player"};
+    std::string roleOfInterest{"enemy"};
+    std::string otherRole{roleOfInterest};
     size_t nColisions{1};
+    size_t nColisionsForOtherRole{1};
     std::set<CollisionType> collisions{CollisionType{roleOfInterest, nColisions}};
     DummyColliderDescriptor colliderDescriptor{std::make_unique<DummyColliderShape>(), role};
+    DummyColliderDescriptor colliderDescriptorOtherRole{std::make_unique<DummyColliderShape>(), otherRole};
     ColliderComponentWithDummyShape collider{std::move(colliderDescriptor), &gameObject, &manager};
+    ColliderComponentWithDummyShape colliderOtherRole{std::move(colliderDescriptorOtherRole), &gameObjectOtherRole,
+                                                      &manager};
     CollisionInfo<DummyColliderShape> info{role, &collider, roleOfInterest, nColisions};
     std::shared_ptr<MockColliderTagsManager> tagsManager{std::make_shared<MockColliderTagsManager>()};
     MockColliderTagsManager *tagsManagerSpy{tagsManager.get()};
@@ -55,26 +61,33 @@ struct CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag : Col
 TEST_F(CollisionContainerTest, UsesItsTagsManagerToBuildATagWhenACollisionIsInserted)
 {
     EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
-    container->insertCollision(info);
+    container->insertCollisionInfo(info);
 }
 
 TEST_F(CollisionContainerTest, ThrowsIfTheTagsManagerBuildEmpyTag)
 {
     EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(emptyTag));
-    ASSERT_THROW(container->insertCollision(info), std::runtime_error);
+    ASSERT_THROW(container->insertCollisionInfo(info), std::runtime_error);
 }
 
 TEST_F(CollisionContainerTest, CanAddACollision)
 {
     EXPECT_CALL(*tagsManagerSpy, buildTag).WillRepeatedly(Return(dummyTag));
     ASSERT_FALSE(container->hasCollision(info));
-    container->insertCollision(info);
+    container->insertCollisionInfo(info);
     ASSERT_TRUE(container->hasCollision(info));
+}
+
+TEST_F(CollisionContainerTest, CanRecordAnOccurredCollision)
+{
+    ASSERT_FALSE(container->colliderHasRecordOfCollisions(&collider));
+    container->recordCollision(&collider, OccurredCollisionInfoWithDummyShape{otherRole, &colliderOtherRole});
+    ASSERT_TRUE(container->colliderHasRecordOfCollisions(&collider));
 }
 
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, ReturnsANonEmptyTagIfTheCollisionExist)
 {
-    container->insertCollision(info);
+    container->insertCollisionInfo(info);
     ASSERT_TRUE(container->hasCollision(info));
     auto tagForCollision{container->tagForCollision(info)};
     ASSERT_FALSE(tagForCollision->empty());
@@ -88,15 +101,23 @@ TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, Does
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag,
        KnowsMaxNumberOfCollisionsForColliderAndItsCollisionTag)
 {
-    container->insertCollision(info);
+    container->insertCollisionInfo(info);
     auto tagForCollision{container->tagForCollision(info)};
     auto maxNumberOfCollisions{container->maxNumberOfCollisions(tagForCollision.value(), info.colliderComponent)};
     ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
 }
+// TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag,
+//        KnowsMaxNumberOfCollisionsForColliderAndItsCollisionTag)
+//{
+//     container->insertCollisionInfo(info);
+//     auto tagForCollision{container->tagForCollision(info)};
+//     auto maxNumberOfCollisions{container->maxNumberOfCollisions(tagForCollision.value(), info.colliderComponent)};
+//     ASSERT_THAT(maxNumberOfCollisions.value(), Eq(info.maxNumberOfCollisions));
+// }
 
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, RemembersInsertedCollidersByRole)
 {
-    container->insertCollision(info);
+    container->insertCollisionInfo(info);
     auto colliderComponents{container->getCollidersByRole(info.colliderRole)};
     ASSERT_TRUE(colliderComponents.has_value());
     ASSERT_TRUE(colliderComponents.value() != nullptr);
@@ -105,6 +126,6 @@ TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, Reme
 
 TEST_F(CollisionContainerTestWithMockTagsManagerConfiguredToReturnDummyTag, ReturnsASetOfAllTheTagsItHas)
 {
-    container->insertCollision(info);
+    container->insertCollisionInfo(info);
     ASSERT_FALSE(container->getAllTags().empty());
 }
