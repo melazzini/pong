@@ -10,6 +10,7 @@
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
+#include <vector>
 
 template <typename TColliderShape> struct ColliderComponent;
 
@@ -33,9 +34,13 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
         m_collisionContainer->insertCollisionInfo(info);
     }
 
+    std::vector<OccurredCollisionInfo<TColliderShape>> colliders(ColliderComponent<TColliderShape> *thisCollider)
+    {
+        return m_collisionContainer->recordedColliders(thisCollider);
+    }
+
     void update(float deltatime) override
     {
-        std::cout << "Updating the ColliderComponentManagerBase!!!!" << std::endl;
         m_collisionContainer->clearRecordedCollisions();
         const std::unordered_set<std::string> &allTags = m_collisionContainer->getAllTags();
         for (const auto &tag : allTags)
@@ -55,7 +60,6 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
                     {
                         continue;
                     }
-                    std::cout << "Can collider" << std::endl;
 
                     for (auto col_B : *setOfCollidersB)
                     {
@@ -67,13 +71,11 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
                         {
                             if (m_validator.colliderIsInterestedInRecordingCollisions(col_A))
                             {
-                                std::cout << "Can colliderAAAA" << std::endl;
                                 OccurredCollisionInfo<TColliderShape> infoA{roleB, col_B};
                                 m_collisionContainer->recordCollision(col_A, infoA);
                             }
                             if (m_validator.colliderIsInterestedInRecordingCollisions(col_B))
                             {
-                                std::cout << "Can colliderBBBB" << std::endl;
                                 OccurredCollisionInfo<TColliderShape> infoB{roleA, col_A};
                                 m_collisionContainer->recordCollision(col_B, infoB);
                             }

@@ -40,6 +40,8 @@ template <typename TColliderShape> struct ICollisionContainer
 
     virtual const std::unordered_set<std::string> &getAllTags() const = 0;
     virtual void clearRecordedCollisions() = 0;
+    virtual std::vector<OccurredCollisionInfo<TColliderShape>> recordedColliders(
+        ColliderComponent<TColliderShape> *) = 0;
 };
 
 template <typename TColliderShape> class CollisionContainer : public ICollisionContainer<TColliderShape>
@@ -130,6 +132,12 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
         {
             colliderPair.second.clear();
         }
+    }
+
+    std::vector<OccurredCollisionInfo<TColliderShape>> recordedColliders(
+        ColliderComponent<TColliderShape> *interestedCollider) override
+    {
+        return std::move(m_recordsOfCollisionsForEachCollider[interestedCollider]);
     }
 
   private:

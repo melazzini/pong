@@ -25,7 +25,6 @@ class BallDrawableComponent : public DrawableComponent
 
     void update(float deltatime) override
     {
-        std::cout << "Drawing the ball" << std::endl;
         auto transform = m_owner->component<TransformComponent>();
         m_shape.setPosition(transform->position());
         m_shape.resize(transform->size().width(), transform->size().height());

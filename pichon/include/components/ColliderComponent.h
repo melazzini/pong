@@ -115,10 +115,6 @@ class Boxcollidershape
 
     bool collidesWith(const Boxcollidershape &other) const
     {
-        std::cout << "x,y:  " << m_x << ", " << m_y << std::endl;
-        std::cout << "w,h:  " << m_w << ", " << m_h << std::endl;
-        std::cout << "other.x,y:  " << other.m_x << ", " << other.m_y << std::endl;
-        std::cout << "other.w,h:  " << other.m_w << ", " << other.m_h << std::endl;
         return (m_x + m_w >= other.m_x && m_y + m_h >= other.m_y) &&
                (other.m_x + other.m_w >= m_x && other.m_y + other.m_h >= m_y);
     };
