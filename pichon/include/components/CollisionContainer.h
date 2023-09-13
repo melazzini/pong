@@ -126,7 +126,7 @@ template <typename TColliderShape> class CollisionContainer : public ICollisionC
 
     void clearRecordedCollisions() override
     {
-        for (auto colliderPair : m_recordsOfCollisionsForEachCollider)
+        for (auto &colliderPair : m_recordsOfCollisionsForEachCollider)
         {
             colliderPair.second.clear();
         }

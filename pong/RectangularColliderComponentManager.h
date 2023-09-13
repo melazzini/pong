@@ -2,6 +2,7 @@
 #include "components/ColliderComponent.h"
 #include "components/ColliderComponentManagerBase.h"
 #include <cstdlib>
+#include <iostream>
 
 using RectangularColliderComponentManagerBase = ColliderComponentManagerBase<Boxcollidershape>;
 using RectangularCollisionContainer = CollisionContainer<Boxcollidershape>;
@@ -34,6 +35,11 @@ struct MyRectangularCollider : RectangularColliderComponent
         manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"paddle", this, "ball"});
         setMaxNumberOfCollisions(1);
     }
+
+    void update(float deltatime) override
+    {
+        std::cout << "Hello paddle!" << std::endl;
+    }
 };
 
 struct MyBallRectangularCollider : RectangularColliderComponent
@@ -44,5 +50,9 @@ struct MyBallRectangularCollider : RectangularColliderComponent
     {
         manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"ball", this, "paddle"});
         setMaxNumberOfCollisions(1);
+    }
+    void update(float deltatime) override
+    {
+        std::cout << "Hello ball!" << std::endl;
     }
 };

@@ -68,6 +68,7 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
                             if (m_validator.colliderIsInterestedInRecordingCollisions(col_A))
                             {
                                 std::cout << "Can colliderAAAA" << std::endl;
+                                // abort();
                                 OccurredCollisionInfo<TColliderShape> infoA{roleB, col_B};
                                 m_collisionContainer->recordCollision(col_A, infoA);
                             }
