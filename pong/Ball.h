@@ -4,6 +4,8 @@
 #include "Interfaces.h"
 #include "RectangularShape.h"
 #include "components/DrawableComponent.h"
+#include "components/TransformComponent.h"
+#include <iostream>
 class Ball : public GameObject
 {
   public:
@@ -18,8 +20,18 @@ class BallDrawableComponent : public DrawableComponent
                                                       glm::u8vec4{255, 0, 0, 255}}
     {
         m_drawable = &m_shape;
+        m_owner = owner;
+    }
+
+    void update(float deltatime) override
+    {
+        std::cout << "Drawing the ball" << std::endl;
+        auto transform = m_owner->component<TransformComponent>();
+        m_shape.setPosition(transform->position());
+        m_shape.resize(transform->size().width(), transform->size().height());
     }
 
   private:
     RectangularShape m_shape;
+    GameObject *m_owner;
 };

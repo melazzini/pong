@@ -1,6 +1,8 @@
 #pragma once
+#include "GameObject.h"
 #include "components/ColliderComponent.h"
 #include "components/ColliderComponentManagerBase.h"
+#include "components/TransformComponent.h"
 #include <cstdlib>
 #include <iostream>
 
@@ -34,12 +36,20 @@ struct MyRectangularCollider : RectangularColliderComponent
     {
         manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"paddle", this, "ball"});
         setMaxNumberOfCollisions(1);
+        m_owner = owner;
     }
 
     void update(float deltatime) override
     {
         std::cout << "Hello paddle!" << std::endl;
+        auto transformComponent = m_owner->component<TransformComponent>();
+
+        m_shape->setPosition(transformComponent->position());
+        m_shape->setSize(transformComponent->size());
     }
+
+  private:
+    GameObject *m_owner;
 };
 
 struct MyBallRectangularCollider : RectangularColliderComponent
@@ -50,9 +60,16 @@ struct MyBallRectangularCollider : RectangularColliderComponent
     {
         manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"ball", this, "paddle"});
         setMaxNumberOfCollisions(1);
+        m_owner = owner;
     }
     void update(float deltatime) override
     {
         std::cout << "Hello ball!" << std::endl;
+        auto transformComponent = m_owner->component<TransformComponent>();
+        m_shape->setPosition(transformComponent->position());
+        m_shape->setSize(transformComponent->size());
     }
+
+  private:
+    GameObject *m_owner;
 };
