@@ -2,6 +2,7 @@
 #include "components/DrawableComponent.h"
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_timer.h>
+#include <chrono>
 #include <iostream>
 
 GameBase::GameBase(GameBackend *backend) : m_backend(backend), m_running(false)
@@ -33,15 +34,16 @@ void GameBase::update()
     auto ticksThisFrame = SDL_GetTicks();
     // deltatime_ = (m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0;
     auto dTicks{ticksThisFrame - ticksPrevFrame};
+    ticksPrevFrame = ticksThisFrame;
+
     if (dTicks < TicksPerFrame)
     {
         SDL_Delay(TicksPerFrame - dTicks);
     }
-    ticksPrevFrame = ticksThisFrame;
 
     for (auto manager : m_managers)
     {
-        manager->update(static_cast<float>(TicksPerFrame) / 1000);
+        manager->update(TicksPerFrame);
     }
 }
 

@@ -17,9 +17,8 @@ Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
 {
     const RectangularGeometry size{20, 100};
     auto transformComponent = addComponent<ConstrainedTransformComponent>(
-        this, TransformComponentManager::getInstance(), glm::ivec2{size.width() / 2, WINDOW_SIZE.height() / 2}, size,
-        [](auto oldNewPair) {
-            if (oldNewPair.second.y > 280 || oldNewPair.second.y < 20)
+        this, TransformComponentManager::getInstance(), glm::ivec2{size.width() / 2, 100}, size, [](auto oldNewPair) {
+            if (oldNewPair.second.y > 780 || oldNewPair.second.y < 20)
             {
                 return oldNewPair.first;
             }

@@ -16,7 +16,7 @@ struct MockComponent : Component
     {
     }
 
-    MOCK_METHOD(void, update, (float), (override));
+    MOCK_METHOD(void, update, (uint32_t), (override));
 
     bool badComponent{};
 };

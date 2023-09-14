@@ -32,7 +32,7 @@ class DrawableComponent : public Component
     }
 
     // maybe in the future you can perform animations from here
-    void update(float deltaTime) override
+    void update(uint32_t deltaTime) override
     {
     }
 

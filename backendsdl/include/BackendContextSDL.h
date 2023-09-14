@@ -131,7 +131,7 @@ struct BackendContextSDL : IBackendContext
       private:
         WindowBackendSDL makeUniqueWindow()
         {
-            auto wnd{SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 500, 400,
+            auto wnd{SDL_CreateWindow("Test Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 800, 800,
                                       SDL_WINDOW_OPENGL)};
             if (wnd == nullptr)
             {

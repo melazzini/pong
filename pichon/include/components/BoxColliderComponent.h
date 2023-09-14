@@ -20,7 +20,7 @@ class BoxColliderComponent : public Component
         : Component(owner, manager), m_manager{manager}, m_tag{tag}
     {
     }
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
     }
 

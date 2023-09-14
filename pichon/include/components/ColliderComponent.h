@@ -72,7 +72,7 @@ template <typename TColliderShape> class ColliderComponent : public Component
         return m_collisionTypes;
     }
 
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         std::cout << "Updating ... my friend!" << std::endl;
     }

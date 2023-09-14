@@ -38,18 +38,18 @@ int main()
         return -1;
     }
     if (!game->addGameObject(
-            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 0), RectangularGeometry{600, 20}, "TopWall"), "TopWall"))
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 0), RectangularGeometry{800, 20}, "TopWall"), "TopWall"))
     {
         return -1;
     }
     if (!game->addGameObject(
-            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 380), RectangularGeometry{600, 20}, "BottomWall"),
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 780), RectangularGeometry{800, 20}, "BottomWall"),
             "BottomWall"))
     {
         return -1;
     }
     if (!game->addGameObject(
-            std::make_unique<Wall>(rendererSDL, glm::ivec2(480, 0), RectangularGeometry{20, 400}, "RightWall"),
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(780, 0), RectangularGeometry{20, 800}, "RightWall"),
             "RightWall"))
     {
         return -1;

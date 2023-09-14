@@ -2,7 +2,7 @@
 #include "GameBase.h"
 #include "RectangularGeometry.h"
 
-static const RectangularGeometry WINDOW_SIZE{600, 400};
+static const RectangularGeometry WINDOW_SIZE{600, 600};
 
 class Game : public GameBase
 {

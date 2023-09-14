@@ -39,7 +39,7 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
         return m_collisionContainer->recordedColliders(thisCollider);
     }
 
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         m_collisionContainer->clearRecordedCollisions();
         const std::unordered_set<std::string> &allTags = m_collisionContainer->getAllTags();

@@ -43,7 +43,7 @@ class TransformComponent : public Component
         m_size = newSize;
     }
 
-    void update(float deltaTime) override
+    void update(uint32_t deltaTime) override
     {
     }
 

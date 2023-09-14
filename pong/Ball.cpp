@@ -12,16 +12,16 @@ struct BallTransformComponent : TransformComponent
 {
     BallTransformComponent(GameObject *owner) : TransformComponent{owner, TransformComponentManager::getInstance()}
     {
-        m_velocityX = -100;
-        m_velocityY = 100;
+        m_velocityX = 200;
+        m_velocityY = -200;
     }
 
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         auto pos{position()};
         auto currentX{pos.x};
         auto currentY{pos.y};
-        setPosition({m_velocityX * deltatime + currentX, m_velocityY * deltatime + currentY});
+        setPosition({(m_velocityX * int(deltatime)) / 1000 + currentX, (m_velocityY * int(deltatime)) / 1000 + currentY});
 
         if (position().x < 0)
         {
@@ -31,20 +31,20 @@ struct BallTransformComponent : TransformComponent
 
     void moveDown()
     {
-        m_velocityY = 100;
+        m_velocityY = 150;
     }
     void moveUp()
     {
-        m_velocityY = -100;
+        m_velocityY = -150;
     }
 
     void moveLeft()
     {
-        m_velocityX = -100;
+        m_velocityX = -150;
     }
     void moveRight()
     {
-        m_velocityX = 100;
+        m_velocityX = 150;
     }
 
   private:
@@ -66,7 +66,7 @@ struct MyBallRectangularCollider : RectangularColliderComponent
         m_owner = owner;
         m_manager = manager_;
     }
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         auto transformComponent = m_owner->component<BallTransformComponent>();
         m_shape->setPosition(transformComponent->position());
@@ -77,22 +77,22 @@ struct MyBallRectangularCollider : RectangularColliderComponent
             {
                 if (col_info.roleOfOtherCollider == "TopWall")
                 {
-                    std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
+                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveDown();
                 }
                 else if (col_info.roleOfOtherCollider == "BottomWall")
                 {
-                    std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
+                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveUp();
                 }
                 else if (col_info.roleOfOtherCollider == "RightWall")
                 {
-                    std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
+                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveLeft();
                 }
                 else if (col_info.roleOfOtherCollider == "paddle")
                 {
-                    std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
+                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveRight();
                 }
             }

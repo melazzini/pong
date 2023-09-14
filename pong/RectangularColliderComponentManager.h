@@ -41,7 +41,7 @@ struct MyRectangularCollider : RectangularColliderComponent
         m_manager = manager_;
     }
 
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         using fmt::format;
         auto transformComponent = m_owner->component<TransformComponent>();

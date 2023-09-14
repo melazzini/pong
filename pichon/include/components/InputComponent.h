@@ -40,7 +40,7 @@ class InputComponent : public Component
     InputComponent(GameObject *owner, ComponentManager *manager) : Component(owner, manager)
     {
     }
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
     }
 };

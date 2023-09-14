@@ -19,7 +19,7 @@ struct DummyComponent : Component
     DummyComponent(GameObject *owner, ComponentManager *componentManger) : Component(owner, componentManger)
     {
     }
-    MOCK_METHOD(void, update, (float), (override));
+    MOCK_METHOD(void, update, (uint32_t), (override));
 };
 
 TEST(AGameObject, CanAddAComponent)

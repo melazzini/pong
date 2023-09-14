@@ -31,7 +31,7 @@ ComponentManager *Component::manager() const
     return m_manager;
 }
 
-void ComponentManager::update(float deltatime)
+void ComponentManager::update(uint32_t deltatime)
 {
     for (auto component : m_components)
     {

@@ -62,7 +62,7 @@ struct PaddleDrawableComponent : DrawableComponent
         m_transformComponent = owner->component<TransformComponent>();
     }
 
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         m_shape.setPosition(m_transformComponent->position());
         m_shape.setWidth(m_transformComponent->size().width());
@@ -117,7 +117,7 @@ struct PaddleInputComponent : InputComponent
         m_inputManager->registerListener(&m_listener);
         m_owner = dynamic_cast<Paddle *>(owner);
     }
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         if (m_inputManager->isKeyPressed(Keyboard::A))
         {

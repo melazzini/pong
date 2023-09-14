@@ -43,7 +43,7 @@ class RectangularShapeComponent : public DrawableComponent
         }
     }
 
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         m_ballShape.draw();
         m_manager->draw(&m_ballShape);

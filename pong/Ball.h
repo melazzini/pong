@@ -23,7 +23,7 @@ class BallDrawableComponent : public DrawableComponent
         m_owner = owner;
     }
 
-    void update(float deltatime) override
+    void update(uint32_t deltatime) override
     {
         auto transform = m_owner->component<TransformComponent>();
         m_shape.setPosition(transform->position());

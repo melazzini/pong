@@ -41,7 +41,7 @@ struct DummyRenderer : IRenderer
 struct ADummyComponentManager : ComponentManager
 {
     MOCK_METHOD(void, registerComponent, (Component *), (override));
-    MOCK_METHOD(void, update, (float), (override));
+    MOCK_METHOD(void, update, (uint32_t), (override));
 };
 struct ADummyDrawableComponentManager : DrawableComponentManagerBase
 {
@@ -49,7 +49,7 @@ struct ADummyDrawableComponentManager : DrawableComponentManagerBase
     {
     }
     MOCK_METHOD(void, registerComponent, (Component *), (override));
-    MOCK_METHOD(void, update, (float), (override));
+    MOCK_METHOD(void, update, (uint32_t), (override));
     MOCK_METHOD(void, paintComponents, (), (override));
 };
 

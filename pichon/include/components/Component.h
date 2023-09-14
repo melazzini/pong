@@ -1,4 +1,5 @@
 #pragma once
+#include <cstdint>
 #include <vector>
 
 struct Component;
@@ -21,7 +22,7 @@ class ComponentManager
 
     bool hasComponent(Component *component) const;
 
-    virtual void update(float deltatime);
+    virtual void update(uint32_t deltatime);
 
     virtual ~ComponentManager() = default;
 
@@ -37,7 +38,7 @@ class Component
   public:
     Component(GameObject *owner, ComponentManager *manager);
 
-    virtual void update(float deltaTime)
+    virtual void update(uint32_t deltaTime)
     {
     }
 
