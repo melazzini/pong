@@ -52,7 +52,8 @@ struct MyRectangularCollider : RectangularColliderComponent
         {
             for (auto &col_info : colliders)
             {
-                std::cout << col_info.otherCollider << "     " << col_info.roleOfOtherCollider << std::endl;
+                //                std::cout << col_info.otherCollider << "     " << col_info.roleOfOtherCollider <<
+                //                std::endl;
             }
         }
     }
@@ -62,23 +63,3 @@ struct MyRectangularCollider : RectangularColliderComponent
     RectangularColliderComponentManagerBase *m_manager;
 };
 
-struct MyBallRectangularCollider : RectangularColliderComponent
-{
-    MyBallRectangularCollider(RectangularColliderDescriptor descriptor, GameObject *owner,
-                              RectangularColliderComponentManager *manager_)
-        : RectangularColliderComponent(std::move(descriptor), owner, manager_)
-    {
-        manager_->insertCollisionInfo(RectangularColliderCollisionInfo{"ball", this, "paddle"});
-        setMaxNumberOfCollisions(1);
-        m_owner = owner;
-    }
-    void update(float deltatime) override
-    {
-        auto transformComponent = m_owner->component<TransformComponent>();
-        m_shape->setPosition(transformComponent->position());
-        m_shape->setSize(transformComponent->size());
-    }
-
-  private:
-    GameObject *m_owner;
-};

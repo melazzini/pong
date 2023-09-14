@@ -65,6 +65,8 @@ struct PaddleDrawableComponent : DrawableComponent
     void update(float deltatime) override
     {
         m_shape.setPosition(m_transformComponent->position());
+        m_shape.setWidth(m_transformComponent->size().width());
+        m_shape.setHeight(m_transformComponent->size().height());
     }
 
     void setColor(glm::u8vec4 color)

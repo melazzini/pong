@@ -19,7 +19,7 @@ Paddle::Paddle(IEventManager *eventManager, IRenderer *renderer)
     auto transformComponent = addComponent<ConstrainedTransformComponent>(
         this, TransformComponentManager::getInstance(), glm::ivec2{size.width() / 2, WINDOW_SIZE.height() / 2}, size,
         [](auto oldNewPair) {
-            if (oldNewPair.second.y > 300 || oldNewPair.second.y < 0)
+            if (oldNewPair.second.y > 280 || oldNewPair.second.y < 20)
             {
                 return oldNewPair.first;
             }

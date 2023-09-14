@@ -1,5 +1,7 @@
 #include "GameBase.h"
 #include "components/DrawableComponent.h"
+#include <SDL2/SDL.h>
+#include <SDL2/SDL_timer.h>
 #include <iostream>
 
 GameBase::GameBase(GameBackend *backend) : m_backend(backend), m_running(false)
@@ -23,13 +25,23 @@ void GameBase::handleInput()
 
 static float deltatime_;
 
+static const uint32_t TicksPerFrame{17};
+static uint32_t ticksPrevFrame{};
+
 void GameBase::update()
 {
-    deltatime_ = (m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0;
+    auto ticksThisFrame = SDL_GetTicks();
+    // deltatime_ = (m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0;
+    auto dTicks{ticksThisFrame - ticksPrevFrame};
+    if (dTicks < TicksPerFrame)
+    {
+        SDL_Delay(TicksPerFrame - dTicks);
+    }
+    ticksPrevFrame = ticksThisFrame;
 
     for (auto manager : m_managers)
     {
-        manager->update(deltatime_);
+        manager->update(static_cast<float>(TicksPerFrame) / 1000);
     }
 }
 
@@ -69,6 +81,7 @@ bool GameBase::addGameObject(std::unique_ptr<GameObject> gameObject, std::string
         m_managers.insert(component->manager());
     }
 
+    gameObject->setName(gameObectTag);
     m_gameObjects.push_back({std::move(gameObject), gameObectTag});
 
     return true;

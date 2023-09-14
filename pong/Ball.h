@@ -16,7 +16,7 @@ class BallDrawableComponent : public DrawableComponent
 {
   public:
     BallDrawableComponent(GameObject *owner, DrawableComponentManagerBase *manager_)
-        : DrawableComponent(owner, manager_), m_shape{glm::ivec2{10, 100}, RectangularGeometry{50, 50},
+        : DrawableComponent(owner, manager_), m_shape{glm::ivec2{250, 150}, RectangularGeometry{200, 20},
                                                       glm::u8vec4{255, 0, 0, 255}}
     {
         m_drawable = &m_shape;

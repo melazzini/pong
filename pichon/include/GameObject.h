@@ -47,6 +47,12 @@ struct GameObject
         return m_components;
     }
 
+    void setName(std::string name)
+    {
+        m_name = std::move(name);
+    }
+
   protected:
     std::vector<std::unique_ptr<Component>> m_components;
+    std::string m_name;
 };

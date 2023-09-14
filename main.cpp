@@ -1,13 +1,17 @@
 #include "../../backendsdl/include/BackendContextSDL.h"
 #include "EventManager.h"
 #include "Game.h"
+#include "GameBase.h"
 #include "Interfaces.h"
 #include "Renderer.h"
 #include "Window.h"
 #include "pong/Ball.h"
 #include "pong/Paddle.h"
+#include "pong/Wall.h"
 #include <iostream>
 #include <memory>
+
+extern GameBase *gameInstance;
 
 int main()
 {
@@ -19,6 +23,7 @@ int main()
 
     Game::GameBackend backend{window, rendererSDL, eventManager};
     auto game{Game::getInstance(&backend)};
+    gameInstance = game;
     if (!game)
     {
         std::cerr << "Error while initializing the game!" << std::endl;
@@ -32,7 +37,23 @@ int main()
     {
         return -1;
     }
-
+    if (!game->addGameObject(
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 0), RectangularGeometry{600, 20}, "TopWall"), "TopWall"))
+    {
+        return -1;
+    }
+    if (!game->addGameObject(
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 380), RectangularGeometry{600, 20}, "BottomWall"),
+            "BottomWall"))
+    {
+        return -1;
+    }
+    if (!game->addGameObject(
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(480, 0), RectangularGeometry{20, 400}, "RightWall"),
+            "RightWall"))
+    {
+        return -1;
+    }
     while (game->isRunning())
     {
         game->handleInput();
