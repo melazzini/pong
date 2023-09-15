@@ -7,13 +7,13 @@
 #include "components/TransformComponent.h"
 
 GameBase *gameInstance{};
-
+static const int v = 400;
 struct BallTransformComponent : TransformComponent
 {
     BallTransformComponent(GameObject *owner) : TransformComponent{owner, TransformComponentManager::getInstance()}
     {
-        m_velocityX = 200;
-        m_velocityY = -200;
+        m_velocityX = v;
+        m_velocityY = -v;
     }
 
     void update(uint32_t deltatime) override
@@ -21,7 +21,8 @@ struct BallTransformComponent : TransformComponent
         auto pos{position()};
         auto currentX{pos.x};
         auto currentY{pos.y};
-        setPosition({(m_velocityX * int(deltatime)) / 1000 + currentX, (m_velocityY * int(deltatime)) / 1000 + currentY});
+        setPosition(
+            {(m_velocityX * int(deltatime)) / 1000 + currentX, (m_velocityY * int(deltatime)) / 1000 + currentY});
 
         if (position().x < 0)
         {
@@ -31,20 +32,20 @@ struct BallTransformComponent : TransformComponent
 
     void moveDown()
     {
-        m_velocityY = 150;
+        m_velocityY = v;
     }
     void moveUp()
     {
-        m_velocityY = -150;
+        m_velocityY = -v;
     }
 
     void moveLeft()
     {
-        m_velocityX = -150;
+        m_velocityX = -v;
     }
     void moveRight()
     {
-        m_velocityX = 150;
+        m_velocityX = v;
     }
 
   private:

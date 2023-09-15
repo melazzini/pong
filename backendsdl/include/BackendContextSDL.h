@@ -6,6 +6,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_events.h>
 #include <SDL2/SDL_keyboard.h>
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_scancode.h>
 #include <iostream>
 #include <memory>
@@ -94,7 +95,7 @@ struct BackendContextSDL : IBackendContext
       private:
         RendererBackendSDL makeUniqueRenderer(SDL_Window *wnd)
         {
-            auto r{SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED)};
+            auto r{SDL_CreateRenderer(wnd, -1, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC)};
             if (r == nullptr)
             {
                 throw std::runtime_error{SDL_GetError()};

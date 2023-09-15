@@ -4,9 +4,12 @@
 #include <SDL2/SDL_timer.h>
 #include <chrono>
 #include <iostream>
+#include <thread>
 
+static uint32_t ticksPrevFrame{};
 GameBase::GameBase(GameBackend *backend) : m_backend(backend), m_running(false)
 {
+    ticksPrevFrame = SDL_GetTicks();
 }
 
 bool GameBase::initialize()
@@ -26,30 +29,50 @@ void GameBase::handleInput()
 
 static float deltatime_;
 
-static const uint32_t TicksPerFrame{17};
-static uint32_t ticksPrevFrame{};
+static const uint32_t TicksPerFrame{16};
 
 void GameBase::update()
 {
-    auto ticksThisFrame = SDL_GetTicks();
     // deltatime_ = (m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0;
+    auto ticksThisFrame = SDL_GetTicks();
     auto dTicks{ticksThisFrame - ticksPrevFrame};
-    ticksPrevFrame = ticksThisFrame;
-
-    if (dTicks < TicksPerFrame)
+    while (dTicks < TicksPerFrame)
     {
-        SDL_Delay(TicksPerFrame - dTicks);
+        // SDL_Delay(TicksPerFrame - dTicks);
+        std::this_thread::sleep_for(std::chrono::milliseconds(TicksPerFrame - dTicks));
+        ticksThisFrame = SDL_GetTicks();
+        dTicks = ticksThisFrame - ticksPrevFrame;
     }
+
+    ticksPrevFrame = ticksThisFrame;
 
     for (auto manager : m_managers)
     {
-        manager->update(TicksPerFrame);
+        manager->update(dTicks);
     }
 }
 
+// void GameBase::update()
+//{
+//     // Wait until 16ms has elapsed since last frame
+//     while (!SDL_TICKS_PASSED(SDL_GetTicks(), ticksPrevFrame + TicksPerFrame))
+//         ;
+//     /// Delta time is the difference in ticks from last frame
+//     // (converted to seconds)
+//     auto deltaTime = SDL_GetTicks() - ticksPrevFrame;
+//
+//     deltaTime = deltaTime > 3 * TicksPerFrame ? 3 * TicksPerFrame : deltaTime;
+//     // Update tick counts (for next frame)
+//     ticksPrevFrame = SDL_GetTicks();
+//     for (auto manager : m_managers)
+//     {
+//         manager->update(deltaTime);
+//     }
+// }
+
 void GameBase::output()
 {
-    m_backend->window->clear(glm::u8vec4{});
+    m_backend->window->clear(glm::u8vec4{0, 0, 255, 255});
     for (auto manager : m_managers)
     {
         if (auto drawableManager = dynamic_cast<DrawableComponentManagerBase *>(manager); drawableManager)
