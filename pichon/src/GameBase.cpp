@@ -12,6 +12,18 @@ GameBase::GameBase(GameBackend *backend) : m_backend(backend), m_running(false)
     ticksPrevFrame = SDL_GetTicks();
 }
 
+int GameBase::launch()
+{
+    while (isRunning())
+    {
+        handleInput();
+        update();
+        output();
+    }
+    destroy();
+    return 0;
+}
+
 bool GameBase::initialize()
 {
     if (!loadGameObjects())

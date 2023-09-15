@@ -56,16 +56,5 @@ int main()
     {
         return -1;
     }
-    while (game->isRunning())
-    {
-        //    auto start = std::chrono::high_resolution_clock::now();
-        game->handleInput();
-        game->update();
-        game->output();
-        //   auto end = std::chrono::high_resolution_clock::now();
-        //  std::cout << "cycle lasted: " << std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count()
-        //           << "ms" << std::endl;
-    }
-    game->destroy();
-    return 0;
+    return game->launch();
 }

@@ -25,6 +25,7 @@ class GameBase
     bool addGameObject(std::unique_ptr<GameObject> gameObject, std::string gameObectTag);
     bool hasGameObject(std::string_view tag) const;
     bool hasComponentManager(ComponentManager *manager) const;
+    int launch();
 
     bool loadGameObjects();
 
