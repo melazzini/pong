@@ -47,3 +47,12 @@ struct hash_pair
         return hash1;
     }
 };
+
+template <typename InputIterator, typename TPredicate, typename TCallable>
+void forEachIf(InputIterator first, InputIterator last, TPredicate pred, TCallable callable)
+{
+    for (; first != last && pred(); first++)
+    {
+        callable(*first);
+    }
+}

@@ -6,7 +6,9 @@
 #include <cstdlib>
 #include <iomanip>
 #include <iostream>
+#include <iterator>
 #include <memory>
+#include <optional>
 #include <set>
 #include <unordered_map>
 #include <unordered_set>
@@ -41,62 +43,141 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
 
     void update(uint32_t deltatime) override
     {
-        m_collisionContainer->clearRecordedCollisions();
-        const std::unordered_set<std::string> &allTags = m_collisionContainer->getAllTags();
-        for (const auto &tag : allTags)
-        {
-            auto [roleA, roleB]{m_tagsManager->getRolesForTag(tag)};
-            auto collidersA = m_collisionContainer->getCollidersByRole(roleA);
-            auto collidersB = m_collisionContainer->getCollidersByRole(roleB);
-
-            if (collidersA.has_value() && collidersB.has_value())
-            {
-                std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersA(collidersA.value());
-                std::unordered_set<ColliderComponent<TColliderShape> *> *setOfCollidersB(collidersB.value());
-
-                for (auto col_A : *setOfCollidersA)
-                {
-                    if (!m_validator.canColliderAcceptMoreCollisions(m_collisionContainer.get(), col_A))
-                    {
-                        continue;
-                    }
-
-                    for (auto col_B : *setOfCollidersB)
-                    {
-                        if (!m_validator.canColliderAcceptMoreCollisions(m_collisionContainer.get(), col_B))
-                        {
-                            continue;
-                        }
-                        if (col_A->collidesWith(col_B))
-                        {
-                            if (m_validator.colliderIsInterestedInRecordingCollisions(col_A))
-                            {
-                                OccurredCollisionInfo<TColliderShape> infoA{roleB, col_B};
-                                m_collisionContainer->recordCollision(col_A, infoA);
-                            }
-                            if (m_validator.colliderIsInterestedInRecordingCollisions(col_B))
-                            {
-                                OccurredCollisionInfo<TColliderShape> infoB{roleA, col_A};
-                                m_collisionContainer->recordCollision(col_B, infoB);
-                            }
-                        }
-                        if (!m_validator.canColliderAcceptMoreCollisions(m_collisionContainer.get(), col_A))
-                        {
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-
-        for (auto colliderRecordPair : m_collisionContainer->recordsOfAllCollisions())
-        {
-            colliderRecordPair.first->update(deltatime);
-        }
+        clearCollisionRecords();
+        recordInformationAboutOccurredCollisions();
+        updateComponents(deltatime);
     }
 
   private:
     std::shared_ptr<IColliderTagsManager> m_tagsManager;
     std::unique_ptr<ICollisionContainer<TColliderShape>> m_collisionContainer;
     ColliderValidator<TColliderShape> m_validator;
+
+  private:
+    void clearCollisionRecords()
+    {
+        m_collisionContainer->clearRecordedCollisions();
+    }
+    void updateComponents(uint32_t deltatime)
+    {
+        for (auto colliderRecordPair : m_collisionContainer->recordsOfAllCollisions())
+        {
+            colliderRecordPair.first->update(deltatime);
+        }
+    }
+
+    struct CollidersSetWithRole
+    {
+        ColliderComponentContainer<TColliderShape> *colliders;
+        std::string role;
+    };
+
+    std::pair<std::optional<ColliderComponentContainer<TColliderShape> *>,
+              std::optional<ColliderComponentContainer<TColliderShape> *>>
+    getCollidersPairByRoles(const std::string &roleA, const std::string &roleB)
+    {
+        return std::pair{m_collisionContainer->getCollidersByRole(roleA),
+                         m_collisionContainer->getCollidersByRole(roleB)};
+    }
+
+    std::pair<std::string, std::string> getRolesForTag(const std::string &tag)
+    {
+        return m_tagsManager->getRolesForTag(tag);
+    }
+
+    bool bothColliderSetsExist(std::optional<ColliderComponentContainer<TColliderShape> *> setA,
+                               std::optional<ColliderComponentContainer<TColliderShape> *> setB)
+    {
+        return setA.has_value() && setB.has_value();
+    }
+
+    std::optional<std::pair<CollidersSetWithRole, CollidersSetWithRole>> getCollidersWithRolesForTag(
+        const std::string &tag)
+    {
+        auto [roleA, roleB]{getRolesForTag(tag)};
+        auto [collidersA, collidersB]{getCollidersPairByRoles(roleA, roleB)};
+        if (bothColliderSetsExist(collidersA, collidersB))
+        {
+            return std::pair{CollidersSetWithRole{collidersA.value(), roleA},
+                             CollidersSetWithRole{collidersB.value(), roleB}};
+        }
+        return std::nullopt;
+    }
+
+    void recordCollisionIfTargetColliderIsInterested(ColliderComponent<TColliderShape> *targetCollider,
+                                                     ColliderComponent<TColliderShape> *otherCollider,
+                                                     const std::string &otherColliderRole)
+    {
+        if (m_validator.colliderIsInterestedInRecordingCollisions(targetCollider))
+        {
+            OccurredCollisionInfo<TColliderShape> info{otherColliderRole, otherCollider};
+            m_collisionContainer->recordCollision(targetCollider, info);
+        }
+    }
+
+    struct ColliderWithRole
+    {
+        ColliderComponent<TColliderShape> *collider;
+        std::string role;
+    };
+
+    void recordCollisionForInterestedColliders(ColliderWithRole colliderA, ColliderWithRole colliderB)
+    {
+        recordCollisionIfTargetColliderIsInterested(colliderA.collider, colliderB.collider, colliderB.role);
+        recordCollisionIfTargetColliderIsInterested(colliderB.collider, colliderA.collider, colliderA.role);
+    }
+
+    bool didCollidersCollide(ColliderComponent<TColliderShape> *colliderA,
+                             ColliderComponent<TColliderShape> *colliderB) const
+    {
+        return colliderA->collidesWith(colliderB);
+    }
+
+    bool canColliderStillAcceptMoreCollisions(ColliderComponent<TColliderShape> *collider)
+    {
+        return m_validator.canColliderAcceptMoreCollisions(m_collisionContainer.get(), collider);
+    }
+
+    void evaluateCollisionOfColliderWithOtherColliders(ColliderWithRole colliderWithRole,
+                                                       CollidersSetWithRole otherColliders)
+    {
+        forEachIf(
+            std::begin(*(otherColliders.colliders)), std::end(*(otherColliders.colliders)),
+            [this, &colliderWithRole] { return canColliderStillAcceptMoreCollisions(colliderWithRole.collider); },
+            [otherColliderRole = otherColliders.role, this,
+             &colliderWithRole](ColliderComponent<TColliderShape> *otherCollider) {
+                if (canColliderStillAcceptMoreCollisions(otherCollider) &&
+                    didCollidersCollide(colliderWithRole.collider, otherCollider))
+                {
+                    recordCollisionForInterestedColliders(colliderWithRole,
+                                                          ColliderWithRole{otherCollider, otherColliderRole});
+                }
+            });
+    }
+
+    void evaluateCollisionsBetweenTwoSetsOfColliders(CollidersSetWithRole collidersA, CollidersSetWithRole collidersB)
+    {
+        for (auto colliderA : *(collidersA.colliders))
+        {
+            evaluateCollisionOfColliderWithOtherColliders(ColliderWithRole{colliderA, collidersA.role}, collidersB);
+        }
+    }
+
+    void recordCollisionsForTag(const std::string &tag)
+    {
+        if (auto theTwoSetsOfColliders{getCollidersWithRolesForTag(tag)}; theTwoSetsOfColliders.has_value())
+        {
+            auto [setOfCollidersA, setOfCollidersB]{theTwoSetsOfColliders.value()};
+            evaluateCollisionsBetweenTwoSetsOfColliders(setOfCollidersA, setOfCollidersB);
+        }
+    }
+
+    void recordInformationAboutOccurredCollisions()
+    {
+        const std::unordered_set<std::string> &allTags = m_collisionContainer->getAllTags();
+        for (const auto &tag : allTags)
+        {
+            recordCollisionsForTag(tag);
+        }
+    }
 };
