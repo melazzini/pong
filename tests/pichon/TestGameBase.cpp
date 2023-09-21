@@ -178,7 +178,7 @@ TEST_F(AGameBase, OnlyRegisterOneInstanceOfAComponentManager)
     ASSERT_THAT(game->managers().size(), Eq(1));
 }
 
-TEST_F(AGameBase, DISABLED_MakesTheComponentManagersUpdateWhenItUpdates)
+TEST_F(AGameBase, MakesTheComponentManagersUpdateWhenItUpdates)
 {
     game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject1");
     EXPECT_CALL(dummyTimer, tick).WillOnce(Return(std::chrono::milliseconds{10}));
