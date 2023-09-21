@@ -4,6 +4,7 @@
 #include "GameBase.h"
 #include "Interfaces.h"
 #include "Renderer.h"
+#include "SimpleTicker.h"
 #include "Window.h"
 #include "pong/Ball.h"
 #include "pong/Paddle.h"
@@ -22,8 +23,8 @@ int main()
     auto backendEventMangerPrimitiveProdiver{EventManagerPrimitiveProviderSDL()};
     auto eventManager{EventManager::getInstance(&backendEventMangerPrimitiveProdiver)};
     auto rendererSDL{Renderer::getInstance(engine)};
-
-    Game::GameBackend backend{window, rendererSDL, eventManager};
+    SimpleTicker ticker{std::chrono::milliseconds{15}};
+    Game::GameBackend backend{window, rendererSDL, eventManager, &ticker};
     auto game{Game::getInstance(&backend)};
     gameInstance = game;
     if (!game)

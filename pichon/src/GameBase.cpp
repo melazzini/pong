@@ -45,22 +45,11 @@ static const uint32_t TicksPerFrame{16};
 
 void GameBase::update()
 {
-    // deltatime_ = (m_backend->timer != nullptr) ? m_backend->timer->sencondsSinceRestared() : 0.0;
-    auto ticksThisFrame = SDL_GetTicks();
-    auto dTicks{ticksThisFrame - ticksPrevFrame};
-    while (dTicks < TicksPerFrame)
-    {
-        // SDL_Delay(TicksPerFrame - dTicks);
-        std::this_thread::sleep_for(std::chrono::milliseconds(TicksPerFrame - dTicks));
-        ticksThisFrame = SDL_GetTicks();
-        dTicks = ticksThisFrame - ticksPrevFrame;
-    }
-
-    ticksPrevFrame = ticksThisFrame;
+    auto dTime_ms{m_backend->ticker->tick()};
 
     for (auto manager : m_managers)
     {
-        manager->update(dTicks);
+        manager->update(dTime_ms.count());
     }
 }
 

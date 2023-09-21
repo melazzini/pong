@@ -110,7 +110,7 @@ Ball::Ball(IRenderer *renderer)
     auto transform = addComponent<BallTransformComponent>(this);
     // transform->setPosition(glm::ivec2{WINDOW_SIZE.width() / 2, WINDOW_SIZE.height() / 2});
     transform->setPosition(glm::ivec2{250, 150});
-    transform->setSize(RectangularGeometry{20, 20});
+    transform->setSize(RectangularGeometry{40, 40});
     auto drawableComponent{addComponent<BallDrawableComponent>(this, DrawableComponentManager::getInstance(renderer))};
     auto ll{addComponent<MyBallRectangularCollider>(
         RectangularColliderDescriptor{std::make_unique<Boxcollidershape>(), "ball"}, this,

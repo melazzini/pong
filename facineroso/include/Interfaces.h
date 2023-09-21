@@ -1,10 +1,12 @@
 #pragma once
+#include <chrono>
 #include <glm/glm.hpp>
 #include <memory>
 
-struct ITimer
+struct ITicker
 {
-    [[nodiscard]] virtual float sencondsSinceRestared() = 0;
+    [[nodiscard]] virtual std::chrono::milliseconds tick() = 0;
+    virtual ~ITicker() = default;
 };
 
 struct Drawable;

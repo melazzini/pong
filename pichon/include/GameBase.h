@@ -1,7 +1,7 @@
 #pragma once
 #include "EventManagementInterface.h"
 #include "GameObject.h"
-#include "Interfaces.h"
+#include "SimpleTicker.h"
 #include <unordered_set>
 #include <vector>
 
@@ -13,7 +13,7 @@ class GameBase
         IWindow *window;
         IRenderer *renderer;
         IEventManager *eventManager;
-        ITimer *timer;
+        ITicker *ticker;
     };
 
     GameBase(GameBackend *backend);
