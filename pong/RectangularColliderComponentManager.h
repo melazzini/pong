@@ -47,7 +47,9 @@ struct MyRectangularCollider : RectangularColliderComponent
         auto transformComponent = m_owner->component<TransformComponent>();
 
         m_shape->setPosition(transformComponent->position());
-        m_shape->setSize(transformComponent->size());
+        RectangularGeometry size_{transformComponent->size().width() + 10, transformComponent->size().height()};
+        m_shape->setSize(size_);
+        m_shape->setSize(size_);
         if (auto colliders{m_manager->colliders(this)}; !colliders.empty())
         {
             for (auto &col_info : colliders)

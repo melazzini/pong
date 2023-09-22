@@ -114,15 +114,18 @@ struct PaddleInputComponent : InputComponent
     PaddleInputComponent(Paddle *owner, ComponentManager *manager_) : InputComponent{owner, manager_}, m_listener{owner}
     {
         m_inputManager = dynamic_cast<InputComponentManagerBase *>(manager());
-        m_inputManager->registerListener(&m_listener);
+        //        m_inputManager->registerListener(&m_listener);
         m_owner = dynamic_cast<Paddle *>(owner);
     }
     void update(uint32_t deltatime) override
     {
-        if (m_inputManager->isKeyPressed(Keyboard::A))
+        if (m_inputManager->isKeyPressed(Keyboard::UP))
         {
-            std::cout << "Yes SR!" << std::endl;
-            m_owner->component<PaddleDrawableComponent>()->setColor(glm::u8vec4{100, 100, 255, 255});
+            m_owner->component<ConstrainedTransformComponent>()->jump(-8);
+        }
+        else if (m_inputManager->isKeyPressed(Keyboard::DOWN))
+        {
+            m_owner->component<ConstrainedTransformComponent>()->jump(8);
         }
     }
 

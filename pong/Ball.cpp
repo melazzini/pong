@@ -7,9 +7,11 @@
 #include "components/TransformComponent.h"
 
 GameBase *gameInstance{};
-static const int v = 400;
+bool collided = false;
+int counter = 0;
 struct BallTransformComponent : TransformComponent
 {
+    static constexpr int v = 500;
     BallTransformComponent(GameObject *owner) : TransformComponent{owner, TransformComponentManager::getInstance()}
     {
         m_velocityX = v;
@@ -21,8 +23,16 @@ struct BallTransformComponent : TransformComponent
         auto pos{position()};
         auto currentX{pos.x};
         auto currentY{pos.y};
-        setPosition(
-            {(m_velocityX * int(deltatime)) / 1000 + currentX, (m_velocityY * int(deltatime)) / 1000 + currentY});
+        if (currentX <= 30 && m_velocityX <= 0)
+        {
+            setPosition(
+                {(m_velocityX * int(deltatime)) / 2000 + currentX, (m_velocityY * int(deltatime)) / 1000 + currentY});
+        }
+        else
+        {
+            setPosition(
+                {(m_velocityX * int(deltatime)) / 1000 + currentX, (m_velocityY * int(deltatime)) / 1000 + currentY});
+        }
 
         if (position().x < 0)
         {
@@ -71,29 +81,26 @@ struct MyBallRectangularCollider : RectangularColliderComponent
     {
         auto transformComponent = m_owner->component<BallTransformComponent>();
         m_shape->setPosition(transformComponent->position());
-        m_shape->setSize(transformComponent->size());
+        RectangularGeometry size_{transformComponent->size().width(), transformComponent->size().height()};
+        m_shape->setSize(size_);
         if (auto colliders{m_manager->colliders(this)}; !colliders.empty())
         {
             for (auto &col_info : colliders)
             {
                 if (col_info.roleOfOtherCollider == "TopWall")
                 {
-                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveDown();
                 }
                 else if (col_info.roleOfOtherCollider == "BottomWall")
                 {
-                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveUp();
                 }
                 else if (col_info.roleOfOtherCollider == "RightWall")
                 {
-                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveLeft();
                 }
                 else if (col_info.roleOfOtherCollider == "paddle")
                 {
-                    // std::cout << "Role: " << col_info.roleOfOtherCollider << std::endl;
                     transformComponent->moveRight();
                 }
             }
@@ -110,7 +117,7 @@ Ball::Ball(IRenderer *renderer)
     auto transform = addComponent<BallTransformComponent>(this);
     // transform->setPosition(glm::ivec2{WINDOW_SIZE.width() / 2, WINDOW_SIZE.height() / 2});
     transform->setPosition(glm::ivec2{250, 150});
-    transform->setSize(RectangularGeometry{40, 40});
+    transform->setSize(RectangularGeometry{20, 20});
     auto drawableComponent{addComponent<BallDrawableComponent>(this, DrawableComponentManager::getInstance(renderer))};
     auto ll{addComponent<MyBallRectangularCollider>(
         RectangularColliderDescriptor{std::make_unique<Boxcollidershape>(), "ball"}, this,
