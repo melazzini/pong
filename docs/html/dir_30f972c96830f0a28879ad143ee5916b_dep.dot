@@ -1,0 +1,15 @@
+digraph "/home/francisco/Projects/gameEngines/Pong/pichon/src"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  compound=true
+  subgraph clusterdir_dc548cb8c5033989fd3991c28fa0f901 {
+    graph [ bgcolor="#edf0f7", pencolor="grey25", style="filled,dashed,", label="pichon", fontname="Helvetica", fontsize="10", URL="dir_dc548cb8c5033989fd3991c28fa0f901.html"]
+  subgraph clusterdir_30f972c96830f0a28879ad143ee5916b {
+    graph [ bgcolor="#edf0f7", pencolor="grey25", style="filled,bold,", label="", fontname="Helvetica", fontsize="10", URL="dir_30f972c96830f0a28879ad143ee5916b.html"]
+    dir_30f972c96830f0a28879ad143ee5916b [shape=plaintext, label="src"];
+  dir_2f93cf2f44534e8cb17af677f4effd7b [shape=box, label="components", style="filled,", fillcolor="#a2b4d6", color="grey25", URL="dir_2f93cf2f44534e8cb17af677f4effd7b.html"];
+  }
+  }
+}

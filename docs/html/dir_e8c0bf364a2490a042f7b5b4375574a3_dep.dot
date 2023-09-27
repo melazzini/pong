@@ -1,0 +1,15 @@
+digraph "/home/francisco/Projects/gameEngines/Pong/build/CMakeFiles/Pong.dir"
+{
+ // LATEX_PDF_SIZE
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  compound=true
+  subgraph clusterdir_63772b626f2709090f0bdca0f40827b4 {
+    graph [ bgcolor="#edf0f7", pencolor="grey50", style="filled,dashed,", label="CMakeFiles", fontname="Helvetica", fontsize="10", URL="dir_63772b626f2709090f0bdca0f40827b4.html"]
+  subgraph clusterdir_e8c0bf364a2490a042f7b5b4375574a3 {
+    graph [ bgcolor="#edf0f7", pencolor="grey25", style="filled,bold,", label="", fontname="Helvetica", fontsize="10", URL="dir_e8c0bf364a2490a042f7b5b4375574a3.html"]
+    dir_e8c0bf364a2490a042f7b5b4375574a3 [shape=plaintext, label="Pong.dir"];
+  dir_b90bf479cbdb9caaa70fcce6ad0e43f5 [shape=box, label="src", style="filled,", fillcolor="#a2b4d6", color="grey25", URL="dir_b90bf479cbdb9caaa70fcce6ad0e43f5.html"];
+  }
+  }
+}
