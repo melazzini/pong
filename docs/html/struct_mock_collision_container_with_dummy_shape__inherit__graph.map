@@ -1,0 +1,4 @@
+<map id="MockCollisionContainerWithDummyShape" name="MockCollisionContainerWithDummyShape">
+<area shape="rect" id="node1" title=" " alt="" coords="15,95,222,136"/>
+<area shape="rect" id="node2" href="$struct_i_collision_container.html" title=" " alt="" coords="5,5,232,47"/>
+</map>

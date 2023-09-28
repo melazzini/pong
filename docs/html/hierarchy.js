@@ -116,6 +116,8 @@ var hierarchy =
       [ "DummyEventManagerPrimitiveProvider", "struct_dummy_event_manager_primitive_provider.html", null ],
       [ "EventManagerPrimitiveProviderSDL", "struct_event_manager_primitive_provider_s_d_l.html", null ]
     ] ],
+    [ "IGameLoop", "struct_i_game_loop.html", null ],
+    [ "IGameObjectsManager", "struct_i_game_objects_manager.html", null ],
     [ "IInteraction", "struct_i_interaction.html", [
       [ "DummyInteraction", "struct_dummy_interaction.html", null ]
     ] ],

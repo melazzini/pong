@@ -1,0 +1,8 @@
+<map id="AColliderComponentManager" name="AColliderComponentManager">
+<area shape="rect" id="node1" title=" " alt="" coords="625,64,839,91"/>
+<area shape="rect" id="node2" title=" " alt="" coords="334,5,435,32"/>
+<area shape="rect" id="node3" href="$class_collider_component_manager_base.html" title=" " alt="" coords="283,57,487,98"/>
+<area shape="rect" id="node4" href="$class_component_manager.html" title=" " alt="" coords="41,64,196,91"/>
+<area shape="rect" id="node5" href="$struct_mock_collision_container_with_dummy_shape.html" title=" " alt="" coords="281,122,488,163"/>
+<area shape="rect" id="node6" href="$struct_i_collision_container.html" title=" " alt="" coords="5,122,232,163"/>
+</map>

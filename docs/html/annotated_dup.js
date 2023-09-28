@@ -88,6 +88,8 @@ var annotated_dup =
     [ "IEvent", "struct_i_event.html", null ],
     [ "IEventManager", "struct_i_event_manager.html", null ],
     [ "IEventManagerPrimitive", "struct_i_event_manager_primitive.html", null ],
+    [ "IGameLoop", "struct_i_game_loop.html", "struct_i_game_loop" ],
+    [ "IGameObjectsManager", "struct_i_game_objects_manager.html", "struct_i_game_objects_manager" ],
     [ "IInteraction", "struct_i_interaction.html", null ],
     [ "IInteractionInfo", "class_i_interaction_info.html", null ],
     [ "IInteractionListener", "struct_i_interaction_listener.html", null ],

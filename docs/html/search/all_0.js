@@ -8,7 +8,7 @@ var searchData=
   ['acollidercomponentmanagerexpectedtogetalltagsusingthecontainerwhenupdates_5',['AColliderComponentManagerExpectedToGetAllTagsUsingTheContainerWhenUpdates',['../struct_a_collider_component_manager_expected_to_get_all_tags_using_the_container_when_updates.html',1,'']]],
   ['acollidercomponentmanagerwhichobtainedthecolliderrolesfromthecollidertagsmanager_6',['AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTagsManager',['../struct_a_collider_component_manager_which_obtained_the_collider_roles_from_the_collider_tags_manager.html',1,'']]],
   ['acomponent_7',['AComponent',['../struct_a_component.html',1,'']]],
-  ['addgameobject_8',['addGameObject',['../class_game_base.html#a469343bd663cd5275451334ff2be68c9',1,'GameBase']]],
+  ['addgameobject_8',['addGameObject',['../class_game_base.html#a469343bd663cd5275451334ff2be68c9',1,'GameBase::addGameObject()'],['../struct_i_game_objects_manager.html#ab1159f4f6598605f27e333bd713d40f7',1,'IGameObjectsManager::addGameObject()']]],
   ['adummycomponent_9',['ADummyComponent',['../struct_a_dummy_component.html',1,'']]],
   ['adummycomponentmanager_10',['ADummyComponentManager',['../struct_a_dummy_component_manager.html',1,'']]],
   ['adummydrawablecomponentmanager_11',['ADummyDrawableComponentManager',['../struct_a_dummy_drawable_component_manager.html',1,'']]],

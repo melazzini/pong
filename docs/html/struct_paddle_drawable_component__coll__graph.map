@@ -1,0 +1,8 @@
+<map id="PaddleDrawableComponent" name="PaddleDrawableComponent">
+<area shape="rect" id="node1" title=" " alt="" coords="150,247,353,273"/>
+<area shape="rect" id="node2" href="$class_drawable_component.html" title=" " alt="" coords="172,171,331,197"/>
+<area shape="rect" id="node3" href="$class_component.html" title=" " alt="" coords="5,81,103,108"/>
+<area shape="rect" id="node4" href="$class_drawable_component_manager_base.html" title=" " alt="" coords="127,81,375,108"/>
+<area shape="rect" id="node5" href="$class_component_manager.html" title=" " alt="" coords="174,5,329,32"/>
+<area shape="rect" id="node6" href="$class_drawable.html" title=" " alt="" coords="400,81,484,108"/>
+</map>

@@ -1,0 +1,4 @@
+<map id="TheRenderer::Dummy2DrawablePrimitive" name="TheRenderer::Dummy2DrawablePrimitive">
+<area shape="rect" id="node1" title=" " alt="" coords="5,80,240,121"/>
+<area shape="rect" id="node2" href="$struct_i_drawable_primitive.html" title="This interface represents the primitive drawable of the selected backend. For example,..." alt="" coords="49,5,196,32"/>
+</map>

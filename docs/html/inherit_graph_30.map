@@ -1,0 +1,7 @@
+<map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
+<area shape="rect" id="node1" href="$struct_i_renderer.html" title="This interface represents a renderer of drawables on the screen." alt="" coords="5,81,91,108"/>
+<area shape="rect" id="node2" href="$struct_a_box_1_1_dummy_renderer.html" title=" " alt="" coords="139,5,313,32"/>
+<area shape="rect" id="node3" href="$struct_dummy_renderer.html" title=" " alt="" coords="159,56,293,83"/>
+<area shape="rect" id="node4" href="$struct_mock_renderer.html" title=" " alt="" coords="168,107,284,133"/>
+<area shape="rect" id="node5" href="$struct_renderer.html" title=" " alt="" coords="185,157,267,184"/>
+</map>

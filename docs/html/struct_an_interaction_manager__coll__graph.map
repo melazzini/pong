@@ -1,0 +1,9 @@
+<map id="AnInteractionManager" name="AnInteractionManager">
+<area shape="rect" id="node1" title=" " alt="" coords="205,171,371,197"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,81,107,108"/>
+<area shape="rect" id="node3" href="$class_interaction_manager.html" title=" " alt="" coords="131,81,280,108"/>
+<area shape="rect" id="node4" href="$struct_dummy_interaction.html" title=" " alt="" coords="304,81,448,108"/>
+<area shape="rect" id="node5" href="$struct_i_interaction.html" title=" " alt="" coords="328,5,424,32"/>
+<area shape="rect" id="node6" href="$struct_dummy_interaction_listener.html" title=" " alt="" coords="473,81,669,108"/>
+<area shape="rect" id="node7" href="$struct_i_interaction_listener.html" title=" " alt="" coords="497,5,645,32"/>
+</map>

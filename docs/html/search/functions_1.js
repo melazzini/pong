@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['gamebase_0',['GameBase',['../class_game_base.html#a97b1601553ab17f370852c98a2285430',1,'GameBase']]]
+  ['destroy_0',['destroy',['../struct_i_game_loop.html#a0463e2aab897810a326aa1402be398de',1,'IGameLoop']]]
 ];

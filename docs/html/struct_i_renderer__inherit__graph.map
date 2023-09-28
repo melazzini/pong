@@ -1,0 +1,7 @@
+<map id="IRenderer" name="IRenderer">
+<area shape="rect" id="node1" title="This interface represents a renderer of drawables on the screen." alt="" coords="303,5,389,32"/>
+<area shape="rect" id="node2" href="$struct_a_box_1_1_dummy_renderer.html" title=" " alt="" coords="5,80,180,107"/>
+<area shape="rect" id="node3" href="$struct_dummy_renderer.html" title=" " alt="" coords="205,80,338,107"/>
+<area shape="rect" id="node4" href="$struct_mock_renderer.html" title=" " alt="" coords="363,80,479,107"/>
+<area shape="rect" id="node5" href="$struct_renderer.html" title=" " alt="" coords="503,80,584,107"/>
+</map>

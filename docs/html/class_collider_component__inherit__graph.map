@@ -1,0 +1,7 @@
+<map id="ColliderComponent&lt; TColliderShape &gt;" name="ColliderComponent&lt; TColliderShape &gt;">
+<area shape="rect" id="node1" title=" " alt="" coords="151,71,309,112"/>
+<area shape="rect" id="node3" href="$struct_my_ball_rectangular_collider.html" title=" " alt="" coords="381,5,576,47"/>
+<area shape="rect" id="node4" href="$struct_my_rectangular_collider.html" title=" " alt="" coords="393,71,564,112"/>
+<area shape="rect" id="node5" href="$struct_wall_collider.html" title=" " alt="" coords="357,137,600,163"/>
+<area shape="rect" id="node2" href="$class_component.html" title=" " alt="" coords="5,78,103,105"/>
+</map>

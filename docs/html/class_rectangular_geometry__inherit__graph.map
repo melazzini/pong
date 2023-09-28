@@ -1,0 +1,8 @@
+<map id="RectangularGeometry" name="RectangularGeometry">
+<area shape="rect" id="node1" title=" " alt="" coords="86,5,251,32"/>
+<area shape="rect" id="node2" href="$class_box.html" title=" " alt="" coords="145,80,192,107"/>
+<area shape="rect" id="node3" href="$struct_ball.html" title=" " alt="" coords="5,155,52,181"/>
+<area shape="rect" id="node4" href="$struct_ball_shape.html" title=" " alt="" coords="76,155,163,181"/>
+<area shape="rect" id="node5" href="$struct_paddle.html" title=" " alt="" coords="187,155,252,181"/>
+<area shape="rect" id="node6" href="$class_rectangular_shape.html" title=" " alt="" coords="276,155,416,181"/>
+</map>

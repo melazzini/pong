@@ -1,0 +1,9 @@
+<map id="DrawableComponent" name="DrawableComponent">
+<area shape="rect" id="node1" title=" " alt="" coords="151,107,309,133"/>
+<area shape="rect" id="node3" href="$class_ball_drawable_component.html" title=" " alt="" coords="373,5,557,32"/>
+<area shape="rect" id="node4" href="$struct_mock_drawable_component.html" title=" " alt="" coords="367,56,562,83"/>
+<area shape="rect" id="node5" href="$struct_paddle_drawable_component.html" title=" " alt="" coords="363,107,566,133"/>
+<area shape="rect" id="node6" href="$class_rectangular_shape_component.html" title=" " alt="" coords="357,157,572,184"/>
+<area shape="rect" id="node7" href="$struct_wall_drawable.html" title=" " alt="" coords="409,208,521,235"/>
+<area shape="rect" id="node2" href="$class_component.html" title=" " alt="" coords="5,107,103,133"/>
+</map>

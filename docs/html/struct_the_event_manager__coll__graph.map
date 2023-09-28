@@ -1,0 +1,14 @@
+<map id="TheEventManager" name="TheEventManager">
+<area shape="rect" id="node1" title=" " alt="" coords="933,131,1073,157"/>
+<area shape="rect" id="node2" title=" " alt="" coords="605,5,707,32"/>
+<area shape="rect" id="node3" href="$struct_dummy_listener.html" title=" " alt="" coords="593,56,719,83"/>
+<area shape="rect" id="node4" href="$struct_i_listener.html" title=" " alt="" coords="311,56,389,83"/>
+<area shape="rect" id="node5" href="$class_dummy_event.html" title=" " alt="" coords="601,107,711,133"/>
+<area shape="rect" id="node6" href="$struct_i_event.html" title=" " alt="" coords="319,107,381,133"/>
+<area shape="rect" id="node7" href="$class_event_manager.html" title=" " alt="" coords="598,157,714,184"/>
+<area shape="rect" id="node8" href="$struct_i_event_manager.html" title=" " alt="" coords="290,157,410,184"/>
+<area shape="rect" id="node9" href="$struct_dummy_event_manager_primitive_provider.html" title=" " alt="" coords="543,209,769,250"/>
+<area shape="rect" id="node10" href="$structbackend_context_1_1_i_event_manager_primitive_provider.html" title=" " alt="" coords="233,209,467,250"/>
+<area shape="rect" id="node11" href="$struct_dummy_event_manager_primitive.html" title=" " alt="" coords="237,284,463,311"/>
+<area shape="rect" id="node12" href="$struct_i_event_manager_primitive.html" title=" " alt="" coords="5,284,184,311"/>
+</map>

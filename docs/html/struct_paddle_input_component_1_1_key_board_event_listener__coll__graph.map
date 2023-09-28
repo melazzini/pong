@@ -1,0 +1,10 @@
+<map id="PaddleInputComponent::KeyBoardEventListener" name="PaddleInputComponent::KeyBoardEventListener">
+<area shape="rect" id="node1" title=" " alt="" coords="91,247,273,288"/>
+<area shape="rect" id="node2" href="$struct_i_listener.html" title=" " alt="" coords="121,157,200,184"/>
+<area shape="rect" id="node3" href="$struct_paddle.html" title=" " alt="" coords="224,157,289,184"/>
+<area shape="rect" id="node4" href="$class_box.html" title=" " alt="" coords="168,81,215,108"/>
+<area shape="rect" id="node5" href="$class_movable.html" title=" " alt="" coords="5,5,84,32"/>
+<area shape="rect" id="node6" href="$class_rectangular_geometry.html" title=" " alt="" coords="109,5,274,32"/>
+<area shape="rect" id="node7" href="$class_drawable.html" title=" " alt="" coords="299,5,383,32"/>
+<area shape="rect" id="node8" href="$struct_game_object.html" title=" " alt="" coords="239,81,341,108"/>
+</map>

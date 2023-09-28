@@ -1,0 +1,10 @@
+<map id="TheWindow" name="TheWindow">
+<area shape="rect" id="node1" title=" " alt="" coords="195,260,293,287"/>
+<area shape="rect" id="node2" title=" " alt="" coords="5,171,107,197"/>
+<area shape="rect" id="node3" href="$class_window.html" title=" " alt="" coords="131,171,205,197"/>
+<area shape="rect" id="node4" href="$struct_i_window.html" title=" " alt="" coords="118,81,197,108"/>
+<area shape="rect" id="node5" href="$struct_dummy_backend_context.html" title=" " alt="" coords="230,171,410,197"/>
+<area shape="rect" id="node6" href="$struct_i_backend_context.html" title=" " alt="" coords="221,81,353,108"/>
+<area shape="rect" id="node7" href="$struct_dummy_window_primitive.html" title=" " alt="" coords="386,81,571,108"/>
+<area shape="rect" id="node8" href="$struct_i_window_primitive.html" title=" " alt="" coords="410,5,547,32"/>
+</map>
