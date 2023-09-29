@@ -17,9 +17,7 @@ struct GameLoop : IGameLoop
 
     void update(uint32_t deltatime, const std::vector<ComponentManager *> &managers) override;
 
-    void output() override
-    {
-    }
+    void output(const std::vector<OutputComponentManager *> &outputComponentManagers) override;
 
     void destroy() override
     {

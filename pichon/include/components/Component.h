@@ -31,6 +31,11 @@ class ComponentManager
     std::vector<Component *> m_components;
 };
 
+struct OutputComponentManager : ComponentManager
+{
+    virtual void output() = 0;
+};
+
 struct GameObject;
 
 class Component

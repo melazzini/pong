@@ -6,6 +6,7 @@
 
 struct GameObject;
 struct ComponentManager;
+struct OutputComponentManager;
 
 /**
  * @brief This is the interface of a game loop.
@@ -51,10 +52,12 @@ struct IGameLoop
      *
      * For example, here is where the game should draw its graphics.
      *
+     * @param outputComponentManagers These are the managers of components that produce any kind of output.
+     *
      * @note This is not where the game updates drawables, or any other component
      *       that produces graphics, for that task you the game should use update().
      */
-    virtual void output() = 0;
+    virtual void output(const std::vector<OutputComponentManager *> &outputComponentManagers) = 0;
 
     /**
      * @brief Here the game internal state gets destroyed.

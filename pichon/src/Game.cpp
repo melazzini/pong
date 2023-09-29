@@ -28,7 +28,7 @@ int Game::launchGame()
     {
         m_pimpl->m_gameLoop->handleInput();
         // m_pimpl->m_gameLoop->update();
-        m_pimpl->m_gameLoop->output();
+        //        m_pimpl->m_gameLoop->output();
     }
 
     m_pimpl->m_gameLoop->destroy();
