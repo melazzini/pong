@@ -1,5 +1,6 @@
 #include "GameInterfaces.h"
 #include "GameLoop.h"
+#include "MockEventManager.h"
 #include "components/Component.h"
 #include "gmock/gmock.h"
 #include <gmock/gmock.h>
@@ -49,6 +50,7 @@ struct TheGameLoop : testing::Test
     MockGameObjectsManager gameObjectsManager;
     std::vector<OutputComponentManager *> outputComponentManagers;
     uint32_t dummyDeltatime{0};
+    MockEventManager eventManager;
 };
 
 TEST_F(TheGameLoop, UpdatesTheGameObjectsUsingTheGameObjectsManager)
@@ -67,4 +69,10 @@ TEST_F(TheGameLoop, DestroysTheGameObjectsUsingTheGameObjectsManager)
 {
     EXPECT_CALL(gameObjectsManager, destroyAllGameObjects);
     gameLoop.destroy(&gameObjectsManager);
+}
+
+TEST_F(TheGameLoop, UsesTheEventManagerToPollInputEvents)
+{
+    EXPECT_CALL(eventManager, pollEvents);
+    gameLoop.handleInput(&eventManager);
 }

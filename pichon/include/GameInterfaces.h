@@ -8,6 +8,7 @@ struct GameObject;
 struct ComponentManager;
 struct OutputComponentManager;
 struct IGameObjectsManager;
+struct IEventManager;
 
 /**
  * @brief This is the interface of a game loop.
@@ -33,8 +34,10 @@ struct IGameLoop
      * For example, network messages or data comming from the network,
      * or user keyboard events that are important to the game like presing ESCAPE
      * to quit the game, etc, all of this should be handle inside this method.
+     *
+     * @param eventManager The manager of events in the game.
      */
-    virtual void handleInput() = 0;
+    virtual void handleInput(IEventManager *eventManager) = 0;
 
     /**
      * @brief In this method the game should update its state.

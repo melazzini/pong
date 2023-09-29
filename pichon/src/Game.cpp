@@ -37,7 +37,7 @@ struct Game::_Pimpl
 
     void handleInput()
     {
-        m_gameLoop->handleInput();
+        m_gameLoop->handleInput(nullptr);
     }
     void update()
     {

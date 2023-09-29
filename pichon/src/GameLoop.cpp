@@ -1,4 +1,5 @@
 #include "GameLoop.h"
+#include "EventManager.h"
 #include "GameInterfaces.h"
 #include "components/Component.h"
 #include <algorithm>
@@ -17,4 +18,9 @@ void GameLoop::generateOutput(IGameObjectsManager *gameObjectsManager)
 void GameLoop::destroy(IGameObjectsManager *gameObjectsManager)
 {
     gameObjectsManager->destroyAllGameObjects();
+}
+
+void GameLoop::handleInput(IEventManager *eventManager)
+{
+    eventManager->pollEvents();
 }

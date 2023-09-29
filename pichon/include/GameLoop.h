@@ -11,9 +11,7 @@ struct GameLoop : IGameLoop
         return false;
     }
 
-    void handleInput() override
-    {
-    }
+    void handleInput(IEventManager *eventManager) override;
 
     void update(uint32_t deltatime, IGameObjectsManager *gameObjectsManager) override;
 
