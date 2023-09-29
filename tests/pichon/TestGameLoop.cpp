@@ -18,7 +18,7 @@ struct TheGameLoop : testing::Test
     uint32_t dummyDeltatime{0};
 };
 
-TEST_F(TheGameLoop, MakesTheComponentManagersUpdateWhenItUpdates)
+TEST_F(TheGameLoop, MakesTheComponentManagersUpdateWhenItIsOnUpdateStage)
 {
     managers.push_back(&componentManager);
     EXPECT_CALL(componentManager, update(dummyDeltatime));
