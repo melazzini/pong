@@ -42,7 +42,7 @@ struct DummyRenderer : IRenderer
 
 struct ADummyComponentManager : ComponentManager
 {
-    MOCK_METHOD(void, registerComponent, (Component *), (override));
+    MOCK_METHOD(void, registerComponent, (IComponent *), (override));
     MOCK_METHOD(void, update, (uint32_t), (override));
 };
 struct ADummyDrawableComponentManager : DrawableComponentManagerBase
@@ -50,7 +50,7 @@ struct ADummyDrawableComponentManager : DrawableComponentManagerBase
     ADummyDrawableComponentManager() : DrawableComponentManagerBase{nullptr}
     {
     }
-    MOCK_METHOD(void, registerComponent, (Component *), (override));
+    MOCK_METHOD(void, registerComponent, (IComponent *), (override));
     MOCK_METHOD(void, update, (uint32_t), (override));
     MOCK_METHOD(void, paintComponents, (), (override));
 };
@@ -147,7 +147,7 @@ TEST_F(AGameBase, PassesEachComponentToItsCorrespondingComponentManagerForTheGiv
     auto gameObject = std::make_unique<DummyGameObject>(&componenManager);
     EXPECT_CALL(componenManager, registerComponent)
         .WillOnce(
-            [spy = gameObject->getDummyComponentSpy()](Component *component_) { ASSERT_THAT(component_, Eq(spy)); });
+            [spy = gameObject->getDummyComponentSpy()](IComponent *component_) { ASSERT_THAT(component_, Eq(spy)); });
 
     game->addGameObject(std::move(gameObject), "dummyGameObject");
 }

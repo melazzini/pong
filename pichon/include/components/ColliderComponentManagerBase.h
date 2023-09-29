@@ -26,7 +26,7 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
     {
     }
 
-    void registerComponent(Component *component) override
+    void registerComponent(IComponent *component) override
     {
         ComponentManager::registerComponent(component);
     }

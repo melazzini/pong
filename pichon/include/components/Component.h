@@ -2,17 +2,17 @@
 #include <cstdint>
 #include <vector>
 
-struct Component;
+struct IComponent;
 
 class ComponentManager
 {
   public:
-    ComponentManager(bool (*componentValidator)(Component *) = [](Component *) { return true; })
+    ComponentManager(bool (*componentValidator)(IComponent *) = [](IComponent *) { return true; })
         : m_componentValidator(componentValidator)
     {
     }
 
-    virtual void registerComponent(Component *component)
+    virtual void registerComponent(IComponent *component)
     {
         if (m_componentValidator(component))
         {
@@ -20,7 +20,7 @@ class ComponentManager
         }
     }
 
-    bool hasComponent(Component *component) const;
+    bool hasComponent(IComponent *component) const;
 
     virtual void update(uint32_t deltatime);
 
@@ -31,8 +31,8 @@ class ComponentManager
     virtual ~ComponentManager() = default;
 
   protected:
-    bool (*m_componentValidator)(Component *);
-    std::vector<Component *> m_components;
+    bool (*m_componentValidator)(IComponent *);
+    std::vector<IComponent *> m_components;
 };
 
 struct OutputComponentManager : ComponentManager
@@ -42,18 +42,21 @@ struct OutputComponentManager : ComponentManager
 
 struct GameObject;
 
-class Component
+struct IComponent
+{
+    ~IComponent() = default;
+    virtual void update(uint32_t deltatime) = 0;
+    virtual ComponentManager *manager() const = 0;
+};
+
+class Component : public IComponent
 {
   public:
     Component(GameObject *owner, ComponentManager *manager);
-
-    virtual void update(uint32_t deltaTime)
+    virtual void update(uint32_t deltaTime) override
     {
     }
-
-    virtual ~Component() = default;
-
-    ComponentManager *manager() const;
+    virtual ComponentManager *manager() const override;
 
   private:
     [[nodiscard]] GameObject *validateOwner(GameObject *owner);

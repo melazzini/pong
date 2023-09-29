@@ -2,6 +2,9 @@
 #include "GameInterfaces.h"
 #include <memory>
 #include <unordered_map>
+#include <unordered_set>
+
+struct IComponent;
 
 class GameObjectsManager : public IGameObjectsManager
 {
@@ -12,6 +15,8 @@ class GameObjectsManager : public IGameObjectsManager
     void updateGameObjects(uint32_t deltatime) override;
     void generateOutputFromGameObjects() override;
     void destroyAllGameObjects() override;
+    bool hasComponentManager(ComponentManager *manager) const override;
+    const std::unordered_set<ComponentManager *> &listOfComponentManagers() const override;
 
   private:
     std::unordered_map<std::string, std::unique_ptr<GameObject>> m_gameObjects;
@@ -19,4 +24,5 @@ class GameObjectsManager : public IGameObjectsManager
 
   private:
     bool insertionIsValid(GameObject *object, const std::string &tag) const;
+    void extractComponentManagers(const std::vector<std::unique_ptr<IComponent>> &componentList);
 };

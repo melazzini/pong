@@ -132,4 +132,22 @@ struct IGameObjectsManager
      * @brief This method destroys all the game objects.
      */
     virtual void destroyAllGameObjects() = 0;
+
+    /**
+     * @brief Checks if the given component manager is listed in and used by the GameObjectsManager.
+     *
+     * @param manager The corresponding component manager.
+     *
+     * @return  `true` if the manager is in the list of ComponentManager s, else `false`
+     */
+    virtual bool hasComponentManager(ComponentManager *manager) const = 0;
+
+    /**
+     * @brief This method returns a list of the component managers.
+     *
+     * @return A list of the component managers.
+     *
+     * @note This method is mainly for unit-testing and/or inspection purposes.
+     */
+    virtual const std::unordered_set<ComponentManager *> &listOfComponentManagers() const = 0;
 };

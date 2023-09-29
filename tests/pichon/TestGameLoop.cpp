@@ -26,6 +26,17 @@ struct MockGameObjectsManager : IGameObjectsManager
     {
         return false;
     }
+    bool hasComponentManager(ComponentManager *) const override
+    {
+        return false;
+    }
+
+    const std::unordered_set<ComponentManager *> &listOfComponentManagers() const override
+    {
+        return listOfComponentManagers_;
+    }
+
+    std::unordered_set<ComponentManager *> listOfComponentManagers_;
 };
 
 struct TheGameLoop : testing::Test

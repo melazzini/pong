@@ -42,7 +42,7 @@ struct GameObject
 
     virtual ~GameObject() = default;
 
-    const std::vector<std::unique_ptr<Component>> &componentList() const
+    const std::vector<std::unique_ptr<IComponent>> &componentList() const
     {
         return m_components;
     }
@@ -52,7 +52,12 @@ struct GameObject
         m_name = std::move(name);
     }
 
+    const std::string &name() const
+    {
+        return m_name;
+    }
+
   protected:
-    std::vector<std::unique_ptr<Component>> m_components;
-    std::string m_name;
+    std::vector<std::unique_ptr<IComponent>> m_components{};
+    std::string m_name{};
 };

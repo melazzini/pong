@@ -37,7 +37,7 @@ TEST(AComponentManager, UpdatesAllItsComponentsWhenYouUpdateIt)
 
 TEST(AComponentManager, CanBeSetupToRefuseRegisteringCertainComponents)
 {
-    ComponentManager manager{[](Component *component) {
+    ComponentManager manager{[](IComponent *component) {
         if (static_cast<MockComponent *>(component)->badComponent)
         {
             return false;

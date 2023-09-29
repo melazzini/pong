@@ -1,5 +1,6 @@
 #include "components/Component.h"
 #include <algorithm>
+#include <iostream>
 #include <iterator>
 #include <stdexcept>
 
@@ -39,7 +40,7 @@ void ComponentManager::update(uint32_t deltatime)
     }
 }
 
-bool ComponentManager::hasComponent(Component *component) const
+bool ComponentManager::hasComponent(IComponent *component) const
 {
     return std::find(std::begin(m_components), std::end(m_components), component) != std::end(m_components);
 }
