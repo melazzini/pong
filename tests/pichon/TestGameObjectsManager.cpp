@@ -23,6 +23,13 @@ TEST_F(TheGameObjectsManager, CanAddGameObjects)
     ASSERT_TRUE(gameObjectsManager.hasGameObject(dummyTag));
 }
 
+TEST_F(TheGameObjectsManager, RefusesToAddNullGameObjects)
+{
+    ASSERT_FALSE(gameObjectsManager.hasGameObject(dummyTag));
+    gameObjectsManager.addGameObject(nullptr, dummyTag);
+    ASSERT_FALSE(gameObjectsManager.hasGameObject(dummyTag));
+}
+
 TEST_F(TheGameObjectsManager, CannotAddAGameObjectWithDupplicatedTag)
 {
     gameObjectsManager.addGameObject(std::make_unique<GameObject>(), dummyTag);

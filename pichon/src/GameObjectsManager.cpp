@@ -3,7 +3,7 @@
 
 bool GameObjectsManager::addGameObject(std::unique_ptr<GameObject> gameObject, const std::string &tag)
 {
-    if (m_gameObjects.contains(tag))
+    if (gameObject == nullptr || m_gameObjects.contains(tag))
     {
         return false;
     }

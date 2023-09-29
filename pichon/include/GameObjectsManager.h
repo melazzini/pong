@@ -15,4 +15,5 @@ class GameObjectsManager : public IGameObjectsManager
 
   private:
     std::unordered_map<std::string, std::unique_ptr<GameObject>> m_gameObjects;
+    std::unordered_set<ComponentManager *> m_componentManagers;
 };
