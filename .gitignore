@@ -5,3 +5,4 @@ build/
 .vscode/
 .clang-format
 .testlists_notes.autosave.xopp
+docs/html/
