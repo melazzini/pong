@@ -19,7 +19,5 @@ struct GameLoop : IGameLoop
 
     void output(const std::vector<OutputComponentManager *> &outputComponentManagers) override;
 
-    void destroy() override
-    {
-    }
+    void destroy(const std::vector<ComponentManager *> &managers) override;
 };

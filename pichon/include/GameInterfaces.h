@@ -43,7 +43,7 @@ struct IGameLoop
      * has to be updated each game frame.
      *
      * @param deltatime The amount of time in milliseconds, counted since the last frame.
-     * @managers The list of component managers.
+     * @param managers The list of component managers.
      */
     virtual void update(uint32_t deltatime, const std::vector<ComponentManager *> &managers) = 0;
 
@@ -64,15 +64,17 @@ struct IGameLoop
      *
      * Here the game should clean up all the resources it uses and it owns, destroy all the remaining
      * components, and any other dependencies that it owns should also be destroyed here.
+     *
+     * @param managers The list of component managers.
      */
-    virtual void destroy() = 0;
+    virtual void destroy(const std::vector<ComponentManager *> &managers) = 0;
 };
 
 /**
  * @brief This is the interface of game objects manager.
  *
- * A game objects manager is basically the container of the game objects
- * and the different components managers.
+ * The role of an IGameObjectsManager is to provide methods to manage
+ * the game objects lifecycle using the component managers.
  */
 struct IGameObjectsManager
 {
@@ -124,4 +126,20 @@ struct IGameObjectsManager
      * @return list of all component managers of the game objects contained in the current game objects manager.
      */
     virtual const std::unordered_set<ComponentManager *> managers() const = 0;
+
+    /**
+     * @brief This method should update the game objects in the game.
+     */
+    virtual void updateGameObjects() = 0;
+
+    /**
+     * @brief This method makes the game objects that generate output
+     * to do it.
+     */
+    virtual void generateOutputFromGameObjects() = 0;
+
+    /**
+     * @brief This method destroys all the game objects.
+     */
+    virtual void destroyAllGameObjects() = 0;
 };

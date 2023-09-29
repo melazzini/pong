@@ -51,7 +51,7 @@ struct Game::_Pimpl
 
     void destroy()
     {
-        m_gameLoop->destroy();
+        m_gameLoop->destroy(managers);
     }
 };
 

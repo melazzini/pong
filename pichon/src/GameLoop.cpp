@@ -14,3 +14,8 @@ void GameLoop::output(const std::vector<OutputComponentManager *> &outputCompone
     std::for_each(std::begin(outputComponentManagers), std::end(outputComponentManagers),
                   [](OutputComponentManager *manager) { manager->output(); });
 }
+
+void GameLoop::destroy(const std::vector<ComponentManager *> &managers)
+{
+    std::for_each(std::begin(managers), std::end(managers), [](ComponentManager *manager) { manager->destroy(); });
+}

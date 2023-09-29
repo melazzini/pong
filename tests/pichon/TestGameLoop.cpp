@@ -7,6 +7,7 @@
 struct MockComponentManager : ComponentManager
 {
     MOCK_METHOD(void, update, (uint32_t), (override));
+    MOCK_METHOD(void, destroy, (), (override));
 };
 
 struct MockOutputComponentManager : OutputComponentManager
@@ -36,4 +37,11 @@ TEST_F(TheGameLoop, MakesTheOutputComponentManagersOutputContentWhenItIsOnOutput
     outputComponentManagers.push_back(&outputComponentManager);
     EXPECT_CALL(outputComponentManager, output);
     gameLoop.output(outputComponentManagers);
+}
+
+TEST_F(TheGameLoop, MakesTheComponentManagersDestroyWhenItIsOnDestroyStage)
+{
+    managers.push_back(&componentManager);
+    EXPECT_CALL(componentManager, destroy);
+    gameLoop.destroy(managers);
 }

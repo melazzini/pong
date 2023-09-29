@@ -24,6 +24,10 @@ class ComponentManager
 
     virtual void update(uint32_t deltatime);
 
+    virtual void destroy()
+    {
+    }
+
     virtual ~ComponentManager() = default;
 
   protected:
