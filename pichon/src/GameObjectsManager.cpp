@@ -13,6 +13,11 @@ bool GameObjectsManager::addGameObject(std::unique_ptr<GameObject> gameObject, c
 
 bool GameObjectsManager::removeGameObject(const std::string &tag)
 {
+    if (m_gameObjects.contains(tag))
+    {
+        m_gameObjects.erase(tag);
+        return true;
+    }
     return false;
 }
 
