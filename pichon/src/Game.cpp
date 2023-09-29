@@ -5,34 +5,66 @@
 #include "GameInterfaces.h"
 #include "GameLoop.h"
 #include "GameObjectsManager.h"
+#include "SimpleTicker.h"
+#include "components/Component.h"
 #include <functional>
 #include <iostream>
 #include <iterator>
 #include <memory>
 #include <stdexcept>
+#include <vector>
 
 struct Game::_Pimpl
 {
+    SimpleTicker ticker{std::chrono::milliseconds(16)};
     GameLoop *m_gameLoop;
     GameObjetctsManager *m_gameObjectsManager;
+    std::vector<ComponentManager *> managers;
+    std::vector<OutputComponentManager *> outputComponentManagers;
+
+    bool gameRunning() const
+    {
+        return m_gameLoop->running;
+    }
+
+    void initialize()
+    {
+        if (!m_gameLoop->initialize())
+        {
+            throw std::runtime_error{"Error while launching the game"};
+        }
+    }
+
+    void handleInput()
+    {
+        m_gameLoop->handleInput();
+    }
+    void update()
+    {
+        auto deltatime = ticker.tick().count();
+        m_gameLoop->update(deltatime, managers);
+    }
+    void output()
+    {
+        m_gameLoop->output(outputComponentManagers);
+    }
+
+    void destroy()
+    {
+        m_gameLoop->destroy();
+    }
 };
 
 int Game::launchGame()
 {
-    if (!m_pimpl->m_gameLoop->initialize())
+    m_pimpl->initialize();
+    while (m_pimpl->gameRunning())
     {
-        throw std::runtime_error{"Error while launching the game"};
+        m_pimpl->handleInput();
+        m_pimpl->update();
+        m_pimpl->output();
     }
-
-    while (m_pimpl->m_gameLoop->running)
-    {
-        m_pimpl->m_gameLoop->handleInput();
-        // m_pimpl->m_gameLoop->update();
-        //        m_pimpl->m_gameLoop->output();
-    }
-
-    m_pimpl->m_gameLoop->destroy();
-
+    m_pimpl->destroy();
     return 0;
 }
 
