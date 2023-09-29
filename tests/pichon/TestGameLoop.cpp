@@ -6,17 +6,6 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 
-struct MockComponentManager : ComponentManager
-{
-    MOCK_METHOD(void, update, (uint32_t), (override));
-    MOCK_METHOD(void, destroy, (), (override));
-};
-
-struct MockOutputComponentManager : OutputComponentManager
-{
-    MOCK_METHOD(void, output, (), (override));
-};
-
 struct MockGameObjectsManager : IGameObjectsManager
 {
     MOCK_METHOD(void, updateGameObjects, (uint32_t), (override));
@@ -34,11 +23,6 @@ struct MockGameObjectsManager : IGameObjectsManager
     }
 
     bool hasGameObject(const std::string &) const override
-    {
-        return false;
-    }
-
-    bool hasComponentManager(ComponentManager *) const override
     {
         return false;
     }

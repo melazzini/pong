@@ -116,15 +116,6 @@ struct IGameObjectsManager
     virtual bool hasGameObject(const std::string &tag) const = 0;
 
     /**
-     * @brief This checks if the game manager contains the given component manager.
-     *
-     * @param manager ComponentManager pointer.
-     *
-     * @return `true` if the manager contains the given game object, else `false`.
-     */
-    virtual bool hasComponentManager(ComponentManager *manager) const = 0;
-
-    /**
      * @brief This method should update the game objects in the game.
      *
      * @param deltatime The deltatime since last frame of the game.
