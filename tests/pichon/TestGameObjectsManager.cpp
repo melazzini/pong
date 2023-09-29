@@ -17,6 +17,7 @@ struct MyDummyComponentManager : ComponentManager
 struct MyMockComponentManager : ComponentManager
 {
     MOCK_METHOD(void, update, (uint32_t), (override));
+    MOCK_METHOD(void, destroy, (), (override));
 };
 
 struct MyDummyComponent : IComponent
@@ -120,4 +121,13 @@ TEST_F(TheGameObjectsManager, UsesTheComponentManagersToUpdateTheGameObjectCompo
     gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
     EXPECT_CALL(myMockComponentManager, update(dummyDeltaTime));
     gameObjectsManager.updateGameObjects(dummyDeltaTime);
+}
+
+TEST_F(TheGameObjectsManager, UsesTheComponentManagersToDestroyTheGameObjectComponents)
+{
+    auto myDummyComponent{gameObject->addComponent<MyDummyComponent>()};
+    myDummyComponent->setManager(&myMockComponentManager);
+    gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
+    EXPECT_CALL(myMockComponentManager, destroy());
+    gameObjectsManager.destroyAllGameObjects();
 }

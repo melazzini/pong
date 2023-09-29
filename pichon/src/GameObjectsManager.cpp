@@ -45,6 +45,8 @@ void GameObjectsManager::generateOutputFromGameObjects()
 
 void GameObjectsManager::destroyAllGameObjects()
 {
+    std::for_each(std::begin(m_componentManagers), std::end(m_componentManagers),
+                  [](ComponentManager *componentManager) { componentManager->destroy(); });
 }
 
 bool GameObjectsManager::insertionIsValid(GameObject *object, const std::string &tag) const
