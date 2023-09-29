@@ -7,6 +7,7 @@
 #include "GameObjectsManager.h"
 #include "SimpleTicker.h"
 #include "components/Component.h"
+#include <chrono>
 #include <functional>
 #include <iostream>
 #include <iterator>
@@ -14,17 +15,19 @@
 #include <stdexcept>
 #include <vector>
 
-struct Game::_Pimpl
+class Game::_Pimpl
 {
-    SimpleTicker ticker{std::chrono::milliseconds(16)};
-    GameLoop *m_gameLoop;
-    GameObjetctsManager *m_gameObjectsManager;
-    std::vector<ComponentManager *> managers;
-    std::vector<OutputComponentManager *> outputComponentManagers;
+  public:
+    _Pimpl(std::unique_ptr<IGameLoop> gameLoop, std::unique_ptr<IGameObjectsManager> gameObjectsManager,
+           std::chrono::milliseconds frameDuration, IEventManager *eventManager)
+        : m_gameLoop{std::move(gameLoop)}, m_gameObjectsManager{std::move(gameObjectsManager)}, m_ticker{frameDuration},
+          m_eventManager{eventManager}, m_gameRunning{false}
+    {
+    }
 
     bool gameRunning() const
     {
-        return m_gameLoop->running;
+        return m_gameRunning;
     }
 
     void initialize()
@@ -33,29 +36,34 @@ struct Game::_Pimpl
         {
             throw std::runtime_error{"Error while launching the game"};
         }
+        m_gameRunning = true;
     }
 
     void handleInput()
     {
-        m_gameLoop->handleInput(nullptr);
+        m_gameLoop->handleInput(m_eventManager);
     }
     void update()
     {
-        auto deltatime = ticker.tick().count();
-        m_gameLoop->update(deltatime, m_gameObjectsManager);
-        m_gameObjectsManager->updateGameObjects(deltatime);
+        auto deltatime = m_ticker.tick().count();
+        m_gameLoop->update(deltatime, m_gameObjectsManager.get());
     }
     void output()
     {
-        m_gameLoop->generateOutput(m_gameObjectsManager);
-        m_gameObjectsManager->generateOutputFromGameObjects();
+        m_gameLoop->generateOutput(m_gameObjectsManager.get());
     }
 
     void destroy()
     {
-        m_gameLoop->destroy(m_gameObjectsManager);
-        m_gameObjectsManager->destroyAllGameObjects();
+        m_gameLoop->destroy(m_gameObjectsManager.get());
     }
+
+  private:
+    std::unique_ptr<IGameLoop> m_gameLoop;
+    std::unique_ptr<IGameObjectsManager> m_gameObjectsManager;
+    SimpleTicker m_ticker;
+    IEventManager *m_eventManager;
+    bool m_gameRunning;
 };
 
 int Game::launchGame()
