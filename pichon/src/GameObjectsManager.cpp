@@ -35,6 +35,8 @@ bool GameObjectsManager::hasGameObject(const std::string &tag) const
 
 void GameObjectsManager::updateGameObjects(uint32_t deltatime)
 {
+    std::for_each(std::begin(m_componentManagers), std::end(m_componentManagers),
+                  [deltatime](ComponentManager *componentManager) { componentManager->update(deltatime); });
 }
 
 void GameObjectsManager::generateOutputFromGameObjects()

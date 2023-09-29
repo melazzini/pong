@@ -14,6 +14,11 @@ struct MyDummyComponentManager : ComponentManager
 {
 };
 
+struct MyMockComponentManager : ComponentManager
+{
+    MOCK_METHOD(void, update, (uint32_t), (override));
+};
+
 struct MyDummyComponent : IComponent
 {
     void setManager(ComponentManager *manager_)
@@ -46,7 +51,9 @@ struct TheGameObjectsManager : testing::Test
     const std::string dummyTag{"DummyTag"};
     const std::string existingGameObjectDummyTag{"ExistingGameObjectDummyTag"};
     MyDummyComponentManager myDummyComponentManager;
+    MyMockComponentManager myMockComponentManager;
     const std::string aSecondDummyTag{"DummyTag2"};
+    uint32_t dummyDeltaTime{10};
     void SetUp() override
     {
         gameObjectsManager.addGameObject(std::make_unique<GameObject>(), existingGameObjectDummyTag);
@@ -104,4 +111,13 @@ TEST_F(TheGameObjectsManager, CannotAddAnExistingComponentManager)
 
     const auto &listOfComponentManagers{gameObjectsManager.listOfComponentManagers()};
     ASSERT_THAT(listOfComponentManagers.count(&myDummyComponentManager), Eq(1));
+}
+
+TEST_F(TheGameObjectsManager, UsesTheComponentManagersToUpdateTheGameObjectComponents)
+{
+    auto myDummyComponent{gameObject->addComponent<MyDummyComponent>()};
+    myDummyComponent->setManager(&myMockComponentManager);
+    gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
+    EXPECT_CALL(myMockComponentManager, update(dummyDeltaTime));
+    gameObjectsManager.updateGameObjects(dummyDeltaTime);
 }
