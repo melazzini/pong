@@ -2,6 +2,7 @@
 #include <memory>
 #include <string>
 #include <unordered_set>
+#include <vector>
 
 struct GameObject;
 struct ComponentManager;
@@ -39,8 +40,11 @@ struct IGameLoop
      * For example, the game should update here the game objects.
      * In general, in this method the game should update anything that
      * has to be updated each game frame.
+     *
+     * @param deltatime The amount of time in milliseconds, counted since the last frame.
+     * @managers The list of component managers.
      */
-    virtual void update() = 0;
+    virtual void update(uint32_t deltatime, const std::vector<ComponentManager *> &managers) = 0;
 
     /**
      * @brief This method outputs any content, like audio and game graphics.
