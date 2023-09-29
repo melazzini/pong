@@ -42,16 +42,19 @@ struct Game::_Pimpl
     void update()
     {
         auto deltatime = ticker.tick().count();
-        m_gameLoop->update(deltatime, managers);
+        m_gameLoop->update(deltatime, m_gameObjectsManager);
+        m_gameObjectsManager->updateGameObjects(deltatime);
     }
     void output()
     {
-        m_gameLoop->output(outputComponentManagers);
+        m_gameLoop->generateOutput(m_gameObjectsManager);
+        m_gameObjectsManager->generateOutputFromGameObjects();
     }
 
     void destroy()
     {
-        m_gameLoop->destroy(managers);
+        m_gameLoop->destroy(m_gameObjectsManager);
+        m_gameObjectsManager->destroyAllGameObjects();
     }
 };
 

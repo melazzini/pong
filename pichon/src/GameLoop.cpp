@@ -1,21 +1,20 @@
 #include "GameLoop.h"
+#include "GameInterfaces.h"
 #include "components/Component.h"
 #include <algorithm>
 #include <vector>
 
-void GameLoop::update(uint32_t deltatime, const std::vector<ComponentManager *> &managers)
+void GameLoop::update(uint32_t deltatime, IGameObjectsManager *gameObjectsManager)
 {
-    std::for_each(std::begin(managers), std::end(managers),
-                  [deltatime](ComponentManager *manager) { manager->update(deltatime); });
+    gameObjectsManager->updateGameObjects(deltatime);
 }
 
-void GameLoop::output(const std::vector<OutputComponentManager *> &outputComponentManagers)
+void GameLoop::generateOutput(IGameObjectsManager *gameObjectsManager)
 {
-    std::for_each(std::begin(outputComponentManagers), std::end(outputComponentManagers),
-                  [](OutputComponentManager *manager) { manager->output(); });
+    gameObjectsManager->generateOutputFromGameObjects();
 }
 
-void GameLoop::destroy(const std::vector<ComponentManager *> &managers)
+void GameLoop::destroy(IGameObjectsManager *gameObjectsManager)
 {
-    std::for_each(std::begin(managers), std::end(managers), [](ComponentManager *manager) { manager->destroy(); });
+    gameObjectsManager->destroyAllGameObjects();
 }

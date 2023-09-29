@@ -7,6 +7,7 @@
 struct GameObject;
 struct ComponentManager;
 struct OutputComponentManager;
+struct IGameObjectsManager;
 
 /**
  * @brief This is the interface of a game loop.
@@ -43,21 +44,21 @@ struct IGameLoop
      * has to be updated each game frame.
      *
      * @param deltatime The amount of time in milliseconds, counted since the last frame.
-     * @param managers The list of component managers.
+     * @param gameObjectsManager The manager of the game objects in the game.
      */
-    virtual void update(uint32_t deltatime, const std::vector<ComponentManager *> &managers) = 0;
+    virtual void update(uint32_t deltatime, IGameObjectsManager *gameObjectsManager) = 0;
 
     /**
      * @brief This method outputs any content, like audio and game graphics.
      *
      * For example, here is where the game should draw its graphics.
      *
-     * @param outputComponentManagers These are the managers of components that produce any kind of output.
+     * @param gameObjectsManager The manager of the game objects in the game.
      *
      * @note This is not where the game updates drawables, or any other component
      *       that produces graphics, for that task you the game should use update().
      */
-    virtual void output(const std::vector<OutputComponentManager *> &outputComponentManagers) = 0;
+    virtual void generateOutput(IGameObjectsManager *gameObjectsManager) = 0;
 
     /**
      * @brief Here the game internal state gets destroyed.
@@ -65,9 +66,9 @@ struct IGameLoop
      * Here the game should clean up all the resources it uses and it owns, destroy all the remaining
      * components, and any other dependencies that it owns should also be destroyed here.
      *
-     * @param managers The list of component managers.
+     * @param gameObjectsManager The manager of the game objects in the game.
      */
-    virtual void destroy(const std::vector<ComponentManager *> &managers) = 0;
+    virtual void destroy(IGameObjectsManager *gameObjectsManager) = 0;
 };
 
 /**
@@ -121,16 +122,11 @@ struct IGameObjectsManager
     virtual bool hasComponentManager(ComponentManager *manager) const = 0;
 
     /**
-     * @brief This getter returns the list of all of the component managers.
-     *
-     * @return list of all component managers of the game objects contained in the current game objects manager.
-     */
-    virtual const std::unordered_set<ComponentManager *> managers() const = 0;
-
-    /**
      * @brief This method should update the game objects in the game.
+     *
+     * @param deltatime The deltatime since last frame of the game.
      */
-    virtual void updateGameObjects() = 0;
+    virtual void updateGameObjects(uint32_t deltatime) = 0;
 
     /**
      * @brief This method makes the game objects that generate output

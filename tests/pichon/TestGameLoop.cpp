@@ -1,3 +1,4 @@
+#include "GameInterfaces.h"
 #include "GameLoop.h"
 #include "components/Component.h"
 #include "gmock/gmock.h"
@@ -15,33 +16,55 @@ struct MockOutputComponentManager : OutputComponentManager
     MOCK_METHOD(void, output, (), (override));
 };
 
+struct MockGameObjectsManager : IGameObjectsManager
+{
+    MOCK_METHOD(void, updateGameObjects, (uint32_t), (override));
+    MOCK_METHOD(void, generateOutputFromGameObjects, (), (override));
+    MOCK_METHOD(void, destroyAllGameObjects, (), (override));
+
+    bool addGameObject(std::unique_ptr<GameObject>, const std::string &) override
+    {
+        return false;
+    }
+
+    bool removeGameObject(const std::string &) override
+    {
+        return false;
+    }
+
+    bool hasGameObject(const std::string &) const override
+    {
+        return false;
+    }
+
+    bool hasComponentManager(ComponentManager *) const override
+    {
+        return false;
+    }
+};
+
 struct TheGameLoop : testing::Test
 {
     GameLoop gameLoop;
-    MockComponentManager componentManager;
-    MockOutputComponentManager outputComponentManager;
-    std::vector<ComponentManager *> managers;
+    MockGameObjectsManager gameObjectsManager;
     std::vector<OutputComponentManager *> outputComponentManagers;
     uint32_t dummyDeltatime{0};
 };
 
-TEST_F(TheGameLoop, MakesTheComponentManagersUpdateWhenItIsOnUpdateStage)
+TEST_F(TheGameLoop, UpdatesTheGameObjectsUsingTheGameObjectsManager)
 {
-    managers.push_back(&componentManager);
-    EXPECT_CALL(componentManager, update(dummyDeltatime));
-    gameLoop.update(dummyDeltatime, managers);
+    EXPECT_CALL(gameObjectsManager, updateGameObjects(dummyDeltatime));
+    gameLoop.update(dummyDeltatime, &gameObjectsManager);
 }
 
-TEST_F(TheGameLoop, MakesTheOutputComponentManagersOutputContentWhenItIsOnOutputStage)
+TEST_F(TheGameLoop, GeneratesOuputUsingTheGameObjectsManager)
 {
-    outputComponentManagers.push_back(&outputComponentManager);
-    EXPECT_CALL(outputComponentManager, output);
-    gameLoop.output(outputComponentManagers);
+    EXPECT_CALL(gameObjectsManager, generateOutputFromGameObjects);
+    gameLoop.generateOutput(&gameObjectsManager);
 }
 
-TEST_F(TheGameLoop, MakesTheComponentManagersDestroyWhenItIsOnDestroyStage)
+TEST_F(TheGameLoop, DestroysTheGameObjectsUsingTheGameObjectsManager)
 {
-    managers.push_back(&componentManager);
-    EXPECT_CALL(componentManager, destroy);
-    gameLoop.destroy(managers);
+    EXPECT_CALL(gameObjectsManager, destroyAllGameObjects);
+    gameLoop.destroy(&gameObjectsManager);
 }

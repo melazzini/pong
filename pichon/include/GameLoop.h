@@ -15,9 +15,9 @@ struct GameLoop : IGameLoop
     {
     }
 
-    void update(uint32_t deltatime, const std::vector<ComponentManager *> &managers) override;
+    void update(uint32_t deltatime, IGameObjectsManager *gameObjectsManager) override;
 
-    void output(const std::vector<OutputComponentManager *> &outputComponentManagers) override;
+    void generateOutput(IGameObjectsManager *gameObjectsManager) override;
 
-    void destroy(const std::vector<ComponentManager *> &managers) override;
+    void destroy(IGameObjectsManager *gameObjectsManager) override;
 };
