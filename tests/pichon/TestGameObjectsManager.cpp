@@ -17,7 +17,7 @@ struct MyDummyComponentManager : ComponentManager
 {
 };
 
-struct MyDummyOutputComponentManager : OutputComponentManager
+struct MyDummyOutputComponentManager : IOutputComponentManager
 {
     void output() override
     {
@@ -31,7 +31,7 @@ struct MyMockComponentManager : ComponentManager
     MOCK_METHOD(void, registerComponent, (IComponent *), (override));
 };
 
-struct MyMockOutputComponentManager : OutputComponentManager
+struct MyMockOutputComponentManager : IOutputComponentManager
 {
     MOCK_METHOD(void, update, (uint32_t), (override));
     MOCK_METHOD(void, destroy, (), (override));
@@ -148,7 +148,7 @@ TEST_F(
 
     ASSERT_TRUE(gameObjectsManager.hasComponentManager(&myDummyComponentManager));
     ASSERT_FALSE(gameObjectsManager.hasOutputComponentManager(
-        static_cast<OutputComponentManager *>(static_cast<ComponentManager *>(&myDummyComponentManager))));
+        static_cast<IOutputComponentManager *>(static_cast<ComponentManager *>(&myDummyComponentManager))));
 }
 
 TEST_F(TheGameObjectsManager, CannotAddAnExistingComponentManager)

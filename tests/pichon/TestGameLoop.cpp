@@ -31,7 +31,7 @@ struct MockGameObjectsManager : IGameObjectsManager
         return false;
     }
 
-    bool hasOutputComponentManager(OutputComponentManager *) const override
+    bool hasOutputComponentManager(IOutputComponentManager *) const override
     {
         return false;
     }
@@ -47,7 +47,7 @@ struct TheGameLoop : testing::Test
 {
     GameLoop gameLoop;
     MockGameObjectsManager gameObjectsManager;
-    std::vector<OutputComponentManager *> outputComponentManagers;
+    std::vector<IOutputComponentManager *> outputComponentManagers;
     uint32_t dummyDeltatime{0};
     MockEventManager eventManager;
 };

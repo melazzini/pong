@@ -6,7 +6,7 @@
 
 struct GameObject;
 struct ComponentManager;
-struct OutputComponentManager;
+struct IOutputComponentManager;
 struct IGameObjectsManager;
 struct IEventManager;
 
@@ -149,7 +149,7 @@ struct IGameObjectsManager
      *
      * @return  `true` if the manager is in the list of OutputComponentManager s, else `false`
      */
-    virtual bool hasOutputComponentManager(OutputComponentManager *outputComonentManager) const = 0;
+    virtual bool hasOutputComponentManager(IOutputComponentManager *outputComonentManager) const = 0;
 
     /**
      * @brief This method returns a list of the component managers.

@@ -43,7 +43,7 @@ void GameObjectsManager::updateGameObjects(uint32_t deltatime)
 void GameObjectsManager::generateOutputFromGameObjects()
 {
     std::for_each(std::begin(m_outputComponentManagers), std::end(m_outputComponentManagers),
-                  [](OutputComponentManager *outputComonentManager) { outputComonentManager->output(); });
+                  [](IOutputComponentManager *outputComonentManager) { outputComonentManager->output(); });
 }
 
 void GameObjectsManager::destroyAllGameObjects()
@@ -76,7 +76,7 @@ bool GameObjectsManager::hasComponentManager(ComponentManager *manager) const
     return m_componentManagers.contains(manager);
 }
 
-bool GameObjectsManager::hasOutputComponentManager(OutputComponentManager *outputComonentManager) const
+bool GameObjectsManager::hasOutputComponentManager(IOutputComponentManager *outputComonentManager) const
 {
     return m_outputComponentManagers.contains(outputComonentManager);
 }
@@ -102,7 +102,7 @@ bool GameObjectsManager::isComponentManagerADuplicateOfAnExistingOne(ComponentMa
 void GameObjectsManager::registerComponentManager(ComponentManager *componentManager)
 {
     m_componentManagers.emplace(componentManager);
-    if (auto outputComponentManager{dynamic_cast<OutputComponentManager *>(componentManager)}; outputComponentManager)
+    if (auto outputComponentManager{dynamic_cast<IOutputComponentManager *>(componentManager)}; outputComponentManager)
     {
         m_outputComponentManagers.emplace(outputComponentManager);
     }
