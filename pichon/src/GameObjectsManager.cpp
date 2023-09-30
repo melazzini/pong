@@ -57,16 +57,20 @@ bool GameObjectsManager::insertionIsValid(GameObject *object, const std::string 
 void GameObjectsManager::extractComponentManagersAndRegisterTheirComponents(
     const std::vector<std::unique_ptr<IComponent>> &componentList)
 {
-    std::for_each(std::cbegin(componentList), std::cend(componentList),
-                  [this](const std::unique_ptr<IComponent> &component) {
-                      auto manager_{component->manager()};
-                      validateComponentManager(manager_);
-                      if (!isComponentManagerADuplicateOfAnExistingOne(manager_))
-                      {
-                          manager_->registerComponent(component.get());
-                          m_componentManagers.emplace(manager_);
-                      }
-                  });
+    std::for_each(
+        std::cbegin(componentList), std::cend(componentList), [this](const std::unique_ptr<IComponent> &component) {
+            auto manager_{component->manager()};
+            validateComponentManager(manager_);
+            if (!isComponentManagerADuplicateOfAnExistingOne(manager_))
+            {
+                manager_->registerComponent(component.get());
+                m_componentManagers.emplace(manager_);
+                if (auto outputComonentManager{dynamic_cast<OutputComponentManager *>(manager_)}; outputComonentManager)
+                {
+                    m_outputComponentManagers.emplace(outputComonentManager);
+                }
+            }
+        });
 }
 
 bool GameObjectsManager::hasComponentManager(ComponentManager *manager) const
@@ -74,6 +78,10 @@ bool GameObjectsManager::hasComponentManager(ComponentManager *manager) const
     return m_componentManagers.contains(manager);
 }
 
+bool GameObjectsManager::hasOutputComponentManager(OutputComponentManager *outputComonentManager) const
+{
+    return m_outputComponentManagers.contains(outputComonentManager);
+}
 const std::unordered_set<ComponentManager *> &GameObjectsManager::listOfComponentManagers() const
 {
     return m_componentManagers;

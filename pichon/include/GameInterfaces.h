@@ -143,6 +143,15 @@ struct IGameObjectsManager
     virtual bool hasComponentManager(ComponentManager *manager) const = 0;
 
     /**
+     * @brief Checks if the given output component manager is listed in and used by the GameObjectsManager.
+     *
+     * @param outputComonentManager The corresponding output component manager.
+     *
+     * @return  `true` if the manager is in the list of OutputComponentManager s, else `false`
+     */
+    virtual bool hasOutputComponentManager(OutputComponentManager *outputComonentManager) const = 0;
+
+    /**
      * @brief This method returns a list of the component managers.
      *
      * @return A list of the component managers.

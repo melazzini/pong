@@ -31,6 +31,10 @@ struct MockGameObjectsManager : IGameObjectsManager
         return false;
     }
 
+    bool hasOutputComponentManager(OutputComponentManager *) const override
+    {
+        return false;
+    }
     const std::unordered_set<ComponentManager *> &listOfComponentManagers() const override
     {
         return listOfComponentManagers_;

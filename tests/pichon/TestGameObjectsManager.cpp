@@ -17,6 +17,13 @@ struct MyDummyComponentManager : ComponentManager
 {
 };
 
+struct MyDummyOutputComponentManager : OutputComponentManager
+{
+    void output() override
+    {
+    }
+};
+
 struct MyMockComponentManager : ComponentManager
 {
     MOCK_METHOD(void, update, (uint32_t), (override));
@@ -56,6 +63,7 @@ struct TheGameObjectsManager : testing::Test
     const std::string dummyTag{"DummyTag"};
     const std::string existingGameObjectDummyTag{"ExistingGameObjectDummyTag"};
     MyDummyComponentManager myDummyComponentManager;
+    MyDummyOutputComponentManager myDummyOutputComponentManager;
     NiceMock<MyMockComponentManager> myMockComponentManager;
     const std::string aSecondDummyTag{"DummyTag2"};
     uint32_t dummyDeltaTime{10};
@@ -107,6 +115,32 @@ TEST_F(TheGameObjectsManager, GetsTheComponentManagersFromTheComponentsOfTheGame
     gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
     Mock::AllowLeak(component);
     Mock::VerifyAndClearExpectations(component);
+}
+
+TEST_F(TheGameObjectsManager, GetsTheOutputComponentManagersFromTheComponentsOfTheGameObjectAdded)
+{
+    auto component = gameObject->addComponent<AMockComponent>();
+    EXPECT_CALL(*component, manager()).WillOnce(Return(&myDummyOutputComponentManager));
+    gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
+    Mock::AllowLeak(component);
+    Mock::VerifyAndClearExpectations(component);
+
+    ASSERT_TRUE(gameObjectsManager.hasOutputComponentManager(&myDummyOutputComponentManager));
+}
+
+TEST_F(
+    TheGameObjectsManager,
+    GetsTheNonOutputComponentManagersFromTheComponentsOfTheGameObjectAddedButNotRegisterThemAsOutputComponentManagers)
+{
+    auto component = gameObject->addComponent<AMockComponent>();
+    EXPECT_CALL(*component, manager()).WillOnce(Return(&myDummyComponentManager));
+    gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
+    Mock::AllowLeak(component);
+    Mock::VerifyAndClearExpectations(component);
+
+    ASSERT_TRUE(gameObjectsManager.hasComponentManager(&myDummyComponentManager));
+    ASSERT_FALSE(gameObjectsManager.hasOutputComponentManager(
+        static_cast<OutputComponentManager *>(static_cast<ComponentManager *>(&myDummyComponentManager))));
 }
 
 TEST_F(TheGameObjectsManager, CannotAddAnExistingComponentManager)

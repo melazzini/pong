@@ -6,6 +6,7 @@
 
 struct IComponent;
 struct ComponentManager;
+struct OutputComponentManager;
 
 class GameObjectsManager : public IGameObjectsManager
 {
@@ -17,11 +18,13 @@ class GameObjectsManager : public IGameObjectsManager
     void generateOutputFromGameObjects() override;
     void destroyAllGameObjects() override;
     bool hasComponentManager(ComponentManager *manager) const override;
+    bool hasOutputComponentManager(OutputComponentManager *outputComonentManager) const override;
     const std::unordered_set<ComponentManager *> &listOfComponentManagers() const override;
 
   private:
     std::unordered_map<std::string, std::unique_ptr<GameObject>> m_gameObjects;
     std::unordered_set<ComponentManager *> m_componentManagers;
+    std::unordered_set<OutputComponentManager *> m_outputComponentManagers;
 
   private:
     bool insertionIsValid(GameObject *object, const std::string &tag) const;
