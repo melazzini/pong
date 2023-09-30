@@ -37,7 +37,7 @@ bool GameObjectsManager::hasGameObject(const std::string &tag) const
 void GameObjectsManager::updateGameObjects(uint32_t deltatime)
 {
     std::for_each(std::begin(m_componentManagers), std::end(m_componentManagers),
-                  [deltatime](ComponentManager *componentManager) { componentManager->update(deltatime); });
+                  [deltatime](IComponentManager *componentManager) { componentManager->updateComponents(deltatime); });
 }
 
 void GameObjectsManager::generateOutputFromGameObjects()
@@ -49,7 +49,7 @@ void GameObjectsManager::generateOutputFromGameObjects()
 void GameObjectsManager::destroyAllGameObjects()
 {
     std::for_each(std::begin(m_componentManagers), std::end(m_componentManagers),
-                  [](ComponentManager *componentManager) { componentManager->destroy(); });
+                  [](IComponentManager *componentManager) { componentManager->destroyComponents(); });
 }
 
 bool GameObjectsManager::insertionIsValid(GameObject *object, const std::string &tag) const
@@ -71,7 +71,7 @@ void GameObjectsManager::extractComponentManagersAndRegisterTheirComponents(
                   });
 }
 
-bool GameObjectsManager::hasComponentManager(ComponentManager *manager) const
+bool GameObjectsManager::hasComponentManager(IComponentManager *manager) const
 {
     return m_componentManagers.contains(manager);
 }
@@ -80,12 +80,12 @@ bool GameObjectsManager::hasOutputComponentManager(IOutputComponentManager *outp
 {
     return m_outputComponentManagers.contains(outputComonentManager);
 }
-const std::unordered_set<ComponentManager *> &GameObjectsManager::listOfComponentManagers() const
+const std::unordered_set<IComponentManager *> &GameObjectsManager::listOfComponentManagers() const
 {
     return m_componentManagers;
 }
 
-void GameObjectsManager::validateComponentManager(ComponentManager *componentManager) const
+void GameObjectsManager::validateComponentManager(IComponentManager *componentManager) const
 {
     if (componentManager == nullptr)
     {
@@ -94,12 +94,12 @@ void GameObjectsManager::validateComponentManager(ComponentManager *componentMan
     }
 }
 
-bool GameObjectsManager::isComponentManagerADuplicateOfAnExistingOne(ComponentManager *manager_) const
+bool GameObjectsManager::isComponentManagerADuplicateOfAnExistingOne(IComponentManager *manager_) const
 {
     return m_componentManagers.contains(manager_);
 }
 
-void GameObjectsManager::registerComponentManager(ComponentManager *componentManager)
+void GameObjectsManager::registerComponentManager(IComponentManager *componentManager)
 {
     m_componentManagers.emplace(componentManager);
     if (auto outputComponentManager{dynamic_cast<IOutputComponentManager *>(componentManager)}; outputComponentManager)
@@ -107,7 +107,7 @@ void GameObjectsManager::registerComponentManager(ComponentManager *componentMan
         m_outputComponentManagers.emplace(outputComponentManager);
     }
 }
-void GameObjectsManager::registerComponent(ComponentManager *componentManager, IComponent *component)
+void GameObjectsManager::registerComponent(IComponentManager *componentManager, IComponent *component)
 {
     componentManager->registerComponent(component);
 }

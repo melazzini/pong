@@ -5,7 +5,7 @@
 #include <vector>
 
 struct GameObject;
-struct ComponentManager;
+struct IComponentManager;
 struct IOutputComponentManager;
 struct IGameObjectsManager;
 struct IEventManager;
@@ -140,7 +140,7 @@ struct IGameObjectsManager
      *
      * @return  `true` if the manager is in the list of ComponentManager s, else `false`
      */
-    virtual bool hasComponentManager(ComponentManager *manager) const = 0;
+    virtual bool hasComponentManager(IComponentManager *manager) const = 0;
 
     /**
      * @brief Checks if the given output component manager is listed in and used by the GameObjectsManager.
@@ -158,5 +158,5 @@ struct IGameObjectsManager
      *
      * @note This method is mainly for unit-testing and/or inspection purposes.
      */
-    virtual const std::unordered_set<ComponentManager *> &listOfComponentManagers() const = 0;
+    virtual const std::unordered_set<IComponentManager *> &listOfComponentManagers() const = 0;
 };

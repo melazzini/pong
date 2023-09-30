@@ -79,7 +79,7 @@ class GameBase
         m_managers.clear();
     }
 
-    const std::unordered_set<ComponentManager *> managers() const
+    const std::unordered_set<IComponentManager *> managers() const
     {
         return m_managers;
     }
@@ -90,5 +90,5 @@ class GameBase
   private:
     bool m_running;
     std::vector<std::pair<std::unique_ptr<GameObject>, std::string>> m_gameObjects;
-    std::unordered_set<ComponentManager *> m_managers;
+    std::unordered_set<IComponentManager *> m_managers;
 };

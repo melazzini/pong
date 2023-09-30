@@ -5,7 +5,7 @@
 #include <unordered_set>
 
 struct IComponent;
-struct ComponentManager;
+struct IComponentManager;
 struct IOutputComponentManager;
 
 class GameObjectsManager : public IGameObjectsManager
@@ -17,21 +17,21 @@ class GameObjectsManager : public IGameObjectsManager
     void updateGameObjects(uint32_t deltatime) override;
     void generateOutputFromGameObjects() override;
     void destroyAllGameObjects() override;
-    bool hasComponentManager(ComponentManager *manager) const override;
+    bool hasComponentManager(IComponentManager *manager) const override;
     bool hasOutputComponentManager(IOutputComponentManager *outputComonentManager) const override;
-    const std::unordered_set<ComponentManager *> &listOfComponentManagers() const override;
+    const std::unordered_set<IComponentManager *> &listOfComponentManagers() const override;
 
   private:
     std::unordered_map<std::string, std::unique_ptr<GameObject>> m_gameObjects;
-    std::unordered_set<ComponentManager *> m_componentManagers;
+    std::unordered_set<IComponentManager *> m_componentManagers;
     std::unordered_set<IOutputComponentManager *> m_outputComponentManagers;
 
   private:
     bool insertionIsValid(GameObject *object, const std::string &tag) const;
     void extractComponentManagersAndRegisterTheirComponents(
         const std::vector<std::unique_ptr<IComponent>> &componentList);
-    void validateComponentManager(ComponentManager *componentManager) const;
-    bool isComponentManagerADuplicateOfAnExistingOne(ComponentManager *componentManager) const;
-    void registerComponentManager(ComponentManager *componentManager);
-    void registerComponent(ComponentManager *componentManager, IComponent *component);
+    void validateComponentManager(IComponentManager *componentManager) const;
+    bool isComponentManagerADuplicateOfAnExistingOne(IComponentManager *componentManager) const;
+    void registerComponentManager(IComponentManager *componentManager);
+    void registerComponent(IComponentManager *componentManager, IComponent *component);
 };

@@ -22,30 +22,51 @@ struct MyDummyOutputComponentManager : IOutputComponentManager
     void output() override
     {
     }
+
+    void updateComponents(uint32_t deltatime) override
+    {
+    }
+
+    void destroyComponents() override
+    {
+    }
+
+    bool registerComponent(IComponent *) override
+    {
+        return false;
+    }
+    bool hasComponent(IComponent *) const override
+    {
+        return false;
+    }
 };
 
 struct MyMockComponentManager : ComponentManager
 {
     MOCK_METHOD(void, update, (uint32_t), (override));
     MOCK_METHOD(void, destroy, (), (override));
-    MOCK_METHOD(void, registerComponent, (IComponent *), (override));
+    MOCK_METHOD(bool, registerComponent, (IComponent *), (override));
+    MOCK_METHOD(void, destroyComponents, (), (override));
+    MOCK_METHOD(void, updateComponents, (uint32_t), (override));
 };
 
 struct MyMockOutputComponentManager : IOutputComponentManager
 {
-    MOCK_METHOD(void, update, (uint32_t), (override));
-    MOCK_METHOD(void, destroy, (), (override));
+    MOCK_METHOD(void, updateComponents, (uint32_t), (override));
+    MOCK_METHOD(void, destroyComponents, (), (override));
     MOCK_METHOD(void, output, (), (override));
+    MOCK_METHOD(bool, hasComponent, (IComponent *), (const override));
+    MOCK_METHOD(bool, registerComponent, (IComponent *), (override));
 };
 
 struct MyDummyComponent : IComponent
 {
-    void setManager(ComponentManager *manager_)
+    void setManager(IComponentManager *manager_)
     {
         _manager = manager_;
     }
 
-    ComponentManager *manager() const override
+    IComponentManager *manager() const override
     {
         return _manager;
     }
@@ -54,13 +75,13 @@ struct MyDummyComponent : IComponent
     {
     }
 
-    ComponentManager *_manager;
+    IComponentManager *_manager;
 };
 
 struct AMockComponent : IComponent
 {
     MOCK_METHOD(void, update, (uint32_t), (override));
-    MOCK_METHOD(ComponentManager *, manager, (), (const override));
+    MOCK_METHOD(IComponentManager *, manager, (), (const override));
 };
 
 struct TheGameObjectsManager : testing::Test
@@ -71,7 +92,7 @@ struct TheGameObjectsManager : testing::Test
     const std::string existingGameObjectDummyTag{"ExistingGameObjectDummyTag"};
     MyDummyComponentManager myDummyComponentManager;
     MyDummyOutputComponentManager myDummyOutputComponentManager;
-    MyMockOutputComponentManager myMockOutputComponentManager;
+    NiceMock<MyMockOutputComponentManager> myMockOutputComponentManager;
     NiceMock<MyMockComponentManager> myMockComponentManager;
     const std::string aSecondDummyTag{"DummyTag2"};
     uint32_t dummyDeltaTime{10};
@@ -148,7 +169,7 @@ TEST_F(
 
     ASSERT_TRUE(gameObjectsManager.hasComponentManager(&myDummyComponentManager));
     ASSERT_FALSE(gameObjectsManager.hasOutputComponentManager(
-        static_cast<IOutputComponentManager *>(static_cast<ComponentManager *>(&myDummyComponentManager))));
+        static_cast<IOutputComponentManager *>(static_cast<IComponentManager *>(&myDummyComponentManager))));
 }
 
 TEST_F(TheGameObjectsManager, CannotAddAnExistingComponentManager)
@@ -180,7 +201,7 @@ TEST_F(TheGameObjectsManager, UsesTheComponentManagersToUpdateTheGameObjectCompo
     auto myDummyComponent{gameObject->addComponent<MyDummyComponent>()};
     myDummyComponent->setManager(&myMockComponentManager);
     gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
-    EXPECT_CALL(myMockComponentManager, update(dummyDeltaTime));
+    EXPECT_CALL(myMockComponentManager, updateComponents(dummyDeltaTime));
     gameObjectsManager.updateGameObjects(dummyDeltaTime);
 }
 
@@ -189,7 +210,7 @@ TEST_F(TheGameObjectsManager, UsesTheComponentManagersToDestroyTheGameObjectComp
     auto myDummyComponent{gameObject->addComponent<MyDummyComponent>()};
     myDummyComponent->setManager(&myMockComponentManager);
     gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
-    EXPECT_CALL(myMockComponentManager, destroy());
+    EXPECT_CALL(myMockComponentManager, destroyComponents());
     gameObjectsManager.destroyAllGameObjects();
 }
 

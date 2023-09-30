@@ -26,7 +26,7 @@ struct MockGameObjectsManager : IGameObjectsManager
     {
         return false;
     }
-    bool hasComponentManager(ComponentManager *) const override
+    bool hasComponentManager(IComponentManager *) const override
     {
         return false;
     }
@@ -35,12 +35,12 @@ struct MockGameObjectsManager : IGameObjectsManager
     {
         return false;
     }
-    const std::unordered_set<ComponentManager *> &listOfComponentManagers() const override
+    const std::unordered_set<IComponentManager *> &listOfComponentManagers() const override
     {
         return listOfComponentManagers_;
     }
 
-    std::unordered_set<ComponentManager *> listOfComponentManagers_;
+    std::unordered_set<IComponentManager *> listOfComponentManagers_;
 };
 
 struct TheGameLoop : testing::Test

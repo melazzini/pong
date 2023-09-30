@@ -42,17 +42,18 @@ struct DummyRenderer : IRenderer
 
 struct ADummyComponentManager : ComponentManager
 {
-    MOCK_METHOD(void, registerComponent, (IComponent *), (override));
+    MOCK_METHOD(bool, registerComponent, (IComponent *), (override));
     MOCK_METHOD(void, update, (uint32_t), (override));
+    MOCK_METHOD(void, updateComponents, (uint32_t), (override));
 };
 struct ADummyDrawableComponentManager : DrawableComponentManagerBase
 {
     ADummyDrawableComponentManager() : DrawableComponentManagerBase{nullptr}
     {
     }
-    MOCK_METHOD(void, registerComponent, (IComponent *), (override));
-    MOCK_METHOD(void, update, (uint32_t), (override));
-    MOCK_METHOD(void, paintComponents, (), (override));
+    MOCK_METHOD(bool, registerComponent, (IComponent *), (override));
+    MOCK_METHOD(void, updateComponents, (uint32_t), (override));
+    MOCK_METHOD(void, output, (), (override));
 };
 
 struct AGameBase : testing::Test
@@ -100,14 +101,14 @@ TEST_F(AGameBase, KnowsIfItsRunning)
 
 struct ADummyComponent : Component
 {
-    ADummyComponent(GameObject *owner, ComponentManager *manager) : Component(owner, manager)
+    ADummyComponent(GameObject *owner, IComponentManager *manager) : Component(owner, manager)
     {
     }
 };
 
 struct DummyGameObject : GameObject
 {
-    DummyGameObject(ComponentManager *manager_)
+    DummyGameObject(IComponentManager *manager_)
     {
         addComponent<ADummyComponent>(this, manager_);
     }
@@ -145,11 +146,14 @@ TEST_F(AGameBase, DoesntStoreTheGameObjectIfItReturnsFalse)
 TEST_F(AGameBase, PassesEachComponentToItsCorrespondingComponentManagerForTheGivenGameObject)
 {
     auto gameObject = std::make_unique<DummyGameObject>(&componenManager);
-    EXPECT_CALL(componenManager, registerComponent)
-        .WillOnce(
-            [spy = gameObject->getDummyComponentSpy()](IComponent *component_) { ASSERT_THAT(component_, Eq(spy)); });
-
+    IComponent *refToComponent;
+    EXPECT_CALL(componenManager, registerComponent).WillOnce([&refToComponent](IComponent *component_) -> bool {
+        refToComponent = component_;
+        return true;
+    });
+    auto spy{gameObject->getDummyComponentSpy()};
     game->addGameObject(std::move(gameObject), "dummyGameObject");
+    ASSERT_THAT(refToComponent, Eq(spy));
 }
 
 TEST_F(AGameBase, RegistersTheComponentManagersOfTheGivenGameObject)
@@ -182,14 +186,7 @@ TEST_F(AGameBase, MakesTheComponentManagersUpdateWhenItUpdates)
 {
     game->addGameObject(std::make_unique<DummyGameObject>(&componenManager), "dummyGameObject1");
     EXPECT_CALL(dummyTimer, tick).WillOnce(Return(std::chrono::milliseconds{10}));
-    EXPECT_CALL(componenManager, update).WillOnce([](float deltatime) { ASSERT_DOUBLE_EQ(deltatime, 10); });
-    game->update();
-}
-
-TEST_F(AGameBase, DoesntMakeTheNonDrawingComponentManagersUpdateWhenItUpdates)
-{
-    game->addGameObject(std::make_unique<DummyGameObject>(&dummyDrawableComponentManager), "dummyGameObject");
-    EXPECT_CALL(dummyDrawableComponentManager, update);
+    EXPECT_CALL(componenManager, updateComponents(10));
     game->update();
 }
 
@@ -198,7 +195,7 @@ TEST_F(AGameBase, MakesTheDrawingComponentManagersPaintTheirComponentsAfterClear
     InSequence s;
     game->addGameObject(std::make_unique<DummyGameObject>(&dummyDrawableComponentManager), "dummyGameObject");
     EXPECT_CALL(window, clear);
-    EXPECT_CALL(dummyDrawableComponentManager, paintComponents);
+    EXPECT_CALL(dummyDrawableComponentManager, output);
     EXPECT_CALL(window, present);
     game->output();
 }

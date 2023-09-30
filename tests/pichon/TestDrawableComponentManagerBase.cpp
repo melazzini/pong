@@ -31,22 +31,31 @@ struct MockDrawableComponent : DrawableComponent
     MOCK_METHOD(void, draw, (), (override));
 };
 
-TEST(ADrawableComponentManagerBase, UsesItsRendererToDrawDrawables)
+struct ADrawableComponentManagerBase : testing::Test
 {
+    GameObject dummyGameObject;
     MockRenderer renderer;
     DrawableComponentManagerBase drawableComponentManager{&renderer};
+};
+
+TEST_F(ADrawableComponentManagerBase, CanRegisterDrawableComponents)
+{
+    MockDrawableComponent drawable{&dummyGameObject, &drawableComponentManager};
+    drawableComponentManager.registerComponent(&drawable);
+    ASSERT_TRUE(drawableComponentManager.hasComponent(&drawable));
+}
+
+TEST_F(ADrawableComponentManagerBase, UsesItsRendererToDrawDrawables)
+{
     DummyDrawable dummyDrawable{nullptr};
     EXPECT_CALL(renderer, render);
     drawableComponentManager.draw(&dummyDrawable);
 }
 
-TEST(ADrawableComponentManagerBase, PaintAllItsDrawableComponents)
+TEST_F(ADrawableComponentManagerBase, PaintAllItsDrawableComponents)
 {
-    GameObject dummyGameObject;
-    MockRenderer renderer;
-    DrawableComponentManagerBase drawableComponentManager{&renderer};
     MockDrawableComponent drawable{&dummyGameObject, &drawableComponentManager};
     drawableComponentManager.registerComponent(&drawable);
     EXPECT_CALL(drawable, draw);
-    drawableComponentManager.paintComponents();
+    drawableComponentManager.output();
 }

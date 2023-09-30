@@ -32,32 +32,30 @@ int main()
         std::cerr << "Error while initializing the game!" << std::endl;
         return -1;
     }
+    if (!game->addGameObject(std::make_unique<Paddle>(eventManager, rendererSDL), "player"))
+    {
+        return -1;
+    }
+    if (!game->addGameObject(std::make_unique<Ball>(rendererSDL), "ball"))
+    {
+        return -1;
+    }
+    if (!game->addGameObject(
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 0), RectangularGeometry{800, 20}, "TopWall"), "TopWall"))
+    {
+        return -1;
+    }
+    if (!game->addGameObject(
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 780), RectangularGeometry{800, 20}, "BottomWall"),
+            "BottomWall"))
+    {
+        return -1;
+    }
+    if (!game->addGameObject(
+            std::make_unique<Wall>(rendererSDL, glm::ivec2(780, 0), RectangularGeometry{20, 800}, "RightWall"),
+            "RightWall"))
+    {
+        return -1;
+    }
     return game->launch();
-    //    if (!game->addGameObject(std::make_unique<Paddle>(eventManager, rendererSDL), "player"))
-    //    {
-    //        return -1;
-    //    }
-    //    if (!game->addGameObject(std::make_unique<Ball>(rendererSDL), "ball"))
-    //    {
-    //        return -1;
-    //    }
-    //    if (!game->addGameObject(
-    //            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 0), RectangularGeometry{800, 20}, "TopWall"),
-    //            "TopWall"))
-    //    {
-    //        return -1;
-    //    }
-    //    if (!game->addGameObject(
-    //            std::make_unique<Wall>(rendererSDL, glm::ivec2(0, 780), RectangularGeometry{800, 20}, "BottomWall"),
-    //            "BottomWall"))
-    //    {
-    //        return -1;
-    //    }
-    //    if (!game->addGameObject(
-    //            std::make_unique<Wall>(rendererSDL, glm::ivec2(780, 0), RectangularGeometry{20, 800}, "RightWall"),
-    //            "RightWall"))
-    //    {
-    //        return -1;
-    //    }
-    //    return game->launch();
 }

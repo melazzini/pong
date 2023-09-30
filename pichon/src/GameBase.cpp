@@ -49,7 +49,7 @@ void GameBase::update()
 
     for (auto manager : m_managers)
     {
-        manager->update(dTime_ms.count());
+        manager->updateComponents(dTime_ms.count());
     }
 }
 
@@ -78,7 +78,7 @@ void GameBase::output()
     {
         if (auto drawableManager = dynamic_cast<DrawableComponentManagerBase *>(manager); drawableManager)
         {
-            drawableManager->paintComponents();
+            drawableManager->output();
         }
     }
     m_backend->window->present();

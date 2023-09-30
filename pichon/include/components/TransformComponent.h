@@ -5,19 +5,25 @@
 #include <glm/fwd.hpp>
 #include <glm/glm.hpp>
 
-class TransformComponentManager : public ComponentManager
+class TransformComponentManager : public IComponentManager
 {
   public:
     static TransformComponentManager *getInstance();
 
+    bool registerComponent(IComponent *component) override;
+    bool hasComponent(IComponent *component) const override;
+    void updateComponents(uint32_t deltatime) override;
+    void destroyComponents() override;
+
   private:
     TransformComponentManager() = default;
+    std::vector<IComponent *> m_components;
 };
 
 class TransformComponent : public Component
 {
   public:
-    TransformComponent(GameObject *owner, ComponentManager *manager, glm::ivec2 initialPosition = {},
+    TransformComponent(GameObject *owner, IComponentManager *manager, glm::ivec2 initialPosition = {},
                        RectangularGeometry initialSize = RectangularGeometry{})
         : Component(owner, manager), m_position{initialPosition}, m_size{initialSize}
     {

@@ -26,7 +26,7 @@ class ConstrainedTransformComponent : public TransformComponent
 {
   public:
     ConstrainedTransformComponent(
-        GameObject *owner, ComponentManager *manager, glm::ivec2 initialPosition, RectangularGeometry initialSize,
+        GameObject *owner, IComponentManager *manager, glm::ivec2 initialPosition, RectangularGeometry initialSize,
         std::function<glm::ivec2(std::pair<const glm::ivec2 &, const glm::ivec2 &>)> positionConstraint)
         : TransformComponent(owner, manager, initialPosition, initialSize), m_constraintNewPosition{
                                                                                 std::move(positionConstraint)}
@@ -111,7 +111,8 @@ struct PaddleInputComponent : InputComponent
         Paddle *m_owner;
     };
 
-    PaddleInputComponent(Paddle *owner, ComponentManager *manager_) : InputComponent{owner, manager_}, m_listener{owner}
+    PaddleInputComponent(Paddle *owner, IComponentManager *manager_)
+        : InputComponent{owner, manager_}, m_listener{owner}
     {
         m_inputManager = dynamic_cast<InputComponentManagerBase *>(manager());
         //        m_inputManager->registerListener(&m_listener);

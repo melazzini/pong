@@ -33,7 +33,7 @@ TEST(TheGetInstanceFunction, ReturnsNullIfYouPassItANullGameBackend)
 
 struct ADummyComponentManager : ComponentManager
 {
-    MOCK_METHOD(void, registerComponent, (IComponent *), (override));
+    MOCK_METHOD(bool, registerComponent, (IComponent *), (override));
 };
 
 struct TheGame : testing::Test

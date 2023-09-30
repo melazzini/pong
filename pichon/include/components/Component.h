@@ -27,7 +27,7 @@ struct IComponentManager
      *
      * @return `true` if the component is being managed by the current manager, else `false`.
      */
-    virtual bool hasComponent(IComponent *componet) = 0;
+    virtual bool hasComponent(IComponent *componet) const = 0;
 
     /**
      * @brief This method updates all the components managed by the current manager.
@@ -42,7 +42,18 @@ struct IComponentManager
     virtual void destroyComponents() = 0;
 };
 
-class ComponentManager
+/**
+ * @brief This is the interface of any component manager that manages output components.
+ */
+struct IOutputComponentManager : IComponentManager
+{
+    /**
+     * @brief This method outputs the conents of the components managed by the current manager.
+     */
+    virtual void output() = 0;
+};
+
+class ComponentManager : public IComponentManager
 {
   public:
     ComponentManager(bool (*componentValidator)(IComponent *) = [](IComponent *) { return true; })
@@ -50,19 +61,29 @@ class ComponentManager
     {
     }
 
-    virtual void registerComponent(IComponent *component)
+    virtual bool registerComponent(IComponent *component) override
     {
         if (m_componentValidator(component))
         {
             m_components.push_back(component);
+            return true;
         }
+        return false;
     }
 
-    bool hasComponent(IComponent *component) const;
+    bool hasComponent(IComponent *component) const override;
 
     virtual void update(uint32_t deltatime);
 
     virtual void destroy()
+    {
+    }
+
+    void updateComponents(uint32_t deltatime) override
+    {
+    }
+
+    void destroyComponents() override
     {
     }
 
@@ -73,39 +94,28 @@ class ComponentManager
     std::vector<IComponent *> m_components;
 };
 
-/**
- * @brief This is the interface of any component manager that manages output components.
- */
-struct IOutputComponentManager : ComponentManager
-{
-    /**
-     * @brief This method outputs the conents of the components managed by the current manager.
-     */
-    virtual void output() = 0;
-};
-
 struct GameObject;
 
 struct IComponent
 {
     ~IComponent() = default;
     virtual void update(uint32_t deltatime) = 0;
-    virtual ComponentManager *manager() const = 0;
+    virtual IComponentManager *manager() const = 0;
 };
 
 class Component : public IComponent
 {
   public:
-    Component(GameObject *owner, ComponentManager *manager);
+    Component(GameObject *owner, IComponentManager *manager);
     virtual void update(uint32_t deltaTime) override
     {
     }
-    virtual ComponentManager *manager() const override;
+    virtual IComponentManager *manager() const override;
 
   private:
     [[nodiscard]] GameObject *validateOwner(GameObject *owner);
-    [[nodiscard]] ComponentManager *validateManager(ComponentManager *manager);
+    [[nodiscard]] IComponentManager *validateManager(IComponentManager *manager);
 
   private:
-    ComponentManager *m_manager;
+    IComponentManager *m_manager;
 };

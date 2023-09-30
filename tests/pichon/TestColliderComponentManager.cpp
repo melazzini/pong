@@ -63,7 +63,7 @@ TEST_F(AColliderComponentManager, GetsAllTheTagsFromTheContainerWhenItUpdates)
     EXPECT_CALL(*containerSpy, getAllTags).WillOnce([this]() -> const std::unordered_set<std::string> & {
         return dummyTags;
     });
-    ccm->update(dummyDeltatime);
+    ccm->updateComponents(dummyDeltatime);
 }
 
 struct AColliderComponentManagerExpectedToGetAllTagsUsingTheContainerWhenUpdates : AColliderComponentManager
@@ -83,7 +83,7 @@ TEST_F(AColliderComponentManagerExpectedToGetAllTagsUsingTheContainerWhenUpdates
     EXPECT_CALL(*tagsManager, getRolesForTag).WillOnce([]() -> std::pair<std::string, std::string> {
         return {"RoleA", "RoleB"};
     });
-    ccm->update(dummyDeltatime);
+    ccm->updateComponents(dummyDeltatime);
 }
 
 struct AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTagsManager
@@ -144,5 +144,5 @@ TEST_F(AColliderComponentManagerWhichObtainedTheColliderRolesFromTheColliderTags
             [this](const std::string &role) -> std::optional<std::unordered_set<ColliderComponentWithDummyShape *> *> {
                 return &collidersB;
             });
-    ccm->update(dummyDeltatime);
+    ccm->updateComponents(dummyDeltatime);
 }

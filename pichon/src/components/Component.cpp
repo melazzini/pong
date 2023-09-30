@@ -4,7 +4,7 @@
 #include <iterator>
 #include <stdexcept>
 
-Component::Component(GameObject *owner, ComponentManager *manager_) : m_manager(validateManager(manager_))
+Component::Component(GameObject *owner, IComponentManager *manager_) : m_manager(validateManager(manager_))
 {
     auto owner_{validateOwner(owner)};
 }
@@ -18,7 +18,7 @@ GameObject *Component::validateOwner(GameObject *owner)
     return owner;
 }
 
-ComponentManager *Component::validateManager(ComponentManager *manager)
+IComponentManager *Component::validateManager(IComponentManager *manager)
 {
     if (manager == nullptr)
     {
@@ -27,7 +27,7 @@ ComponentManager *Component::validateManager(ComponentManager *manager)
     return manager;
 }
 
-ComponentManager *Component::manager() const
+IComponentManager *Component::manager() const
 {
     return m_manager;
 }

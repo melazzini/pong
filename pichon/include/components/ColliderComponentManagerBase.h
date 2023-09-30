@@ -16,7 +16,7 @@
 
 template <typename TColliderShape> struct ColliderComponent;
 
-template <typename TColliderShape> class ColliderComponentManagerBase : public ComponentManager
+template <typename TColliderShape> class ColliderComponentManagerBase : public IComponentManager
 {
   public:
     inline static int count{};
@@ -26,9 +26,23 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
     {
     }
 
-    void registerComponent(IComponent *component) override
+    bool hasComponent(IComponent *componet) const override
     {
-        ComponentManager::registerComponent(component);
+        return false;
+    }
+
+    void destroyComponents() override
+    {
+    }
+
+    bool registerComponent(IComponent *component) override
+    {
+        if (component)
+        {
+            m_components.push_back(component);
+            return true;
+        }
+        return false;
     }
 
     void insertCollisionInfo(CollisionInfo<TColliderShape> info)
@@ -41,24 +55,25 @@ template <typename TColliderShape> class ColliderComponentManagerBase : public C
         return m_collisionContainer->recordedColliders(thisCollider);
     }
 
-    void update(uint32_t deltatime) override
+    void updateComponents(uint32_t deltatime) override
     {
         clearCollisionRecords();
         recordInformationAboutOccurredCollisions();
-        updateComponents(deltatime);
+        updateComponentsImpl(deltatime);
     }
 
   private:
     std::shared_ptr<IColliderTagsManager> m_tagsManager;
     std::unique_ptr<ICollisionContainer<TColliderShape>> m_collisionContainer;
     ColliderValidator<TColliderShape> m_validator;
+    std::vector<IComponent *> m_components;
 
   private:
     void clearCollisionRecords()
     {
         m_collisionContainer->clearRecordedCollisions();
     }
-    void updateComponents(uint32_t deltatime)
+    void updateComponentsImpl(uint32_t deltatime)
     {
         for (auto colliderRecordPair : m_collisionContainer->recordsOfAllCollisions())
         {

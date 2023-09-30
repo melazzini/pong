@@ -5,7 +5,7 @@
 #include "components/Component.h"
 #include <iostream>
 struct DrawableComponent;
-class DrawableComponentManagerBase : public ComponentManager
+class DrawableComponentManagerBase : public IOutputComponentManager
 {
   public:
     DrawableComponentManagerBase(IRenderer *renderer) : m_renderer{renderer}
@@ -17,10 +17,19 @@ class DrawableComponentManagerBase : public ComponentManager
         m_renderer->render(drawable);
     }
 
-    virtual void paintComponents();
+    void output() override;
+
+    void updateComponents(uint32_t deltatime) override;
+
+    bool hasComponent(IComponent *component) const override;
+
+    bool registerComponent(IComponent *componet) override;
+
+    void destroyComponents() override;
 
   private:
     IRenderer *m_renderer;
+    std::vector<DrawableComponent *> m_components;
 };
 
 class DrawableComponent : public Component
