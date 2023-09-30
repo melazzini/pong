@@ -1,7 +1,6 @@
 #include "../../backendsdl/include/BackendContextSDL.h"
 #include "EventManager.h"
 #include "Game.h"
-#include "GameBase.h"
 #include "Interfaces.h"
 #include "Renderer.h"
 #include "SimpleTicker.h"
@@ -14,7 +13,7 @@
 #include <iostream>
 #include <memory>
 
-extern GameBase *gameInstance;
+extern Game *gameInstance;
 
 int main()
 {
@@ -57,5 +56,5 @@ int main()
     {
         return -1;
     }
-    return game->launch();
+    return game->launchGame();
 }

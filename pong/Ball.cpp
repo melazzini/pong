@@ -6,7 +6,7 @@
 #include "components/DrawableComponent.h"
 #include "components/TransformComponent.h"
 
-GameBase *gameInstance{};
+Game *gameInstance{};
 bool collided = false;
 int counter = 0;
 struct BallTransformComponent : TransformComponent
@@ -36,7 +36,7 @@ struct BallTransformComponent : TransformComponent
 
         if (position().x < 0)
         {
-            gameInstance->setRunning(false);
+            gameInstance->terminate();
         }
     }
 

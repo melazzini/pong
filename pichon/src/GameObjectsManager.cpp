@@ -65,9 +65,9 @@ void GameObjectsManager::extractComponentManagersAndRegisterTheirComponents(
                       validateComponentManager(manager_);
                       if (!isComponentManagerADuplicateOfAnExistingOne(manager_))
                       {
-                          registerComponent(manager_, component.get());
                           registerComponentManager(manager_);
                       }
+                      registerComponent(manager_, component.get());
                   });
 }
 

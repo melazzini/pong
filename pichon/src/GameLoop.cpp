@@ -3,6 +3,7 @@
 #include "GameInterfaces.h"
 #include "components/Component.h"
 #include <algorithm>
+#include <iostream>
 #include <vector>
 
 void GameLoop::update(uint32_t deltatime, IGameObjectsManager *gameObjectsManager)

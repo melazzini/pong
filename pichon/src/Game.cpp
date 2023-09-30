@@ -4,6 +4,7 @@
 #include "EventUtils.h"
 #include "GameInterfaces.h"
 #include "GameLoop.h"
+#include "GameObject.h"
 #include "GameObjectsManager.h"
 #include "SimpleTicker.h"
 #include "components/Component.h"
@@ -19,9 +20,9 @@ class Game::_Pimpl
 {
   public:
     _Pimpl(std::unique_ptr<IGameLoop> gameLoop, std::unique_ptr<IGameObjectsManager> gameObjectsManager,
-           std::chrono::milliseconds frameDuration, IEventManager *eventManager)
+           std::chrono::milliseconds frameDuration, IEventManager *eventManager, IWindow *window)
         : m_gameLoop{std::move(gameLoop)}, m_gameObjectsManager{std::move(gameObjectsManager)}, m_ticker{frameDuration},
-          m_eventManager{eventManager}, m_gameRunning{false}
+          m_eventManager{eventManager}, m_window{window}, m_gameRunning{false}
     {
     }
 
@@ -50,7 +51,9 @@ class Game::_Pimpl
     }
     void output()
     {
+        m_window->clear(glm::u8vec4{0, 0, 255, 255});
         m_gameLoop->generateOutput(m_gameObjectsManager.get());
+        m_window->present();
     }
 
     void destroy()
@@ -58,11 +61,22 @@ class Game::_Pimpl
         m_gameLoop->destroy(m_gameObjectsManager.get());
     }
 
+    bool addGameObject(std::unique_ptr<GameObject> gameobj, const std::string &tag)
+    {
+        return m_gameObjectsManager->addGameObject(std::move(gameobj), tag);
+    }
+
+    void setRunning(bool trueFalse)
+    {
+        m_gameRunning = trueFalse;
+    }
+
   private:
     std::unique_ptr<IGameLoop> m_gameLoop;
     std::unique_ptr<IGameObjectsManager> m_gameObjectsManager;
     SimpleTicker m_ticker;
     IEventManager *m_eventManager;
+    IWindow *m_window;
     bool m_gameRunning;
 };
 
@@ -89,14 +103,27 @@ Game *Game::getInstance(Game::GameBackend *backend)
     return &game;
 }
 
-Game::Game(Game::GameBackend *backend, RectangularGeometry windowSize) : GameBase(backend), m_windowSize{windowSize}
+bool Game::addGameObject(std::unique_ptr<GameObject> gameobj, const std::string &tag)
+{
+    return m_pimpl->addGameObject(std::move(gameobj), tag);
+}
+
+void Game::terminate()
+{
+    m_pimpl->setRunning(false);
+}
+
+Game::Game(Game::GameBackend *backend, RectangularGeometry windowSize) : m_windowSize{windowSize}, m_backend{backend}
 {
     std::cout << "Creating the game..." << std::endl;
-    initialize();
-    static CallbackEventListener listener{EventType::QUIT, [this](const IEvent &) { this->setRunning(false); }};
+    static CallbackEventListener listener{EventType::QUIT,
+                                          [this](const IEvent &) { this->m_pimpl->setRunning(false); }};
     if (m_backend->eventManager)
     {
         m_backend->eventManager->registerListener(&listener);
     }
+
+    m_pimpl = new _Pimpl(std::make_unique<GameLoop>(), std::make_unique<GameObjectsManager>(),
+                         std::chrono::milliseconds(15), m_backend->eventManager, m_backend->window);
 }
 

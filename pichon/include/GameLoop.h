@@ -8,7 +8,7 @@ struct GameLoop : IGameLoop
 
     bool initialize() override
     {
-        return false;
+        return true;
     }
 
     void handleInput(IEventManager *eventManager) override;
