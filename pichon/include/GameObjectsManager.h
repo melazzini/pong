@@ -32,4 +32,6 @@ class GameObjectsManager : public IGameObjectsManager
         const std::vector<std::unique_ptr<IComponent>> &componentList);
     void validateComponentManager(ComponentManager *componentManager) const;
     bool isComponentManagerADuplicateOfAnExistingOne(ComponentManager *componentManager) const;
+    void registerComponentManager(ComponentManager *componentManager);
+    void registerComponent(ComponentManager *componentManager, IComponent *component);
 };

@@ -57,20 +57,16 @@ bool GameObjectsManager::insertionIsValid(GameObject *object, const std::string 
 void GameObjectsManager::extractComponentManagersAndRegisterTheirComponents(
     const std::vector<std::unique_ptr<IComponent>> &componentList)
 {
-    std::for_each(
-        std::cbegin(componentList), std::cend(componentList), [this](const std::unique_ptr<IComponent> &component) {
-            auto manager_{component->manager()};
-            validateComponentManager(manager_);
-            if (!isComponentManagerADuplicateOfAnExistingOne(manager_))
-            {
-                manager_->registerComponent(component.get());
-                m_componentManagers.emplace(manager_);
-                if (auto outputComonentManager{dynamic_cast<OutputComponentManager *>(manager_)}; outputComonentManager)
-                {
-                    m_outputComponentManagers.emplace(outputComonentManager);
-                }
-            }
-        });
+    std::for_each(std::cbegin(componentList), std::cend(componentList),
+                  [this](const std::unique_ptr<IComponent> &component) {
+                      auto manager_{component->manager()};
+                      validateComponentManager(manager_);
+                      if (!isComponentManagerADuplicateOfAnExistingOne(manager_))
+                      {
+                          registerComponent(manager_, component.get());
+                          registerComponentManager(manager_);
+                      }
+                  });
 }
 
 bool GameObjectsManager::hasComponentManager(ComponentManager *manager) const
@@ -99,4 +95,17 @@ void GameObjectsManager::validateComponentManager(ComponentManager *componentMan
 bool GameObjectsManager::isComponentManagerADuplicateOfAnExistingOne(ComponentManager *manager_) const
 {
     return m_componentManagers.contains(manager_);
+}
+
+void GameObjectsManager::registerComponentManager(ComponentManager *componentManager)
+{
+    m_componentManagers.emplace(componentManager);
+    if (auto outputComponentManager{dynamic_cast<OutputComponentManager *>(componentManager)}; outputComponentManager)
+    {
+        m_outputComponentManagers.emplace(outputComponentManager);
+    }
+}
+void GameObjectsManager::registerComponent(ComponentManager *componentManager, IComponent *component)
+{
+    componentManager->registerComponent(component);
 }
