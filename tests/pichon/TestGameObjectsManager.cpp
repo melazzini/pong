@@ -31,6 +31,13 @@ struct MyMockComponentManager : ComponentManager
     MOCK_METHOD(void, registerComponent, (IComponent *), (override));
 };
 
+struct MyMockOutputComponentManager : OutputComponentManager
+{
+    MOCK_METHOD(void, update, (uint32_t), (override));
+    MOCK_METHOD(void, destroy, (), (override));
+    MOCK_METHOD(void, output, (), (override));
+};
+
 struct MyDummyComponent : IComponent
 {
     void setManager(ComponentManager *manager_)
@@ -64,6 +71,7 @@ struct TheGameObjectsManager : testing::Test
     const std::string existingGameObjectDummyTag{"ExistingGameObjectDummyTag"};
     MyDummyComponentManager myDummyComponentManager;
     MyDummyOutputComponentManager myDummyOutputComponentManager;
+    MyMockOutputComponentManager myMockOutputComponentManager;
     NiceMock<MyMockComponentManager> myMockComponentManager;
     const std::string aSecondDummyTag{"DummyTag2"};
     uint32_t dummyDeltaTime{10};
@@ -183,4 +191,13 @@ TEST_F(TheGameObjectsManager, UsesTheComponentManagersToDestroyTheGameObjectComp
     gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
     EXPECT_CALL(myMockComponentManager, destroy());
     gameObjectsManager.destroyAllGameObjects();
+}
+
+TEST_F(TheGameObjectsManager, UsesTheOutputComponentManagersToGenerateOutput)
+{
+    auto myDummyComponent{gameObject->addComponent<MyDummyComponent>()};
+    myDummyComponent->setManager(&myMockOutputComponentManager);
+    gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
+    EXPECT_CALL(myMockOutputComponentManager, output());
+    gameObjectsManager.generateOutputFromGameObjects();
 }

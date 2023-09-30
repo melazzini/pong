@@ -42,6 +42,8 @@ void GameObjectsManager::updateGameObjects(uint32_t deltatime)
 
 void GameObjectsManager::generateOutputFromGameObjects()
 {
+    std::for_each(std::begin(m_outputComponentManagers), std::end(m_outputComponentManagers),
+                  [](OutputComponentManager *outputComonentManager) { outputComonentManager->output(); });
 }
 
 void GameObjectsManager::destroyAllGameObjects()
