@@ -6,9 +6,12 @@
 #include <gmock/gmock.h>
 #include <gtest/gtest.h>
 #include <memory>
+#include <stdexcept>
 
 using testing::Eq;
 using testing::Mock;
+using testing::NiceMock;
+using testing::Return;
 
 struct MyDummyComponentManager : ComponentManager
 {
@@ -18,6 +21,7 @@ struct MyMockComponentManager : ComponentManager
 {
     MOCK_METHOD(void, update, (uint32_t), (override));
     MOCK_METHOD(void, destroy, (), (override));
+    MOCK_METHOD(void, registerComponent, (IComponent *), (override));
 };
 
 struct MyDummyComponent : IComponent
@@ -52,7 +56,7 @@ struct TheGameObjectsManager : testing::Test
     const std::string dummyTag{"DummyTag"};
     const std::string existingGameObjectDummyTag{"ExistingGameObjectDummyTag"};
     MyDummyComponentManager myDummyComponentManager;
-    MyMockComponentManager myMockComponentManager;
+    NiceMock<MyMockComponentManager> myMockComponentManager;
     const std::string aSecondDummyTag{"DummyTag2"};
     uint32_t dummyDeltaTime{10};
     void SetUp() override
@@ -76,6 +80,13 @@ TEST_F(TheGameObjectsManager, RefusesToAddNullGameObjects)
     ASSERT_FALSE(gameObjectsManager.hasGameObject(dummyTag));
 }
 
+TEST_F(TheGameObjectsManager, ThrowsIfYouAddAGameObjectWhichHasAComponentWithANullComponentManager)
+{
+    auto myDummyComponent{gameObject->addComponent<MyDummyComponent>()};
+    myDummyComponent->setManager(nullptr);
+    ASSERT_THROW(gameObjectsManager.addGameObject(std::move(gameObject), dummyTag), std::runtime_error);
+}
+
 TEST_F(TheGameObjectsManager, CannotAddAGameObjectWithDupplicatedTag)
 {
     gameObjectsManager.addGameObject(std::make_unique<GameObject>(), dummyTag);
@@ -92,7 +103,7 @@ TEST_F(TheGameObjectsManager, CanRemoveExistingGameObjects)
 TEST_F(TheGameObjectsManager, GetsTheComponentManagersFromTheComponentsOfTheGameObjectAdded)
 {
     auto component = gameObject->addComponent<AMockComponent>();
-    EXPECT_CALL(*component, manager());
+    EXPECT_CALL(*component, manager()).WillOnce(Return(&myDummyComponentManager));
     gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
     Mock::AllowLeak(component);
     Mock::VerifyAndClearExpectations(component);
@@ -112,6 +123,14 @@ TEST_F(TheGameObjectsManager, CannotAddAnExistingComponentManager)
 
     const auto &listOfComponentManagers{gameObjectsManager.listOfComponentManagers()};
     ASSERT_THAT(listOfComponentManagers.count(&myDummyComponentManager), Eq(1));
+}
+
+TEST_F(TheGameObjectsManager, UsesTheComponentManagersToRegisterTheComponentsWhenYouAddANewGameObject)
+{
+    auto myDummyComponent{gameObject->addComponent<MyDummyComponent>()};
+    myDummyComponent->setManager(&myMockComponentManager);
+    EXPECT_CALL(myMockComponentManager, registerComponent(myDummyComponent));
+    gameObjectsManager.addGameObject(std::move(gameObject), dummyTag);
 }
 
 TEST_F(TheGameObjectsManager, UsesTheComponentManagersToUpdateTheGameObjectComponents)

@@ -5,6 +5,7 @@
 #include <unordered_set>
 
 struct IComponent;
+struct ComponentManager;
 
 class GameObjectsManager : public IGameObjectsManager
 {
@@ -24,5 +25,8 @@ class GameObjectsManager : public IGameObjectsManager
 
   private:
     bool insertionIsValid(GameObject *object, const std::string &tag) const;
-    void extractComponentManagers(const std::vector<std::unique_ptr<IComponent>> &componentList);
+    void extractComponentManagersAndRegisterTheirComponents(
+        const std::vector<std::unique_ptr<IComponent>> &componentList);
+    void validateComponentManager(ComponentManager *componentManager) const;
+    bool isComponentManagerADuplicateOfAnExistingOne(ComponentManager *componentManager) const;
 };
