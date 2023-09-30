@@ -1,8 +1,14 @@
- # README
+# README
 
-This project is about test-driving a simple 2d game engine, which could use different backend apis (gtk, sdl, ...).
-I'm also creating a Pong game to help drive the design.
+This project is about test-driving a simple 2D game engine that can switch between different backend APIs (such as GTK, SDL, ...). I'm also creating a Pong game to help me design and test the engine.
 
-Facineroso is the layer that creates the abstraction from the backend libraries.
-Pichon is the actual game engine.
-Pong is the classic pong game.
+The game engine implements an Entity-Component-Manager architecture.
+
+You can add entities to the game, and these entities have components, each managed by component managers.
+
+The different pieces of the project are:
+
+- `Facineroso`: This layer creates an abstraction from the backend libraries.
+- `Pichon`: This is the actual game engine.
+- `Pong`: This is the classic Pong game.
+
