@@ -111,6 +111,20 @@ struct IDrawablePrimitive
      * @param renderer
      */
     virtual void paintWithRendererPrimitive(IRendererPrimitive *primitive) = 0;
+
+    /**
+     * @brief This method sets the backgroud color the drawable.
+     *
+     * @param newColor The given new color.
+     */
+    virtual void setBackgroundColor(glm::u8vec4 newColor) = 0;
+
+    /**
+     * @brief Getter of the current backgroud color of the drawable.
+     *
+     * @return The current background color.
+     */
+    virtual glm::u8vec4 getBackgroundColor() const = 0;
 };
 
 struct IEventManager;

@@ -18,6 +18,14 @@ static const int dummyHeight{10};
 struct MockDrawablePrimitive : IDrawablePrimitive
 {
     MOCK_METHOD(void, paintWithRendererPrimitive, (IRendererPrimitive *), (override));
+    glm::u8vec4 getBackgroundColor() const override
+    {
+        return {};
+    }
+
+    void setBackgroundColor(glm::u8vec4 newColor) override
+    {
+    }
 };
 
 struct ABoxInstance : testing::Test

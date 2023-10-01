@@ -1,4 +1,5 @@
 #include "BackendContextSDL.h"
+#include "RendererPrimitiveSDL.h"
 
 BackendContextSDL *BackendContextSDL::getInstance()
 {
@@ -14,3 +15,17 @@ BackendContextSDL::BackendContextSDL()
         abort();
     }
 }
+
+std::unique_ptr<IRendererPrimitive> BackendContextSDL::rendererPrimitive()
+{
+    auto rendererPrimitive{std::make_unique<RendererPrimitiveSDL>(wnd)};
+    renderer = rendererPrimitive->m_renderer.get();
+    return rendererPrimitive;
+}
+std::unique_ptr<IWindowPrimitive> BackendContextSDL::windowPrimitive()
+{
+    auto wndPrimitive{std::make_unique<WindowPrimitive>()};
+    wnd = wndPrimitive->m_window.get();
+    return wndPrimitive;
+}
+

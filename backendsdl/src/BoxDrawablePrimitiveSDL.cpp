@@ -1,9 +1,9 @@
 #include "BoxDrawablePrimitiveSDL.h"
-#include "BackendContextSDL.h"
+#include "RendererPrimitiveSDL.h"
 
 void BoxDrawablePrimitiveSDL::paintWithRendererPrimitive(IRendererPrimitive *primitive)
 {
-    auto rendererPimpl{static_cast<BackendContextSDL::RendererPrimitive *>(primitive)};
+    auto rendererPimpl{static_cast<RendererPrimitiveSDL *>(primitive)};
 
     SDL_Rect rect{position.x, position.y, size.x, size.y};
     SDL_SetRenderDrawColor(rendererPimpl->m_renderer.get(), color.r, color.g, color.b, color.a);

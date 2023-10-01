@@ -52,6 +52,14 @@ struct TheRenderer : testing::Test
         void paintWithRendererPrimitive(IRendererPrimitive *) override
         {
         }
+        glm::u8vec4 getBackgroundColor() const override
+        {
+            return {};
+        }
+
+        void setBackgroundColor(glm::u8vec4 newColor) override
+        {
+        }
     };
 
     std::unique_ptr<testing::NiceMock<Dummy2Drawable>> drawable{};
