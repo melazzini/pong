@@ -1,6 +1,5 @@
 #pragma once
 #include "../../backendsdl/include/RectangularShapePrimitiveSDL.h"
-#include "Box.h"
 #include "Component.h"
 #include "SimpleShapes.h"
 #include "components/DrawableComponent.h"
