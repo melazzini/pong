@@ -124,7 +124,8 @@ struct IDrawablePrimitive
      *
      * @return The current background color.
      */
-    virtual glm::u8vec4 getBackgroundColor() const = 0;
+    virtual glm::u8vec4 backgroundColor() const = 0;
+
 };
 
 struct IEventManager;

@@ -20,7 +20,7 @@ struct BoxDrawablePrimitiveSDL : IDrawablePrimitive
 
     void paintWithRendererPrimitive(IRendererPrimitive *) override;
 
-    glm::u8vec4 getBackgroundColor() const override
+    glm::u8vec4 backgroundColor() const override
     {
         return color;
     }
