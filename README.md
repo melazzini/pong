@@ -8,6 +8,7 @@ You can add entities to the game, and these entities have components, each manag
 
 The different pieces of the project are:
 
+- `BackendSDL`: This is the implementation of a backend that uses SDL2. At the moment, this is the only backend that the project has.
 - `Facineroso`: This layer creates an abstraction from the backend libraries.
 - `Pichon`: This is the actual game engine.
 - `Pong`: This is the classic Pong game.
