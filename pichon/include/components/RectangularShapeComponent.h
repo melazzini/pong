@@ -1,45 +1,24 @@
 #pragma once
-#include "../../backendsdl/include/BoxDrawablePrimitiveSDL.h"
+#include "../../backendsdl/include/RectangularShapePrimitiveSDL.h"
 #include "Box.h"
 #include "Component.h"
+#include "SimpleShapes.h"
 #include "components/DrawableComponent.h"
 #include <glm/fwd.hpp>
 #include <iostream>
+#include <stdexcept>
 
-struct BallShape : Box
-{
-    BallShape(glm::ivec2 position, int size)
-        : Box(position, RectangularGeometry{size, size}, std::make_unique<BoxDrawablePrimitiveSDL>()),
-          m_boxDrawablePrimitive(dynamic_cast<BoxDrawablePrimitiveSDL *>(m_primitive.get()))
-    {
-    }
-
-    void draw() override
-    {
-        m_boxDrawablePrimitive->position = position();
-        m_boxDrawablePrimitive->size = {width(), height()};
-        m_boxDrawablePrimitive->color = m_color;
-    }
-
-    void setColor(glm::u8vec4 color)
-    {
-        m_color = color;
-    }
-
-  private:
-    BoxDrawablePrimitiveSDL *m_boxDrawablePrimitive;
-    glm::u8vec4 m_color{255, 0, 0, 255};
-};
 class RectangularShapeComponent : public DrawableComponent
 {
   public:
     RectangularShapeComponent(GameObject *owner, DrawableComponentManagerBase *manager_)
-        : DrawableComponent(owner, manager_), m_manager{nullptr}, m_ballShape{glm::ivec2{100, 100}, 20}
+        : DrawableComponent(owner, manager_), m_manager{nullptr}, m_ballShape{glm::ivec2{100, 100},
+                                                                              RectangularGeometry{20, 20}}
     {
-        m_manager = dynamic_cast<DrawableComponentManagerBase *>(manager_);
-        if (m_manager != nullptr)
+        m_manager = manager_;
+        if (m_manager == nullptr)
         {
-            std::cout << "SUPER!!!" << std::endl;
+            throw std::runtime_error{"The DrawableComponentManagerBase cannot be null!"};
         }
     }
 
@@ -51,11 +30,11 @@ class RectangularShapeComponent : public DrawableComponent
 
     void setColor(glm::u8vec4 color)
     {
-        m_ballShape.setColor(color);
+        m_ballShape.setBackgroundColor(color);
     }
 
   private:
     DrawableComponentManagerBase *m_manager;
-    BallShape m_ballShape;
+    RectangularShape m_ballShape;
 };
 

@@ -4,7 +4,7 @@
 #include "GameObject.h"
 #include "Interfaces.h"
 #include "RectangularColliderComponentManager.h"
-#include "RectangularShape.h"
+#include "SimpleShapes.h"
 #include "components/TransformComponent.h"
 #include "utils.h"
 #include <memory>
@@ -56,10 +56,11 @@ struct PaddleDrawableComponent : DrawableComponent
 {
     PaddleDrawableComponent(Paddle *owner, DrawableComponentManagerBase *manager)
         : DrawableComponent{owner, manager}, m_transformComponent{nullptr},
-          m_shape(glm::ivec2{100, 100}, RectangularGeometry{20, 100}, glm::u8vec4{200, 200, 100, 255})
+          m_shape(glm::ivec2{100, 100}, RectangularGeometry{20, 100})
     {
         m_drawable = &m_shape;
         m_transformComponent = owner->component<TransformComponent>();
+        m_shape.setBackgroundColor(glm::u8vec4{200, 200, 100, 255});
     }
 
     void update(uint32_t deltatime) override
@@ -71,7 +72,7 @@ struct PaddleDrawableComponent : DrawableComponent
 
     void setColor(glm::u8vec4 color)
     {
-        m_shape.setColor(color);
+        m_shape.setBackgroundColor(color);
     }
 
   private:

@@ -3,6 +3,7 @@
 #include "Game.h"
 #include "Interfaces.h"
 #include "Renderer.h"
+#include "SimpleShapes.h"
 #include "SimpleTicker.h"
 #include "Window.h"
 #include "pong/Ball.h"
@@ -17,6 +18,8 @@ extern Game *gameInstance;
 
 int main()
 {
+    // SimpleBoxShape simlpeBox{glm::ivec2{0, 0}, RectangularGeometry{0, 0}};
+
     auto engine{BackendContextSDL::getInstance()};
     auto window = Window::getInstance(engine);
     auto backendEventMangerPrimitiveProdiver{EventManagerPrimitiveProviderSDL()};
