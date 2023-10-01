@@ -1,5 +1,6 @@
 #pragma once
 
+#include "IPrimitives.h"
 #include "Interfaces.h"
 
 class Drawable

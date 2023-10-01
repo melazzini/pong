@@ -1,4 +1,5 @@
 #pragma once
+#include "IPrimitives.h"
 #include "Interfaces.h"
 
 class Window : public IWindow

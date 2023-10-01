@@ -1,4 +1,5 @@
 #include "Drawable.h"
+#include "IPrimitives.h"
 #include "Interfaces.h"
 #include "Renderer.h"
 #include "gmock/gmock.h"

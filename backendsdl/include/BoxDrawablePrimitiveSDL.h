@@ -1,4 +1,5 @@
 #pragma once
+#include "IPrimitives.h"
 #include "Interfaces.h"
 
 #include <glm/glm.hpp>
