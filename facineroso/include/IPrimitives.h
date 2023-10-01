@@ -1,4 +1,5 @@
 #pragma once
+#include "EventUtils.h"
 #include <glm/glm.hpp>
 #include <memory>
 
@@ -43,6 +44,7 @@ struct IRendererPrimitive
  */
 struct IWindowPrimitive
 {
+    virtual ~IWindowPrimitive() = default;
 
     /**
      * @brief This method clears the window using a solid color.
@@ -57,8 +59,6 @@ struct IWindowPrimitive
      * @note The contents that will be displayed have to be drawn internally by the IRendererPrimitive.
      */
     virtual void updateWindow() = 0;
-
-    virtual ~IWindowPrimitive() = default;
 };
 
 /**
@@ -73,6 +73,7 @@ struct IWindowPrimitive
  */
 struct IBackendContext
 {
+    virtual ~IBackendContext() = default;
 
     /**
      * @brief Provides the intance of the renderer primitive.
@@ -87,8 +88,6 @@ struct IBackendContext
      * @return Intance of the window primitive.
      */
     virtual std::unique_ptr<IWindowPrimitive> windowPrimitive() = 0;
-
-    virtual ~IBackendContext() = default;
 };
 
 /**
@@ -103,6 +102,8 @@ struct IBackendContext
  */
 struct IDrawablePrimitive
 {
+    virtual ~IDrawablePrimitive() = default;
+
     /**
      * @brief This method should be called by the primitive
      * in order to paint its graphics using the chosen backend.
@@ -110,6 +111,39 @@ struct IDrawablePrimitive
      * @param renderer
      */
     virtual void paintWithRendererPrimitive(IRendererPrimitive *primitive) = 0;
+};
 
-    virtual ~IDrawablePrimitive() = default;
+struct IEventManager;
+
+/**
+ * @brief This is the interface of an event manager primitive.
+ *
+ * An event manager primitive provides event polling and keyboard/mouse/other-controllers state checking
+ * to the facineroso api.
+ *
+ * @warning This is not thought to be used by the user of the facineroso api, this abstraction is meant
+ * to be used only internally by the api, and it should be implemented by the backend layer.
+ */
+struct IEventManagerPrimitive
+{
+    virtual ~IEventManagerPrimitive() = default;
+
+    /**
+     * @brief Poll the events into the event manager.
+     *
+     * After invoking this method, all the events that were in the event queue
+     * will be polled into the given event manager.
+     *
+     * @param eventManager The actual event manager that will received the polled events.
+     */
+    virtual void pollEvents(IEventManager &eventManager) const = 0;
+
+    /**
+     * @brief This method checks whether the given key is pressed or not.
+     *
+     * @param key The key to be considered.
+     *
+     * @return `true` if the key is being pressed, else `false`.
+     */
+    virtual bool isKeyPressed(Keyboard key) const = 0;
 };

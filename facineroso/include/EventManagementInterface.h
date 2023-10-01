@@ -29,10 +29,3 @@ struct IEventManager
     virtual ~IEventManager() = default;
 };
 
-struct IEventManagerPrimitive
-{
-    virtual void pollEvents(IEventManager &) const = 0;
-    virtual bool isKeyPressed(Keyboard key) const = 0;
-    virtual ~IEventManagerPrimitive() = default;
-};
-
