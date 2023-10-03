@@ -1,36 +1,15 @@
 #pragma once
-#include <SDL2/SDL.h>
-#include <SDL2/SDL_events.h>
-#include <SDL2/SDL_keyboard.h>
-#include <SDL2/SDL_render.h>
-#include <SDL2/SDL_scancode.h>
-
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-
 #include "BackendContextInterface.h"
 #include "EventUtils.h"
 #include "IPrimitives.h"
+#include <memory>
 
-struct EventManagerPrimitiveSDL : IEventManagerPrimitive
-{
-    void pollEvents(IEventManager &eventManager) const override;
-    bool isKeyPressed(Keyboard key) const override;
-};
-
-struct EventManagerPrimitiveProviderSDL : backendContext::IEventManagerPrimitiveProvider
-{
-    std::unique_ptr<IEventManagerPrimitive> provide() const override
-    {
-        return std::make_unique<EventManagerPrimitiveSDL>();
-    }
-};
-
+struct SDL_Window;
+struct SDL_Renderer;
 struct BackendContextSDL : IBackendContext
 {
-    inline static SDL_Window *wnd{};
-    inline static SDL_Renderer *renderer{};
+    static SDL_Window *wnd;
+    static SDL_Renderer *renderer;
 
     static BackendContextSDL *getInstance();
 

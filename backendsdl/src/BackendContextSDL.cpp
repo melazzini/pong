@@ -1,6 +1,10 @@
 #include "BackendContextSDL.h"
 #include "RendererPrimitiveSDL.h"
 #include "WindowPrimitiveSDL.h"
+#include <stdexcept>
+
+SDL_Window *BackendContextSDL::wnd{};
+SDL_Renderer *BackendContextSDL::renderer{};
 
 BackendContextSDL *BackendContextSDL::getInstance()
 {
@@ -12,8 +16,7 @@ BackendContextSDL::BackendContextSDL()
 {
     if (SDL_Init(SDL_INIT_EVERYTHING) != 0)
     {
-        std::cerr << SDL_GetError() << std::endl;
-        abort();
+        throw std::runtime_error{SDL_GetError()};
     }
 }
 

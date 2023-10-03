@@ -1,4 +1,5 @@
 #include "../../backendsdl/include/BackendContextSDL.h"
+#include "../../backendsdl/include/EventManagerPrimitiveSDL.h"
 #include "EventManager.h"
 #include "Game.h"
 #include "Interfaces.h"

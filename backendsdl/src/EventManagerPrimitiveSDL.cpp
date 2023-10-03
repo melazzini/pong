@@ -1,5 +1,7 @@
+#include "EventManagerPrimitiveSDL.h"
 #include "BackendContextSDL.h"
 #include "Events.h"
+#include <SDL2/SDL.h>
 
 void EventManagerPrimitiveSDL::pollEvents(IEventManager &eventManager) const
 {
