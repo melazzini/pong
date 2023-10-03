@@ -1,5 +1,6 @@
 #include "BackendContextSDL.h"
 #include "RendererPrimitiveSDL.h"
+#include "WindowPrimitiveSDL.h"
 
 BackendContextSDL *BackendContextSDL::getInstance()
 {
