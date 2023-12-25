@@ -1,5 +1,6 @@
 #pragma once
 #include "Component.h"
+#include "ComponentManager.h"
 #include "GameObject.h"
 #include <string>
 #include <vector>

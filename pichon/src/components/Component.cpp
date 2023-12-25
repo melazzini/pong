@@ -1,4 +1,5 @@
 #include "components/Component.h"
+#include "components/ComponentManager.h"
 #include <algorithm>
 #include <iostream>
 #include <iterator>
@@ -32,15 +33,3 @@ IComponentManager *Component::manager() const
     return m_manager;
 }
 
-void ComponentManager::update(uint32_t deltatime)
-{
-    for (auto component : m_components)
-    {
-        component->update(deltatime);
-    }
-}
-
-bool ComponentManager::hasComponent(IComponent *component) const
-{
-    return std::find(std::begin(m_components), std::end(m_components), component) != std::end(m_components);
-}

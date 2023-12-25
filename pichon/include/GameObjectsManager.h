@@ -34,4 +34,5 @@ class GameObjectsManager : public IGameObjectsManager
     bool isComponentManagerADuplicateOfAnExistingOne(IComponentManager *componentManager) const;
     void registerComponentManager(IComponentManager *componentManager);
     void registerComponent(IComponentManager *componentManager, IComponent *component);
+    void registerComponentManagerIfNotDuplicated(IComponentManager *componentManager);
 };

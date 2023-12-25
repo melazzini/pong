@@ -63,12 +63,17 @@ void GameObjectsManager::extractComponentManagersAndRegisterTheirComponents(
                   [this](const std::unique_ptr<IComponent> &component) {
                       auto manager_{component->manager()};
                       validateComponentManager(manager_);
-                      if (!isComponentManagerADuplicateOfAnExistingOne(manager_))
-                      {
-                          registerComponentManager(manager_);
-                      }
+                      registerComponentManagerIfNotDuplicated(manager_);
                       registerComponent(manager_, component.get());
                   });
+}
+
+void GameObjectsManager::registerComponentManagerIfNotDuplicated(IComponentManager *manager_)
+{
+    if (!isComponentManagerADuplicateOfAnExistingOne(manager_))
+    {
+        registerComponentManager(manager_);
+    }
 }
 
 bool GameObjectsManager::hasComponentManager(IComponentManager *manager) const

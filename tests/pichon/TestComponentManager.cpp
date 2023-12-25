@@ -32,7 +32,7 @@ TEST(AComponentManager, UpdatesAllItsComponentsWhenYouUpdateIt)
     MockComponent dummyComponent{&gameObject, &manager};
     manager.registerComponent(&dummyComponent);
     EXPECT_CALL(dummyComponent, update);
-    manager.update(0);
+    manager.updateComponents(0);
 }
 
 TEST(AComponentManager, CanBeSetupToRefuseRegisteringCertainComponents)

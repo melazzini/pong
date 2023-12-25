@@ -43,8 +43,6 @@ struct MyDummyOutputComponentManager : IOutputComponentManager
 
 struct MyMockComponentManager : ComponentManager
 {
-    MOCK_METHOD(void, update, (uint32_t), (override));
-    MOCK_METHOD(void, destroy, (), (override));
     MOCK_METHOD(bool, registerComponent, (IComponent *), (override));
     MOCK_METHOD(void, destroyComponents, (), (override));
     MOCK_METHOD(void, updateComponents, (uint32_t), (override));

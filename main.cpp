@@ -1,3 +1,9 @@
+#include <bits/chrono.h>
+
+#include <chrono>
+#include <iostream>
+#include <memory>
+
 #include "../../backendsdl/include/BackendContextSDL.h"
 #include "../../backendsdl/include/EventManagerPrimitiveSDL.h"
 #include "EventManager.h"
@@ -10,10 +16,6 @@
 #include "pong/Ball.h"
 #include "pong/Paddle.h"
 #include "pong/Wall.h"
-#include <bits/chrono.h>
-#include <chrono>
-#include <iostream>
-#include <memory>
 
 extern Game *gameInstance;
 
